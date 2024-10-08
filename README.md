@@ -30,3 +30,4 @@ Department-specific Chatbots: Targeted assistance for employees.
 Service Integration: Connection with HR system, knowledge base, etc.
 Human Support Escalation: For complex inquiries.
 
+[Document]([url](https://docs.google.com/document/d/1U2VDIWDSIMtlF2A7HwGSDMSvilc5jwsD/edit?usp=sharing&ouid=116592569507515419898&rtpof=true&sd=true)) 
