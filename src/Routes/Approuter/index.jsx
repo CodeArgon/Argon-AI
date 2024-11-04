@@ -5,6 +5,12 @@ import store from "../../store";
 import { Provider } from "react-redux";
 import Login from "../../views/pages/Authentication/Login";
 import Register from "../../views/pages/Authentication/Register";
+import RegisterData from "../../views/pages/Authentication/RegisterData";
+import RegisterEducation from "../../views/pages/Authentication/RegisterEducation";
+import RegisterExperience from "../../views/pages/Authentication/RegisterExperience";
+import RegisterBankDetails from "../../views/pages/Authentication/RegisterBankDetails";
+import RegisterEmergencyContact from "../../views/pages/Authentication/RegisterEmergencyContact";
+import ProfileStepper from "../../views/pages/Authentication/ProfileStepper";
 import Otp from "../../views/pages/Authentication/Otp";
 import Error404 from "../../views/pages/Error/Error404";
 import Error500 from "../../views/pages/Error/Error500";
@@ -52,6 +58,7 @@ import ComingSoon from "../../views/pages/Pages/ComingSoon";
 import UnderManitenance from "../../views/pages/Pages/UnderManitenance";
 import Editer from "../../components/Editer/Editer";
 import Unauthorized from "../../components/Unauthorized";
+import {AppProvider} from "../../contexts/UserContext";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -70,12 +77,19 @@ const AppRouter = () => {
   }, []);
   return (
     <div>
+       <AppProvider>
       <Provider store={store}>
         <BrowserRouter basename="/react/template">
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/profile-stepper" element={<ProfileStepper />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/register-data" element={<RegisterData />} />
+            <Route path="/register-edu" element={<RegisterEducation />} />
+            <Route path="/register-exp" element={<RegisterExperience />} />
+            <Route path="/register-bank" element={<RegisterBankDetails />} />
+            <Route path="/register-emergency-contact" element={<RegisterEmergencyContact />} />
             <Route path="/otp" element={<Otp />} />
             <Route path="/error-404" element={<Error404 />} />
             <Route path="/error-500" element={<Error500 />} />
@@ -133,6 +147,7 @@ const AppRouter = () => {
           </Routes>
         </BrowserRouter>
       </Provider>
+      </AppProvider>
     </div>
   );
 };

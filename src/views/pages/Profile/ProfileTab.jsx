@@ -13,21 +13,9 @@ const ProfileTab = () => {
     { id: 3, title: "Tel", text: userData?.user?.profile.mobile_number },
     { id: 4, title: "Nationality", text: userData?.user?.profile.nationality },
     { id: 5, title: "Religion", text: userData?.user?.profile.religion },
-    {
-      id: 6,
-      title: "Marital status",
-      text: userData?.user?.profile.marital_status,
-    },
-    {
-      id: 7,
-      title: "Employment of spouse",
-      text: userData?.user?.profile.employment_of_spouse,
-    },
-    {
-      id: 8,
-      title: "No. of children",
-      text: userData?.user?.profile.number_of_children,
-    },
+    { id: 6, title: "Marital status", text: userData?.user?.profile.marital_status },
+    { id: 7, title: "Employment of spouse", text: userData?.user?.profile.employment_of_spouse },
+    { id: 8, title: "No. of children", text: userData?.user?.profile.number_of_children },
   ];
   // const personalInfoData = [
   //   { id: 1, title: "Passport No.", text: "9876543210" },

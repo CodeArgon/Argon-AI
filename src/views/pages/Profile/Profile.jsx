@@ -5,39 +5,14 @@ import { Link } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 const Profile = () => {
+
   const userDataString = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(userDataString));
 
   useEffect(() => {
     // Fetch and parse the user data from localStorage when the component mounts
-    console.log("Yooo", userDataString);
+    console.log("Yooo",userDataString)
 
-    // if (userDataString) {
-    //   try {
-    //     const user = JSON.parse(userDataString);
-    //     console.log(user)
-    //     setUserData({
-    //       id: user?.id,
-    //       name: user?.first_name,
-    //       role: user?.profile?.role,
-    //       jobTitle: user?.profile?.designation,
-    //       employeeId: user?.id,
-    //       dateOfJoin: user?.profile?.date_of_joining,
-    //       phone: user?.profile?.mobile_number,
-    //       email: user?.email,
-    //       birthday: user?.profile?.date_of_birth,
-    //       address: user?.profile?.address,
-    //       gender: user?.profile?.gender,
-    //       supervisor: {
-    //         name: "Jeffery Lalor",
-    //         avatar: "assets/img/profiles/avatar-16.jpg",
-    //       },
-    //     });
-    //     console.log("heheh",userData)
-    //   } catch (error) {
-    //     console.error("Error parsing user data:", error);
-    //   }
-    // }
   }, []); //
 
   useEffect(() => {
@@ -64,10 +39,7 @@ const Profile = () => {
                       <div className="profile-img">
                         <Link to="#">
                           <img src={Avatar_02} alt="User Image" />
-                          <img
-                            src={userData?.user?.profile?.profile_photo}
-                            alt="User Image"
-                          />
+                          <img src={userData?.user?.profile?.profile_photo} alt="User Image" />
                         </Link>
                       </div>
                     </div>
@@ -78,9 +50,7 @@ const Profile = () => {
                             <h3 className="user-name m-t-0 mb-0">
                               {userData?.user.first_name}
                             </h3>
-                            <h6 className="text-muted">
-                              {userData?.user?.role}
-                            </h6>
+                            <h6 className="text-muted">{userData?.user?.role}</h6>
                             <small className="text-muted">
                               {userData?.user?.profile?.designation}
                             </small>
@@ -88,8 +58,7 @@ const Profile = () => {
                               Employee ID : {userData?.user?.id}
                             </div>
                             <div className="small doj text-muted">
-                              Date of Join :{" "}
-                              {userData?.user?.profile?.date_of_joining}
+                              Date of Join : {userData?.user?.profile?.date_of_joining}
                             </div>
                             <div className="staff-msg">
                               <Link className="btn btn-custom" to="/call/chat">
@@ -103,9 +72,7 @@ const Profile = () => {
                             <li>
                               <div className="title">Phone:</div>
                               <div className="text">
-                                <Link
-                                  to={`tel:${userData?.user?.profile?.mobile_number}`}
-                                >
+                                <Link to={`tel:${userData?.user?.profile?.mobile_number}`}>
                                   {userData?.user?.profile?.mobile_number}
                                 </Link>
                               </div>
@@ -120,21 +87,15 @@ const Profile = () => {
                             </li>
                             <li>
                               <div className="title">Birthday:</div>
-                              <div className="text">
-                                {userData?.user?.profile?.date_of_birth}
-                              </div>
+                              <div className="text">{userData?.user?.profile?.date_of_birth}</div>
                             </li>
                             <li>
                               <div className="title">Address:</div>
-                              <div className="text">
-                                {userData?.user?.profile?.address}
-                              </div>
+                              <div className="text">{userData?.user?.profile?.address}</div>
                             </li>
                             <li>
                               <div className="title">Gender:</div>
-                              <div className="text">
-                                {userData?.user?.profile?.gender}
-                              </div>
+                              <div className="text">{userData?.user?.profile?.gender}</div>
                             </li>
                             <li>
                               <div className="title">Reports to:</div>

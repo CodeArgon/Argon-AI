@@ -23,6 +23,7 @@ import GoalType from "../../views/pages/Performance/Goals/GoalType";
 import Trainers from "../../views/pages/Performance/Training/Trainers";
 import Training from "../../views/pages/Performance/Training/Training";
 import TrainingType from "../../views/pages/Performance/Training/TrainingType";
+import ProfileStepper from "../../views/pages/Authentication/ProfileStepper";
 
 // import EmployeeProfile from "../../views/pages/Pages/profile/Employeeprofile";
 import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard";
@@ -1088,6 +1089,12 @@ const AppContainer = () => {
       path: "editer",
       element: <Editer />,
       allowedRoles: ["admin", "Employee"],
+    },
+    {
+      id: 140,
+      path: "profile-stepper",
+      element: <ProfileStepper />,
+      allowedRoles: ["IT"],
     },
   ];
 
