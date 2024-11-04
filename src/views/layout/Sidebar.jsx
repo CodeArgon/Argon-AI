@@ -1745,11 +1745,7 @@ const Sidebar = () => {
                   <>
                     <li className="menu-title" key={index + 1}>
                       <span>{t(mainTittle.tittle)}</span>
-                      {mainTittle?.tittle === "CRM" ? (
-                        <small class="newly-added-features">New</small>
-                      ) : (
-                        ""
-                      )}
+                      {mainTittle?.tittle === "CRM" ? <small></small> : ""}
                     </li>
                     {mainTittle.menu.map((menu, menuIndex) => {
                       return (

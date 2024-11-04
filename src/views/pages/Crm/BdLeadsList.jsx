@@ -10,7 +10,7 @@ import EditLeads from "../../../components/modelpopup/Crm/EditLeads";
 import SearchBox from "../../../components/SearchBox";
 import { BASE_URL } from "../../../constants/urls";
 
-const BdLeadsList = () => {
+const LeadsList = () => {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prevVisibility) => !prevVisibility);
@@ -540,4 +540,4 @@ const BdLeadsList = () => {
   );
 };
 
-export default BdLeadsList;
+export default LeadsList;

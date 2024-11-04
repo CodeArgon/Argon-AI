@@ -11,22 +11,22 @@ export const SidebarData = [
         route: "#",
         icon: "la la-dashcube",
         subMenus: [
-          // {
-          //   menuValue: "Admin Dashboard",
-          //   route: "/admin-dashboard",
-          // },
+          {
+            menuValue: "Admin Dashboard",
+            route: "/admin-dashboard",
+          },
           {
             menuValue: "Employee Dashboard",
             route: "/employee-dashboard",
           },
-          // {
-          //   menuValue: "Deals Dashboard",
-          //   route: "/deals-dashboard",
-          // },
-          // {
-          //   menuValue: "Leads Dashboard",
-          //   route: "/leads-dashboard",
-          // },
+          {
+            menuValue: "Deals Dashboard",
+            route: "/deals-dashboard",
+          },
+          {
+            menuValue: "Leads Dashboard",
+            route: "/leads-dashboard",
+          },
         ],
       },
       // {
@@ -36,20 +36,6 @@ export const SidebarData = [
       //   route: "/employee-dashboard",
       //   icon: "la la-dashcube",
       // },
-      {
-        menuValue: "File Manager",
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: "/file-manager",
-        icon: "la la-rocket",
-      },
-      {
-        menuValue: "Add User",
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: "/profile-stepper",
-        icon: "la la-user-plus",
-      },
 
       {
         menuValue: "Proposal Manager",
@@ -67,6 +53,14 @@ export const SidebarData = [
             route: "/proposal-creation",
           },
         ],
+      },
+
+      {
+        menuValue: "File Manager",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/file-manager",
+        icon: "la la-rocket",
       },
 
       // {
@@ -242,62 +236,62 @@ export const SidebarData = [
   //     },
   //   ],
   // },
-  // {
-  //   tittle: "CRM",
-  //   showAsTab: false,
-  //   separateRoute: false,
-  //   menu: [
-  //     {
-  //       menuValue: "Contacts",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/contact-list",
-  //       icon: "la la-user-shield",
-  //     },
-  //     {
-  //       menuValue: "Companies",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/companies",
-  //       icon: "la la-building",
-  //     },
-  //     {
-  //       menuValue: "Deals",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/deals",
-  //       icon: "la la-cubes",
-  //     },
-  //     {
-  //       menuValue: "Leads",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/leads-list",
-  //       icon: "la la-chart-area",
-  //     },
-  //     {
-  //       menuValue: "Pipeline",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/pipeline",
-  //       icon: "la la-exchange-alt",
-  //     },
-  //     {
-  //       menuValue: "Analytics",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/analytics",
-  //       icon: "la la-dice",
-  //     },
-  //     {
-  //       menuValue: "Activities",
-  //       hasSubRoute: false,
-  //       showSubRoute: false,
-  //       route: "/activities",
-  //       icon: "la la-directions",
-  //     },
-  //   ],
-  // },
+  {
+    tittle: "CRM",
+    showAsTab: false,
+    separateRoute: false,
+    menu: [
+      {
+        menuValue: "Contacts",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/contact-list",
+        icon: "la la-user-shield",
+      },
+      {
+        menuValue: "Companies",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/companies",
+        icon: "la la-building",
+      },
+      {
+        menuValue: "Deals",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/deals",
+        icon: "la la-cubes",
+      },
+      {
+        menuValue: "Leads",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/leads-list",
+        icon: "la la-chart-area",
+      },
+      {
+        menuValue: "Pipeline",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/pipeline",
+        icon: "la la-exchange-alt",
+      },
+      {
+        menuValue: "Analytics",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/analytics",
+        icon: "la la-dice",
+      },
+      {
+        menuValue: "Activities",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/activities",
+        icon: "la la-directions",
+      },
+    ],
+  },
   // {
   //   tittle: "HR",
   //   showAsTab: false,
