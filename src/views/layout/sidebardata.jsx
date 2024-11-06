@@ -270,6 +270,20 @@ export const SidebarData = [
         icon: "la la-chart-area",
       },
       {
+        menuValue: "My Leads",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/bd-leads-list",
+        icon: "la la-chart-area",
+      },
+      {
+        menuValue: "DL Leads",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/dl-leads-list",
+        icon: "la la-chart-area",
+      },
+      {
         menuValue: "Pipeline",
         hasSubRoute: false,
         showSubRoute: false,

@@ -11,7 +11,7 @@ import EditLeads from "../../../components/modelpopup/Crm/EditLeads";
 import SearchBox from "../../../components/SearchBox";
 import { BASE_URL } from "../../../constants/urls";
 
-const BdLeadsList = () => {
+const DlLeadsList = () => {
   const { userData, profileID } = useContext(UserContext);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const toggleFilterVisibility = () => {
@@ -104,25 +104,26 @@ const BdLeadsList = () => {
     },
 
     {
-      title: "Lead Status",
-      dataIndex: "LeadStatus",
+      title: "Approval Status",
+      // title: "Lead Status",
+      dataIndex: "approval_status",
       render: (text) => (
         <div>
-          {text === "Closed" && (
+          {text === "approved" && (
             <span className="badge badge-soft-success">{text}</span>
           )}
-          {text === "Not Contacted" && (
+          {text === "open" && (
             <span className="badge badge-soft-info">{text}</span>
           )}
-          {text === "Contacted" && (
+          {text === "disapproved" && (
             <span className="badge badge-soft-warning">{text}</span>
           )}
-          {text === "Lost" && (
+          {text === "pending" && (
             <span className="badge badge-soft-danger">{text}</span>
           )}
         </div>
       ),
-      sorter: (a, b) => a.LeadStatus.length - b.LeadStatus.length,
+      sorter: (a, b) => a.approval_status.length - b.approval_status.length,
     },
 
     {
@@ -302,7 +303,16 @@ const BdLeadsList = () => {
   //     cleanup();
   //   };
   // }, [isFullScreen]);
-
+//<div>
+//                  <span className="badge bg-success me-1">
+//                    <span className="badge-label">Success </span>
+//                    <i className="fa-solid fa-check" />
+//                  </span>
+//                  <span className="badge bg-success me-1">
+//                    <span className="badge-label">Pending </span>
+//                    <i className="fa-solid fa-circle-info" />
+//                  </span>
+//                </div>
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -462,40 +472,8 @@ const BdLeadsList = () => {
           <br />
           <div
             className="row align-items-center"
-            style={{ alignContent: "center", alignItems: "center" }}
           >
-            <div className="col-md-2">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
-                  <h5>Total Leads</h5>
-                  <h6 className="counter">3,000</h6>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-2">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
-                  <h5>In process</h5>
-                  <h6 className="counter">1,500</h6>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-2">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
-                  <h5>Total Won</h5>
-                  <h6 className="counter">1050</h6>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-2">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
-                  <h5>Total Lost</h5>
-                  <h6 className="counter">450</h6>
-                </div>
-              </div>
-            </div>
+            
             <div className="col-md-2" style={{ flex: 2 }}>
               <ul>
                 <li>
@@ -538,4 +516,4 @@ const BdLeadsList = () => {
   );
 };
 
-export default BdLeadsList;
+export default DlLeadsList;

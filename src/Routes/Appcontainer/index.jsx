@@ -185,6 +185,8 @@ import TicketDetails from "../../views/pages/Employees/TicketDetails.jsx";
 import Companies from "../../views/pages/Crm/companies.jsx";
 import ContactDetails from "../../views/pages/Crm/ContactDetails.jsx";
 import LeadsList from "../../views/pages/Crm/LeadsList.jsx";
+import BdLeadsList from "../../views/pages/Crm/BdLeadsList.jsx";
+import DlLeadsList from "../../views/pages/Crm/DlLeadsList.jsx";
 import LeadsKanban from "../../views/pages/Crm/LeadsKanban.jsx";
 import LeadsDetails from "../../views/pages/Crm/LeadsDetails.jsx";
 import PipeLine from "../../views/pages/Crm/PipeLine.jsx";
@@ -1095,6 +1097,18 @@ const AppContainer = () => {
       path: "profile-stepper",
       element: <ProfileStepper />,
       allowedRoles: ["IT"],
+    },
+    {
+      id: 126,
+      path: "bd-leads-list",
+      element: <BdLeadsList />,
+      allowedRoles: ["admin", "Employee"],
+    },
+    {
+      id: 127,
+      path: "dl-leads-list",
+      element: <DlLeadsList />,
+      allowedRoles: ["admin", "Employee"],
     },
   ];
 

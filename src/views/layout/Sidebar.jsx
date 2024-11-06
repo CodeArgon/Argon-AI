@@ -3032,6 +3032,22 @@ const Sidebar = () => {
                     </li>
                     <li>
                       <Link
+                        className={pathname.includes("bd-leads-list") ? "active" : ""}
+                        to="/leads"
+                      >
+                        {t("My Leads")}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={pathname.includes("dl-leads-list") ? "active" : ""}
+                        to="/leads"
+                      >
+                        {t("DL Leads")}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
                         className={
                           pathname.includes("pipeline") ? "active" : ""
                         }
