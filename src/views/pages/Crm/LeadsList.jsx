@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ExportLeads from "../../../components/modelpopup/Crm/ExportLeads";
 import AddLeads from "../../../components/modelpopup/Crm/AddLeads";
@@ -46,7 +46,7 @@ const LeadsList = () => {
   }, []);
 
   const handleEditClick = (record) => {
-    setSelectedLead(record); // Set the selected lead data or ID
+    setSelectedLead(record);
   };
 
   const columns = [
@@ -67,8 +67,12 @@ const LeadsList = () => {
     {
       title: "Lead Name",
       dataIndex: "name",
-      render: (text) => (
-        <Link to="/leads-details" className="company-img">
+      render: (text, record) => (
+        <Link
+          to="/leads-details"
+          className="company-img"
+          state={{ leadData: record }}
+        >
           {text}
         </Link>
       ),
@@ -204,14 +208,6 @@ const LeadsList = () => {
     { value: "Contacted", label: "Contacted" },
     { value: "Lost", label: "Lost" },
   ];
-  const SourceName = [
-    { value: "--Select--", label: "--Select--" },
-    { value: "NovaWaveLLC", label: "NovaWaveLLC" },
-    { value: "SilverHawk", label: "SilverHawk" },
-    { value: "SummitPeak", label: "SummitPeak" },
-    { value: "HarborView", label: "HarborView" },
-    { value: "Redwood Inc", label: "Redwood Inc" },
-  ];
 
   const customStyles = {
     option: (provided, state) => ({
@@ -261,41 +257,6 @@ const LeadsList = () => {
       setFocused1(true);
     }
   };
-  //filter
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const handleToggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-  const [isFullScreen, setFullScreen] = useState(false);
-  const maximizeBtnRef = useRef(null);
-
-  // useEffect(() => {
-  //   const handleClick = () => {
-  //     if (!document.fullscreenElement) {
-  //       document.documentElement.requestFullscreen();
-  //       setFullScreen(true);
-  //     } else {
-  //       if (document.exitFullscreen) {
-  //         document.exitFullscreen();
-  //         setFullScreen(false);
-  //       }
-  //     }
-  //   };
-
-  //   const cleanup = () => {
-  //     if (isFullScreen && document.exitFullscreen) {
-  //       document.exitFullscreen();
-  //       setFullScreen(false);
-  //     }
-  //   };
-
-  //   const maximizeBtn = maximizeBtnRef.current;
-  //   maximizeBtn.addEventListener("click", handleClick);
-  //   return () => {
-  //     maximizeBtn.removeEventListener("click", handleClick);
-  //     cleanup();
-  //   };
-  // }, [isFullScreen]);
 
   if (loading) return <div>Loading...</div>;
 
@@ -323,7 +284,6 @@ const LeadsList = () => {
                     <Link to="#" className="grid-view btn btn-link">
                       <i className="las la-redo-alt" />
                     </Link>
-
                     <Link
                       to="#"
                       className={`list-view btn btn-link ${
