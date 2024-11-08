@@ -12,7 +12,7 @@ import SearchBox from "../../../components/SearchBox";
 import { BASE_URL } from "../../../constants/urls";
 
 const DlLeadsList = () => {
-  const { userData, profileID } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prevVisibility) => !prevVisibility);
