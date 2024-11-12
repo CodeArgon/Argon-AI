@@ -1,410 +1,328 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
-import Select from 'react-select';
-import { TagsInput } from 'react-tag-input-component';
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import axios from "axios";
+import { BASE_URL } from "../../../constants/urls";
 
-const EditLeads = () => {
-    const [tags] = useState(["Promotion ", "Rated "]);
-    const [owner] = useState(["James"]);
-    const companyList = [
-        { value: 1, label: "Select" },
-        { value: 2, label: "NovaWaveLLC" },
-        { value: 3, label: "SilverHawk" },
-        { value: 4, label: "SummitPeak" },
-    ];
-    const currency = [
-        { value: "Select", label: "Select" },
-        { value: "$", label: "$" },
-        { value: "€", label: "€" },
-    ];
-    const mode = [
-        { value: "Work", label: "Work" },
-        { value: "Home", label: "Home" },
-    ];
-    const mode1 = [
-        { value: "Work", label: "Work" },
-        { value: "Home", label: "Home" },
-    ];
-    const status = [
-        { value: "Select", label: "Select" },
-        { value: "Highy", label: "Highy" },
-        { value: "Low", label: "Low" },
-        { value: "Medium", label: "Medium" },
-    ];
-    const customStyles = {
-        option: (provided, state) => ({
-            ...provided,
-            backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
-            color: state.isFocused ? "#fff" : "#000",
-            "&:hover": {
-                backgroundColor: "#ff9b44",
-            },
-        }),
+const EditLeads = ({ leadData }) => {
+  const [leadName, setLeadName] = useState("");
+  const [leadGenManager, setLeadGenManager] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [source, setSource] = useState(null);
+  const [sources, setSources] = useState([]);
+  const [connects, setConnects] = useState(0);
+  const [medium, setMedium] = useState(null);
+  const [mediums, setMediums] = useState([]);
+  const [assignedTo, setAssignedTo] = useState(null);
+  const [accountExecutive, setAccountExecutive] = useState(null);
+  const [sdr, setSdr] = useState(null);
+  const [gora, setGora] = useState("");
+  const [notes, setNotes] = useState("");
+  const [users, setUsers] = useState([]);
+  const [dl, setDL] = useState([]);
+
+  const statusOptions = [
+    { value: 1, label: "Contacted" },
+    { value: 2, label: "Not Contacted" },
+    { value: 3, label: "Closed" },
+    { value: 4, label: "Lost" },
+  ];
+
+  useEffect(() => {
+    if (leadData) {
+      setLeadName(leadData.name || "");
+      setLeadGenManager(leadData.leadGenManager || null);
+      setStatus(leadData.status || null);
+      setSource(leadData.source || null);
+      setConnects(leadData.connects || 0);
+      setMedium(leadData.medium || null);
+      setAssignedTo(leadData.assignedTo || null);
+      setAccountExecutive(leadData.accountExecutive || null);
+      setSdr(leadData.sdr || null);
+      setGora(leadData.gora || "");
+      setNotes(leadData.notes || "");
+    }
+  }, [leadData]);
+
+  useEffect(() => {
+    const authToken = localStorage.getItem("BearerToken");
+
+    const fetchMediums = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}mediums/`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+        setMediums(
+          response.data.map((medium) => ({
+            value: medium.id,
+            label: medium.name,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching mediums:", error);
+      }
     };
-    const [inputSets, setInputSets] = useState([
-        {
-            id: 1,
-            namePlaceholder: 'Enter Name',
-            emailPlaceholder: 'Email Address',
+
+    const fetchSources = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}sources/`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+        setSources(
+          response.data.map((src) => ({ value: src.id, label: src.name }))
+        );
+      } catch (error) {
+        console.error("Error fetching sources:", error);
+      }
+    };
+
+    fetchMediums();
+    fetchSources();
+  }, []);
+
+  const fetchUsers = async () => {
+    const authToken = localStorage.getItem("BearerToken");
+
+    try {
+      const response = await fetch(`${BASE_URL}users/by-role/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
         },
-    ]);
-    const handleAddInputSet = () => {
-        const newInputSet = {
-            id: inputSets.length + 1,
-            namePlaceholder: 'Enter Name',
-            emailPlaceholder: 'Email Address',
-        };
-        setInputSets([...inputSets, newInputSet]);
-    };
+        body: JSON.stringify({ roles: ["Admin"] }),
+      });
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
 
-    const handleRemoveInputSet = (id) => {
-        const updatedInputSets = inputSets.filter((inputSet) => inputSet.id !== id);
-        setInputSets(updatedInputSets);
-    };
-    const [inputCompany, setInputCompany] = useState([
-        {
-            id: 1,
-            namePlaceholder: 'Enter Name',
-            emailPlaceholder: 'Email Address',
+  const fetchDLs = async () => {
+    const authToken = localStorage.getItem("BearerToken");
+
+    try {
+      const response = await fetch(`${BASE_URL}users/by-role/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
         },
-    ]);
-    const handleAddInputCompany = () => {
-        const newInputSet = {
-            id: inputCompany.length + 1,
-            namePlaceholder: 'Enter Name',
-            emailPlaceholder: 'Email Address',
-        };
-        setInputCompany([...inputSets, newInputSet]);
+        body: JSON.stringify({ roles: ["Employee"] }),
+      });
+      const data = await response.json();
+      setDL(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchDLs();
+  }, []);
+
+  const leadGenManagerOptions = users.map((user) => ({
+    value: user.id,
+    label: user.username,
+  }));
+  const DLsOptions = dl.map((user) => ({
+    value: user.id,
+    label: user.username,
+  }));
+
+  const handleEditLead = async (e) => {
+    e.preventDefault();
+    const leadData = {
+      name: leadName,
+      lead_gen_manager_id: leadGenManager?.value,
+      source_id: source?.value,
+      connects: connects,
+      medium_id: medium?.value,
+      assigned_to_id: assignedTo?.value,
+      account_executive_id: accountExecutive?.value,
+      sdr_id: sdr?.value,
+      gora: gora,
+      communication_notes: notes,
     };
 
-    const handleRemoveInputCompany = (id) => {
-        const updatedInputSets = inputCompany.filter((inputSet) => inputSet.id !== id);
-        setInputCompany(updatedInputSets);
-    };
-    const [inputEmail, setEmail] = useState([
+    try {
+      const authToken = localStorage.getItem("BearerToken");
+      const response = await axios.put(
+        `${BASE_URL}leads/${leadData.id}/`,
+        leadData,
         {
-            id: 1,
-            emailPlaceholder: 'Email Address',
-        },
-    ]);
-    const handleAddEmailInputSet = () => {
-        const newInputSet = {
-            id: inputEmail.length + 1,
-            namePlaceholder: 'Enter Name',
-            emailPlaceholder: 'Email Address',
-        };
-        setEmail([...inputEmail, newInputSet]);
-    };
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Lead updated successfully:", response.data);
+    } catch (error) {
+      console.error("Error updating lead:", error);
+    }
+  };
 
-    const handleRemoveEmailInputSet = (id) => {
-        const updatedInputSets = inputSets.filter((inputSet) => inputSet.id !== id);
-        setEmail(updatedInputSets);
-    };
-    return (
-        <div>
-            {/* Add Leads */}
-            <div
-                className="modal custom-modal fade custom-modal-two modal-padding"
-                id="edit_leads"
-                role="dialog"
+  return (
+    <div
+      className="modal custom-modal fade custom-modal-two modal-padding"
+      id="edit_leads"
+      role="dialog"
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-header header-border justify-content-between p-0">
+            <h5 className="modal-title">Edit Lead</h5>
+            <button
+              style={{ backgroundColor: "#667eea", borderColor: "white" }}
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
             >
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header header-border justify-content-between p-0">
-                            <h5 className="modal-title">Edit New Lead</h5>
-                            <button
-                                type="button"
-                                className="btn-close position-static"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div className="modal-body p-0">
-                            <form action="/leads">
-                                <div className="contact-input-set">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Lead Name <span className="text-danger">*</span>
-                                                </label>
-                                                <input className="form-control" type="text"  value="Adams"/>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="input-block mb-3">
-                                                <h5 className="mb-3">Lead Type</h5>
-                                                <div className="status-radio-btns d-flex">
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test1"
-                                                            name="radio-group"
-                                                            defaultChecked={true}
-                                                        />
-                                                        <label htmlFor="test1">Person</label>
-                                                    </div>
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test2"
-                                                            name="radio-group"
-                                                        />
-                                                        <label htmlFor="test2">Organization</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12 company-add-col">
-                                            {inputCompany.map((inputSet, index) => (
-                                                <div className="input-block mb-3">
-                                                    <div className="d-flex justify-content-between align-items-center">
-                                                        <label className="col-form-label">
-                                                            Company <span className="text-danger">*</span>
-                                                        </label>
-                                                        <Link to="#" className="add-new add-new-company"
-                                                            onClick={index === 0 ? handleAddInputCompany : () => handleRemoveInputCompany(inputSet.id)}>
-
-                                                            <i className={index === 0 ? 'las la-plus-circle' : ''} />
-                                                            Add New
-                                                        </Link>
-
-                                                    </div>
-                                                    <Select
-                                                        options={companyList}
-                                                        placeholder="Select"
-                                                        styles={customStyles}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Value<span className="text-danger"> *</span>
-                                                </label>
-                                                <input className="form-control" type="text" value="10"/>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Currency <span className="text-danger">*</span>
-                                                </label>
-                                                <Select
-                                                    options={currency}
-                                                    placeholder="$"
-                                                    styles={customStyles}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12 lead-phno-col del-phno-col">
-                                            {inputSets.map((inputSet, index) => (
-                                                <div className="row">
-                                                    <div className="col-lg-8">
-                                                        <div className="input-block mb-3">
-                                                            <label className="col-form-label">
-                                                                Phone Number <span className="text-danger" value="+1 546555455">*</span>
-                                                            </label>
-                                                            <input className="form-control" type="text" placeholder={inputSet.namePlaceholder} />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-lg-4 d-flex align-items-end">
-                                                        <div className="input-block mb-3 d-flex align-items-center">
-                                                            <div className="w-100">
-                                                                <Select
-                                                                    options={mode}
-                                                                    styles={customStyles}
-                                                                    placeholder={inputSet.namePlaceholder}
-                                                                />
-                                                            </div>
-                                                            <Link to="#" className="add-modal-row add-lead-phno"
-                                                                onClick={index === 0 ? handleAddInputSet : () => handleRemoveInputSet(inputSet.id)}>
-
-                                                                <i className={index === 0 ? 'las la-plus-circle' : 'las la-trash'} />
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="col-md-12 lead-email-col del-email-col">
-                                            {inputEmail.map((inputSet, index) => (
-                                                <div className="row">
-                                                    <div className="col-lg-8">
-                                                        <div className="input-block mb-3">
-                                                            <label className="col-form-label">
-                                                                Email <span className="text-danger">*</span>
-                                                            </label>
-                                                            <input className="form-control" type="email" />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-lg-4 d-flex align-items-end">
-                                                        <div className="input-block mb-3 d-flex align-items-center">
-                                                            <div className="w-100">
-                                                                <Select
-                                                                    options={mode1}
-                                                                    placeholder="Select"
-                                                                    styles={customStyles}
-                                                                />
-                                                            </div>
-                                                            <Link to="#" className="add-modal-row add-lead-email"
-                                                                onClick={index === 0 ? handleAddEmailInputSet : () => handleRemoveEmailInputSet(inputSet.id)}>
-
-                                                                <i className={index === 0 ? 'las la-plus-circle' : 'las la-trash'} />
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Source <span className="text-danger">*</span>
-                                                </label>
-                                                <input className="form-control" type="text" value="Lost" />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Industry <span className="text-danger" value="Highly">*</span>
-                                                </label>
-
-                                                <Select
-                                                    options={status}
-                                                    placeholder="Select"
-                                                    styles={customStyles}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="input-block tag-with-img mb-3">
-                                                <label className="col-form-label">
-                                                    Owner <span className="text-danger">*</span>
-                                                </label>
-
-                                                <div>
-                                                    <TagsInput
-                                                        tags={owner}
-                                                        value={owner}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Tags <span className="text-danger">*</span>
-                                                </label>
-                                                <div>
-                                                    <TagsInput
-                                                        tags={tags}
-                                                        value={tags}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-12">
-                                            <div className="input-block mb-3">
-                                                <label className="col-form-label">
-                                                    Description <span className="text-danger">*</span>
-                                                </label>
-                                                <textarea
-                                                    className="form-control"
-                                                    rows={5}
-                                                    defaultValue={""}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="input-block mb-3">
-                                                <h5 className="mb-3">Visibility</h5>
-                                                <div className="status-radio-btns d-flex">
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test3"
-                                                            name="radio-group2"
-                                                            defaultChecked="true"
-                                                        />
-                                                        <label htmlFor="test3">Pubilc</label>
-                                                    </div>
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test4"
-                                                            name="radio-group2"
-                                                        />
-                                                        <label htmlFor="test4">Private</label>
-                                                    </div>
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test5"
-                                                            name="radio-group2"
-                                                        />
-                                                        <label htmlFor="test5">Select People</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="input-block mb-3">
-                                                <h5 className="mb-3">Status</h5>
-                                                <div className="status-radio-btns d-flex">
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test6"
-                                                            name="radio-group3"
-                                                            defaultChecked="true"
-                                                        />
-                                                        <label htmlFor="test6">Active</label>
-                                                    </div>
-                                                    <div className="people-status-radio">
-                                                        <input
-                                                            type="radio"
-                                                            className="status-radio"
-                                                            id="test7"
-                                                            name="radio-group3"
-                                                        />
-                                                        <label htmlFor="test7">Inactive</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-12 text-end form-wizard-button">
-                                            <button
-                                                className="button btn-lights reset-btn"
-                                                type="reset"
-                                                data-bs-dismiss="modal"
-                                            >
-                                                Reset
-                                            </button>
-                                            <Link className="btn btn-primary" tp="#">
-                                                Save Lead
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+              <span style={{ color: "white" }}>x</span>
+            </button>
+          </div>
+          <div className="modal-body p-0">
+            <form onSubmit={handleEditLead}>
+              <div className="contact-input-set">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Lead Name <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        value={leadName}
+                        onChange={(e) => setLeadName(e.target.value)}
+                        required
+                      />
                     </div>
-                </div>
-            </div>
-            {/* /Add Leads */}
-        </div>
-    )
-}
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">Lead Gen Manager</label>
+                    <Select
+                      options={leadGenManagerOptions}
+                      value={leadGenManager}
+                      onChange={setLeadGenManager}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">Source</label>
+                    <Select
+                      options={sources}
+                      value={source}
+                      onChange={setSource}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">Connects</label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        value={connects}
+                        onChange={(e) => setConnects(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">Medium</label>
+                    <Select
+                      options={mediums}
+                      value={medium}
+                      onChange={setMedium}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">Assigned To</label>
+                    <Select
+                      options={DLsOptions}
+                      value={assignedTo}
+                      onChange={setAssignedTo}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">Account Executive</label>
+                    <Select
+                      options={DLsOptions}
+                      value={accountExecutive}
+                      onChange={setAccountExecutive}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">SDR</label>
+                    <Select
+                      options={DLsOptions}
+                      value={sdr}
+                      onChange={setSdr}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label">Status</label>
+                    <Select
+                      options={statusOptions}
+                      value={status}
+                      onChange={setStatus}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Client Name(Gora)
+                      </label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        value={gora}
+                        onChange={(e) => setGora(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-12">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Communication Notes
+                      </label>
+                      <textarea
+                        className="form-control"
+                        rows={5}
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="input-block mb-3">
+                    <label className="col-form-label">Upload Files</label>
+                    <input className="form-control" type="file" required />
+                  </div>
 
-export default EditLeads
+                  <div className="col-lg-12 text-end form-wizard-button">
+                    <button className="btn btn-primary" type="submit">
+                      Update Lead
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EditLeads;

@@ -1,5 +1,5 @@
 import { Table } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ExportLeads from "../../../components/modelpopup/Crm/ExportLeads";
 import AddLeads from "../../../components/modelpopup/Crm/AddLeads";
@@ -10,7 +10,7 @@ import EditLeads from "../../../components/modelpopup/Crm/EditLeads";
 import SearchBox from "../../../components/SearchBox";
 import { BASE_URL } from "../../../constants/urls";
 
-const BdLeadsList = () => {
+const LeadsList = () => {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prevVisibility) => !prevVisibility);
@@ -32,7 +32,6 @@ const BdLeadsList = () => {
         if (response.ok) {
           const data = await response.json();
           setData(data);
-          console.log("Result", data);
         } else {
           console.error("Failed to fetch leads:", response.statusText);
         }
@@ -47,7 +46,7 @@ const BdLeadsList = () => {
   }, []);
 
   const handleEditClick = (record) => {
-    setSelectedLead(record); // Set the selected lead data or ID
+    setSelectedLead(record);
   };
 
   const columns = [
@@ -68,8 +67,12 @@ const BdLeadsList = () => {
     {
       title: "Lead Name",
       dataIndex: "name",
-      render: (text) => (
-        <Link to="/leads-details" className="company-img">
+      render: (text, record) => (
+        <Link
+          to="/leads-details"
+          className="company-img"
+          state={{ leadData: record }}
+        >
           {text}
         </Link>
       ),
@@ -205,14 +208,6 @@ const BdLeadsList = () => {
     { value: "Contacted", label: "Contacted" },
     { value: "Lost", label: "Lost" },
   ];
-  const SourceName = [
-    { value: "--Select--", label: "--Select--" },
-    { value: "NovaWaveLLC", label: "NovaWaveLLC" },
-    { value: "SilverHawk", label: "SilverHawk" },
-    { value: "SummitPeak", label: "SummitPeak" },
-    { value: "HarborView", label: "HarborView" },
-    { value: "Redwood Inc", label: "Redwood Inc" },
-  ];
 
   const customStyles = {
     option: (provided, state) => ({
@@ -262,41 +257,6 @@ const BdLeadsList = () => {
       setFocused1(true);
     }
   };
-  //filter
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const handleToggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-  const [isFullScreen, setFullScreen] = useState(false);
-  const maximizeBtnRef = useRef(null);
-
-  // useEffect(() => {
-  //   const handleClick = () => {
-  //     if (!document.fullscreenElement) {
-  //       document.documentElement.requestFullscreen();
-  //       setFullScreen(true);
-  //     } else {
-  //       if (document.exitFullscreen) {
-  //         document.exitFullscreen();
-  //         setFullScreen(false);
-  //       }
-  //     }
-  //   };
-
-  //   const cleanup = () => {
-  //     if (isFullScreen && document.exitFullscreen) {
-  //       document.exitFullscreen();
-  //       setFullScreen(false);
-  //     }
-  //   };
-
-  //   const maximizeBtn = maximizeBtnRef.current;
-  //   maximizeBtn.addEventListener("click", handleClick);
-  //   return () => {
-  //     maximizeBtn.removeEventListener("click", handleClick);
-  //     cleanup();
-  //   };
-  // }, [isFullScreen]);
 
   if (loading) return <div>Loading...</div>;
 
@@ -324,7 +284,6 @@ const BdLeadsList = () => {
                     <Link to="#" className="grid-view btn btn-link">
                       <i className="las la-redo-alt" />
                     </Link>
-
                     <Link
                       to="#"
                       className={`list-view btn btn-link ${
@@ -451,55 +410,8 @@ const BdLeadsList = () => {
 
           <hr />
           {/* /Search Filter */}
-          
           <div className="filter-section">
-            
-          </div>
-          <br />
-          <div className="row align-items-center" style={{alignContent:'center',alignItems:'center'}}>
-              <div className="col-md-2" >
-                <div className="card"   >
-                  <div
-                    className="card-body"
-                  >
-                    <h5>Total Leads</h5>
-                    <h6 className="counter">3,000</h6>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-2" >
-                <div className="card"   >
-                  <div
-                    className="card-body"
-                  >
-                    <h5>In process</h5>
-                    <h6 className="counter">1,500</h6>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-2">
-                <div className="card" >
-                  <div
-                    className="card-body"
-                   
-                  >
-                    <h5>Total Won</h5>
-                    <h6 className="counter">1050</h6>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-2" >
-                <div className="card">
-                  <div
-                    className="card-body"
-                  >
-                    <h5>Total Lost</h5>
-                    <h6 className="counter">450</h6>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-2" style={{flex:2}} >
-              <ul>
+            <ul>
               <li>
                 <div className="view-icons">
                   <Link
@@ -514,8 +426,8 @@ const BdLeadsList = () => {
                 </div>
               </li>
             </ul>
-              </div>
-            </div>
+          </div>
+          <br />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -540,4 +452,4 @@ const BdLeadsList = () => {
   );
 };
 
-export default BdLeadsList;
+export default LeadsList;

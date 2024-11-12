@@ -1,16 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { company_icon_01, company_icon_02, company_icon_03, company_icon_04, company_icon_05, company_icon_06, company_icon_07, company_icon_08, company_icon_09, company_icon_10 } from '../../../Routes/ImagePath';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import {
+  company_icon_01,
+  company_icon_02,
+  company_icon_03,
+  company_icon_04,
+  company_icon_05,
+  company_icon_06,
+  company_icon_07,
+  company_icon_08,
+  company_icon_09,
+  company_icon_10,
+} from "../../../Routes/ImagePath";
+import { Link } from "react-router-dom";
 import { Table } from "antd";
-import Select from 'react-select';
-import CompaniesModal from '../../../components/modelpopup/CompaniesModal';
-import DateRangePicker from 'react-bootstrap-daterangepicker';
-import AddNotes from '../../../components/modelpopup/Crm/AddNotes';
-
-
+import Select from "react-select";
+import CompaniesModal from "../../../components/modelpopup/CompaniesModal";
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import AddNotes from "../../../components/modelpopup/Crm/AddNotes";
 
 const Companies = () => {
-
   const [showFilter, setShowFilter] = useState(false);
   const [fieldInputs, setFieldInputs] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -29,11 +37,16 @@ const Companies = () => {
       location: "Germany",
       rating: 4.2,
       owner: "Hendry",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star filled",
-      image: company_icon_01
-
+      image: company_icon_01,
     },
     {
       name: "BlueSky Industries",
@@ -43,10 +56,16 @@ const Companies = () => {
       location: "USA",
       rating: 5.0,
       owner: "Guillory",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_02
+      image: company_icon_02,
     },
     {
       name: "SilverHawk",
@@ -56,10 +75,16 @@ const Companies = () => {
       location: "Canada",
       rating: 3.5,
       owner: "Jami",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Inactive",
       stars: "fa fa-star filled",
-      image: company_icon_03
+      image: company_icon_03,
     },
     {
       name: "SummitPeak",
@@ -69,10 +94,16 @@ const Companies = () => {
       location: "India",
       rating: 4.5,
       owner: "Theresa",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_04
+      image: company_icon_04,
     },
     {
       name: "RiverStone Ventur",
@@ -82,10 +113,16 @@ const Companies = () => {
       location: "China",
       rating: 4.7,
       owner: "Espinosa",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_05
+      image: company_icon_05,
     },
     {
       name: "Bright Bridge Grp",
@@ -95,10 +132,16 @@ const Companies = () => {
       location: "Japan",
       rating: 5.0,
       owner: "Martin",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star filled",
-      image: company_icon_06
+      image: company_icon_06,
     },
     {
       name: "CoastalStar Co.",
@@ -108,11 +151,16 @@ const Companies = () => {
       location: "Indonesia",
       rating: 3.1,
       owner: "Newell",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_07
-
+      image: company_icon_07,
     },
     {
       name: "HarborView",
@@ -122,10 +170,16 @@ const Companies = () => {
       location: "Cuba",
       rating: 5.0,
       owner: "Janet",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_08
+      image: company_icon_08,
     },
     {
       name: "Golden Gate Ltd",
@@ -135,10 +189,16 @@ const Companies = () => {
       location: "Isreal",
       rating: 2.7,
       owner: "Craig",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_09
+      image: company_icon_09,
     },
     {
       name: "Redwood Inc",
@@ -148,15 +208,20 @@ const Companies = () => {
       location: "Colombia",
       rating: 3.0,
       owner: "Daniel",
-      social_links: ["la la-envelope", "la la-phone-volume", "lab la-facebook-messenger", "la la-skype", "la la-facebook"],
+      social_links: [
+        "la la-envelope",
+        "la la-phone-volume",
+        "lab la-facebook-messenger",
+        "la la-skype",
+        "la la-facebook",
+      ],
       status: "Active",
       stars: "fa fa-star",
-      image: company_icon_10
-    }
-  ]
+      image: company_icon_10,
+    },
+  ];
 
   const columns = [
-
     {
       title: "Name",
       dataIndex: "name",
@@ -169,8 +234,12 @@ const Companies = () => {
           </div>
           <div>
             <h2 className="table-avatar d-flex align-items-center table-padding">
-              <Link to="/company-details" className="company-img"><img src={record.image} alt="UserImage" /></Link>
-              <Link to="/company-details" className="profile-split">{record.name}</Link>
+              <Link to="/company-details" className="company-img">
+                <img src={record.image} alt="UserImage" />
+              </Link>
+              <Link to="/company-details" className="profile-split">
+                {record.name}
+              </Link>
             </h2>
           </div>
         </div>
@@ -186,26 +255,31 @@ const Companies = () => {
     {
       title: "Email",
       dataIndex: "email",
-      sorter: (a, b) =>
-        a.email.length - b.email.length,
+      sorter: (a, b) => a.email.length - b.email.length,
     },
 
     {
       title: "Tags",
       dataIndex: "tags",
-      render: (text) =>
-        <span className={
-          text === 'Promotion' ? 'badge badge-soft-info' :
-            text === 'Rated' ? 'badge badge-soft-warning' :
-              text === 'Rejected' ? 'badge badge-soft-danger' :
-                text === 'Calls' ? 'badge badge-soft-purple' :
+      render: (text) => (
+        <span
+          className={
+            text === "Promotion"
+              ? "badge badge-soft-info"
+              : text === "Rated"
+              ? "badge badge-soft-warning"
+              : text === "Rejected"
+              ? "badge badge-soft-danger"
+              : text === "Calls"
+              ? "badge badge-soft-purple"
+              : "badge badge-soft-danger"
+          }
+        >
+          {text}
+        </span>
+      ),
 
-                  'badge badge-soft-danger'}>
-          {text}</span>,
-
-
-      sorter: (a, b) =>
-        a.tags.length - b.tags.length,
+      sorter: (a, b) => a.tags.length - b.tags.length,
     },
     {
       title: "Location",
@@ -215,12 +289,12 @@ const Companies = () => {
     {
       title: "Rating",
       dataIndex: "rating",
-      render: (text) =>
+      render: (text) => (
         <div className="set-star">
-          <i className="fa fa-star filled me-2" />{text}
+          <i className="fa fa-star filled me-2" />
+          {text}
         </div>
-      ,
-
+      ),
       sorter: (a, b) => a.rating.length - b.rating.length,
     },
     {
@@ -229,32 +303,38 @@ const Companies = () => {
       sorter: (a, b) => a.owner.length - b.owner.length,
     },
 
-
     {
       title: "Contact",
       dataIndex: "Contact",
       render: () => (
         <ul className="social-links d-flex align-items-center">
           <li>
-            <Link to="#"><i className="la la-envelope" /></Link>
+            <Link to="#">
+              <i className="la la-envelope" />
+            </Link>
           </li>
           <li>
-            <Link to="#"><i className="la la-phone-volume" /></Link>
+            <Link to="#">
+              <i className="la la-phone-volume" />
+            </Link>
           </li>
           <li>
-            <Link to="#"><i className="lab la-facebook-messenger" /></Link>
+            <Link to="#">
+              <i className="lab la-facebook-messenger" />
+            </Link>
           </li>
           <li>
-            <Link to="#"><i className="la la-skype" /></Link>
+            <Link to="#">
+              <i className="la la-skype" />
+            </Link>
           </li>
           <li>
-            <Link to="#"><i className="la la-facebook " /></Link>
+            <Link to="#">
+              <i className="la la-facebook " />
+            </Link>
           </li>
         </ul>
-
       ),
-
-
 
       sorter: (a, b) => a.owner.length - b.owner.length,
     },
@@ -263,17 +343,22 @@ const Companies = () => {
       dataIndex: "status",
       render: (text) => (
         <div className="dropdown action-label">
-          <Link to="#" className={text === "Inactive" ? "btn btn-white btn-sm badge-outline-danger status-color-dg" :
-            "btn btn-white btn-sm badge-outline-success status-color"}> {text} </Link>
+          <Link
+            to="#"
+            className={
+              text === "Inactive"
+                ? "btn btn-white btn-sm badge-outline-danger status-color-dg"
+                : "btn btn-white btn-sm badge-outline-success status-color"
+            }
+          >
+            {" "}
+            {text}{" "}
+          </Link>
         </div>
-
       ),
-
-
 
       sorter: (a, b) => a.owner.length - b.owner.length,
     },
-
 
     {
       title: "Action",
@@ -306,32 +391,37 @@ const Companies = () => {
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
             <Link className="dropdown-item" to="/company-details">
-              <i className="fa-regular fa-eye"></i> Preview</Link>
+              <i className="fa-regular fa-eye"></i> Preview
+            </Link>
 
-              <Link className="dropdown-item" to="#" data-bs-toggle="modal" data-bs-target="#add_notes" ><i class="la la-file-prescription"></i> Notes</Link>
-
-
+            <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#add_notes"
+            >
+              <i class="la la-file-prescription"></i> Notes
+            </Link>
           </div>
         </div>
       ),
     },
   ];
 
-
   const optionSort = [
-    { value: 'Germany', label: 'Germany' },
-    { value: 'USA', label: 'USA' },
-    { value: 'Canada', label: 'Canada' },
-    { value: 'India', label: 'India' },
-    { value: 'China', label: 'China' }
+    { value: "Germany", label: "Germany" },
+    { value: "USA", label: "USA" },
+    { value: "Canada", label: "Canada" },
+    { value: "India", label: "India" },
+    { value: "China", label: "China" },
   ];
 
   const optionsSortValue = [
-    { value: 'sortAlphabet', label: 'Sort By Alphabet' },
-    { value: 'ascending', label: 'Ascending' },
-    { value: 'descending', label: 'Descending' },
-    { value: 'recentlyViewed', label: 'Recently Viewed' },
-    { value: 'recentlyAdded', label: 'Recently Added' }
+    { value: "sortAlphabet", label: "Sort By Alphabet" },
+    { value: "ascending", label: "Ascending" },
+    { value: "descending", label: "Descending" },
+    { value: "recentlyViewed", label: "Recently Viewed" },
+    { value: "recentlyAdded", label: "Recently Added" },
   ];
 
   const handleLabelClick = () => {
@@ -417,8 +507,6 @@ const Companies = () => {
     timePicker: false,
   };
 
-
-
   const [isFullScreen, setFullScreen] = useState(false);
   const maximizeBtnRef = useRef(null);
 
@@ -443,30 +531,27 @@ const Companies = () => {
     };
 
     const maximizeBtn = maximizeBtnRef.current;
-    maximizeBtn.addEventListener('click', handleClick);
+    maximizeBtn.addEventListener("click", handleClick);
 
     // Cleanup function to remove the event listener and exit fullscreen on component unmount
     return () => {
-      maximizeBtn.removeEventListener('click', handleClick);
+      maximizeBtn.removeEventListener("click", handleClick);
       cleanup();
     };
   }, [isFullScreen]);
 
-
   const customStyles = {
     option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
-        color: state.isFocused ? "#fff" : "#000",
-        "&:hover": {
-            backgroundColor: "#ff9b44",
-        },
+      ...provided,
+      backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
+      color: state.isFocused ? "#fff" : "#000",
+      "&:hover": {
+        backgroundColor: "#ff9b44",
+      },
     }),
-};
+  };
 
   return (
-
-
     <div className="page-wrapper">
       {/* Page Content */}
       <div className="content container-fluid">
@@ -476,28 +561,69 @@ const Companies = () => {
             <div className="col-md-4">
               <h3 className="page-title">Companies</h3>
               <ul className="breadcrumb">
-                <li className="breadcrumb-item"><Link to="/admin-dashboard">Dashboard</Link></li>
+                <li className="breadcrumb-item">
+                  <Link to="/admin-dashboard">Dashboard</Link>
+                </li>
                 <li className="breadcrumb-item active">Companies</li>
               </ul>
             </div>
             <div className="col-md-8 float-end ms-auto">
               <div className="d-flex title-head">
                 <div className="view-icons">
-                  <Link to="#" className="grid-view btn btn-link"><i className="las la-redo-alt" /></Link>
-                  <Link to="#" className="list-view btn btn-link" id="collapse-header" ref={maximizeBtnRef}><i className="las la-expand-arrows-alt" /></Link>
-                  <Link to="#" className={fieldInputs ? "list-view btn btn-link active-filter" : "list-view btn btn-link"} id="filter_search" onClick={() => setFieldInputs(!fieldInputs)}><i className="las la-filter" /></Link>
+                  <Link to="#" className="grid-view btn btn-link">
+                    <i className="las la-redo-alt" />
+                  </Link>
+                  <Link
+                    to="#"
+                    className="list-view btn btn-link"
+                    id="collapse-header"
+                    ref={maximizeBtnRef}
+                  >
+                    <i className="las la-expand-arrows-alt" />
+                  </Link>
+                  <Link
+                    to="#"
+                    className={
+                      fieldInputs
+                        ? "list-view btn btn-link active-filter"
+                        : "list-view btn btn-link"
+                    }
+                    id="filter_search"
+                    onClick={() => setFieldInputs(!fieldInputs)}
+                  >
+                    <i className="las la-filter" />
+                  </Link>
                 </div>
                 <div className="form-sort">
-                  <Link to="#" className="list-view btn btn-link" data-bs-toggle="modal" data-bs-target="#export"><i className="las la-file-export" />Export</Link>
+                  <Link
+                    to="#"
+                    className="list-view btn btn-link"
+                    data-bs-toggle="modal"
+                    data-bs-target="#export"
+                  >
+                    <i className="las la-file-export" />
+                    Export
+                  </Link>
                 </div>
-                <Link to="#" className="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_company"><i className="la la-plus-circle" /> Add Company</Link>
+                <Link
+                  to="#"
+                  className="btn btn-sm btn-primary add-btn"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add_company"
+                >
+                  <i className="la la-plus-circle" /> Add Company
+                </Link>
               </div>
             </div>
           </div>
         </div>
         {/* /Page Header */}
         {/* Search Filter */}
-        <div className="filter-filelds" id="filter_inputs" style={{ display: fieldInputs ? "block" : "none" }} >
+        <div
+          className="filter-filelds"
+          id="filter_inputs"
+          style={{ display: fieldInputs ? "block" : "none" }}
+        >
           <div className="row filter-row">
             <div className="col-xl-2">
               <div
@@ -571,7 +697,6 @@ const Companies = () => {
                   />
                 </DateRangePicker>
                 <label className="focus-label">From - To Date</label>
-
               </div>
             </div>
             <div className="col-xl-2">
@@ -587,7 +712,10 @@ const Companies = () => {
               </div>
             </div>
             <div className="col-xl-2">
-              <Link to="#" className="btn btn-success w-100"> Search </Link>
+              <Link to="#" className="btn btn-success w-100">
+                {" "}
+                Search{" "}
+              </Link>
             </div>
           </div>
         </div>
@@ -597,8 +725,12 @@ const Companies = () => {
           <ul>
             <li>
               <div className="view-icons">
-                <Link to="/companies" className="list-view btn btn-link active"><i className="las la-list" /></Link>
-                <Link to="/companies-grid" className="grid-view btn btn-link"><i className="las la-th" /></Link>
+                <Link to="/companies" className="list-view btn btn-link active">
+                  <i className="las la-list" />
+                </Link>
+                <Link to="/companies-grid" className="grid-view btn btn-link">
+                  <i className="las la-th" />
+                </Link>
               </div>
             </li>
             <li>
@@ -610,15 +742,30 @@ const Companies = () => {
                   className="select w-100"
                   isSearchable={false}
                   styles={customStyles}
-
                 />
               </div>
             </li>
             <li>
-
-              <div className={showFilter ? "form-sorts dropdown table-filter-show" : "form-sorts dropdown"} >
-                <Link to="#" className="dropdown-toggle" id="table-filter" onClick={() => setShowFilter(!showFilter)}><i className="las la-filter me-2" />Filter</Link>
-                <div className="filter-dropdown-menu" style={{ display: showFilter ? "block" : "none" }}>
+              <div
+                className={
+                  showFilter
+                    ? "form-sorts dropdown table-filter-show"
+                    : "form-sorts dropdown"
+                }
+              >
+                <Link
+                  to="#"
+                  className="dropdown-toggle"
+                  id="table-filter"
+                  onClick={() => setShowFilter(!showFilter)}
+                >
+                  <i className="las la-filter me-2" />
+                  Filter
+                </Link>
+                <div
+                  className="filter-dropdown-menu"
+                  style={{ display: showFilter ? "block" : "none" }}
+                >
                   <div className="filter-set-view">
                     <div className="filter-set-head">
                       <h4>Filter</h4>
@@ -626,9 +773,22 @@ const Companies = () => {
                     <div className="accordion" id="accordionExample">
                       <div className="filter-set-content">
                         <div className="filter-set-content-head">
-                          <Link to="#" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Rating<i className="las la-angle-right" /></Link>
+                          <Link
+                            to="#"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true"
+                            aria-controls="collapseOne"
+                          >
+                            Rating
+                            <i className="las la-angle-right" />
+                          </Link>
                         </div>
-                        <div className="filter-set-contents accordion-collapse collapse show" id="collapseOne" data-bs-parent="#accordionExample">
+                        <div
+                          className="filter-set-contents accordion-collapse collapse show"
+                          id="collapseOne"
+                          data-bs-parent="#accordionExample"
+                        >
                           <ul>
                             <li>
                               <div className="filter-checks">
@@ -715,9 +875,22 @@ const Companies = () => {
                       </div>
                       <div className="filter-set-content">
                         <div className="filter-set-content-head">
-                          <Link to="#" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Owner<i className="las la-angle-right" /></Link>
+                          <Link
+                            to="#"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo"
+                            aria-expanded="false"
+                            aria-controls="collapseTwo"
+                          >
+                            Owner
+                            <i className="las la-angle-right" />
+                          </Link>
                         </div>
-                        <div className="filter-set-contents accordion-collapse collapse" id="collapseTwo" data-bs-parent="#accordionExample">
+                        <div
+                          className="filter-set-contents accordion-collapse collapse"
+                          id="collapseTwo"
+                          data-bs-parent="#accordionExample"
+                        >
                           <ul>
                             <li>
                               <div className="filter-checks">
@@ -779,9 +952,22 @@ const Companies = () => {
                       </div>
                       <div className="filter-set-content">
                         <div className="filter-set-content-head">
-                          <Link to="#" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Tags<i className="las la-angle-right" /></Link>
+                          <Link
+                            to="#"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree"
+                            aria-expanded="false"
+                            aria-controls="collapseThree"
+                          >
+                            Tags
+                            <i className="las la-angle-right" />
+                          </Link>
                         </div>
-                        <div className="filter-set-contents accordion-collapse collapse" id="collapseThree" data-bs-parent="#accordionExample">
+                        <div
+                          className="filter-set-contents accordion-collapse collapse"
+                          id="collapseThree"
+                          data-bs-parent="#accordionExample"
+                        >
                           <ul>
                             <li>
                               <div className="filter-checks">
@@ -843,8 +1029,12 @@ const Companies = () => {
                       </div>
                     </div>
                     <div className="filter-reset-btns">
-                      <Link to="#" className="btn btn-light">Reset</Link>
-                      <Link to="#" className="btn btn-primary">Filter</Link>
+                      <Link to="#" className="btn btn-light">
+                        Reset
+                      </Link>
+                      <Link to="#" className="btn btn-primary">
+                        Filter
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -853,9 +1043,18 @@ const Companies = () => {
             <li>
               <div className="search-set">
                 <div className="search-input">
-                  <Link to="#" className="btn btn-searchset"><i className="las la-search" /></Link>
+                  <Link to="#" className="btn btn-searchset">
+                    <i className="las la-search" />
+                  </Link>
                   <div className="dataTables_filter">
-                    <label> <input type="search" className="form-control form-control-sm" placeholder="Search" /></label>
+                    <label>
+                      {" "}
+                      <input
+                        type="search"
+                        className="form-control form-control-sm"
+                        placeholder="Search"
+                      />
+                    </label>
                   </div>
                 </div>
               </div>
@@ -876,12 +1075,9 @@ const Companies = () => {
         </div>
       </div>
       <CompaniesModal />
-      <AddNotes/>
+      <AddNotes />
     </div>
+  );
+};
 
-
-
-  )
-}
-
-export default Companies
+export default Companies;

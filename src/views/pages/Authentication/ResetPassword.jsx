@@ -3,6 +3,7 @@ import { Applogo } from "../../../Routes/ImagePath";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../../constants/urls";
+import Swal from "sweetalert2";
 
 const ChangePassword = () => {
   const { uid, token } = useParams();
@@ -11,12 +12,12 @@ const ChangePassword = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
-  // const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
+      Swal.fire("Passwords don't match.");
       setError("Passwords don't match.");
       return;
     }
@@ -33,8 +34,9 @@ const ChangePassword = () => {
         }
       );
       console.log(response);
-      setMessage("Password has been reset successfully.");
+      Swal.fire("Password has been reset successfully.");
       navigate("/login");
+      setMessage("Password has been reset successfully.");
     } catch (error) {
       setError("Invalid token or the token has expired.");
     }

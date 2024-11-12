@@ -15,7 +15,8 @@ const ContactContents = () => {
                   to="#"
                   className="btn btn-primary btn-block w-100"
                   data-bs-toggle="modal"
-                  data-bs-target="#add_contact">
+                  data-bs-target="#add_contact"
+                >
                   <i className="fa fa-plus" /> Add Contact
                 </Link>
                 <div className="roles-menu">
@@ -41,9 +42,7 @@ const ContactContents = () => {
                     <li key={index}>
                       <div className="contact-cont">
                         <div className="float-start user-img">
-                          <Link
-                            to="/profile"
-                            className="avatar">
+                          <Link to="/profile" className="avatar">
                             <img
                               className="rounded-circle"
                               alt=""
@@ -66,7 +65,8 @@ const ContactContents = () => {
                               to="#"
                               className="dropdown-toggle action-icon"
                               data-bs-toggle="dropdown"
-                              aria-expanded="false">
+                              aria-expanded="false"
+                            >
                               <i className="material-icons">more_vert</i>
                             </Link>
                             <div className="dropdown-menu dropdown-menu-right">
@@ -74,14 +74,16 @@ const ContactContents = () => {
                                 className="dropdown-item"
                                 to="#"
                                 data-bs-toggle="modal"
-                                data-bs-target="#edit_contact">
+                                data-bs-target="#edit_contact"
+                              >
                                 Edit
                               </Link>
                               <Link
                                 className="dropdown-item"
                                 to="#"
                                 data-bs-toggle="modal"
-                                data-bs-target="#delete_contact">
+                                data-bs-target="#delete_contact"
+                              >
                                 Delete
                               </Link>
                             </div>

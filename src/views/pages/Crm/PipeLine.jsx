@@ -1,13 +1,13 @@
-import { Table } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
-import DatePicker from 'react-datepicker'
-import { Link } from 'react-router-dom'
-import Select from 'react-select'
-import ExportLeads from '../../../components/modelpopup/Crm/ExportLeads'
-import AddPipeLine from '../../../components/modelpopup/Crm/AddPipeLine'
-import SearchBox from '../../../components/SearchBox'
-import EditPipeLine from '../../../components/modelpopup/Crm/EditPipeLine'
-import DetelePipeLine from '../../../components/modelpopup/Crm/DetelePipeLine'
+import { Table } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import DatePicker from "react-datepicker";
+import { Link } from "react-router-dom";
+import Select from "react-select";
+import ExportLeads from "../../../components/modelpopup/Crm/ExportLeads";
+import AddPipeLine from "../../../components/modelpopup/Crm/AddPipeLine";
+import SearchBox from "../../../components/SearchBox";
+import EditPipeLine from "../../../components/modelpopup/Crm/EditPipeLine";
+import DetelePipeLine from "../../../components/modelpopup/Crm/DetelePipeLine";
 
 const PipeLine = () => {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -54,19 +54,19 @@ const PipeLine = () => {
     }
   };
   const sortoption = [
-    { value: 'Sort By Alphabet', label: 'Sort By Alphabet' },
-    { value: 'Ascending', label: 'Ascending' },
-    { value: 'Descending', label: 'Descending' },
-    { value: 'Recently Viewed', label: 'Recently Viewed' },
-    { value: 'Recently Added', label: 'Recently Added' },
+    { value: "Sort By Alphabet", label: "Sort By Alphabet" },
+    { value: "Ascending", label: "Ascending" },
+    { value: "Descending", label: "Descending" },
+    { value: "Recently Viewed", label: "Recently Viewed" },
+    { value: "Recently Added", label: "Recently Added" },
   ];
   const pipelinelist = [
-    { value: '--Select--', label: '--Select--' },
-    { value: 'Win', label: 'Win' },
-    { value: 'In PipeLine', label: 'In PipeLine' },
-    { value: 'Conversation', label: 'Conversation' },
-    { value: 'Folllow Up', label: 'Folllow Up' },
-    { value: 'Lost', label: 'Lost' },
+    { value: "--Select--", label: "--Select--" },
+    { value: "Win", label: "Win" },
+    { value: "In PipeLine", label: "In PipeLine" },
+    { value: "Conversation", label: "Conversation" },
+    { value: "Folllow Up", label: "Folllow Up" },
+    { value: "Lost", label: "Lost" },
   ];
 
   const customStyles = {
@@ -159,8 +159,8 @@ const PipeLine = () => {
       Stages: "Lost",
       CreatedDate: "28 June 2024",
       Status: "Active",
-    }
-  ]
+    },
+  ];
   const columns = [
     {
       title: "Pipeline Name",
@@ -179,31 +179,52 @@ const PipeLine = () => {
       sorter: (a, b) => a.NoofDeals.length - b.NoofDeals.length,
     },
     {
-      title: 'Stages',
-      dataIndex: 'Stages',
+      title: "Stages",
+      dataIndex: "Stages",
       render: (text, record) => (
-        <div className='pipeline-progress d-flex align-items-center'>
-          <div className='progress'>
-            {text === 'In Pipeline' && (
-              <div className='progress-bar progress-bar-violet' role='progressbar'></div>
+        <div className="pipeline-progress d-flex align-items-center">
+          <div className="progress">
+            {text === "In Pipeline" && (
+              <div
+                className="progress-bar progress-bar-violet"
+                role="progressbar"
+              ></div>
             )}
-            {text === 'Win' && (
-              <div className='progress-bar progress-bar-success' role='progressbar'></div>
+            {text === "Win" && (
+              <div
+                className="progress-bar progress-bar-success"
+                role="progressbar"
+              ></div>
             )}
-            {text === 'Follow Up' && (
-              <div className='progress-bar progress-bar-warning' role='progressbar'></div>
+            {text === "Follow Up" && (
+              <div
+                className="progress-bar progress-bar-warning"
+                role="progressbar"
+              ></div>
             )}
-            {text === 'In PipeLine' && (
-              <div className='progress-bar progress-bar-violet' role='progressbar'></div>
+            {text === "In PipeLine" && (
+              <div
+                className="progress-bar progress-bar-violet"
+                role="progressbar"
+              ></div>
             )}
-            {text === 'Schedule Service' && (
-              <div className='progress-bar progress-bar-pink' role='progressbar'></div>
+            {text === "Schedule Service" && (
+              <div
+                className="progress-bar progress-bar-pink"
+                role="progressbar"
+              ></div>
             )}
-            {text === 'Lost' && (
-              <div className='progress-bar progress-bar-danger' role='progressbar'></div>
+            {text === "Lost" && (
+              <div
+                className="progress-bar progress-bar-danger"
+                role="progressbar"
+              ></div>
             )}
-            {text === 'Conversation' && (
-              <div className='progress-bar progress-bar-info' role='progressbar'></div>
+            {text === "Conversation" && (
+              <div
+                className="progress-bar progress-bar-info"
+                role="progressbar"
+              ></div>
             )}
           </div>
           <span>{text}</span>
@@ -245,7 +266,9 @@ const PipeLine = () => {
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
-            <Link class="dropdown-item" to="/leads-details"><i class="fa-regular fa-eye"></i> Preview</Link>
+            <Link class="dropdown-item" to="/leads-details">
+              <i class="fa-regular fa-eye"></i> Preview
+            </Link>
           </div>
         </div>
       ),
@@ -293,11 +316,11 @@ const PipeLine = () => {
     };
 
     const maximizeBtn = maximizeBtnRef.current;
-    maximizeBtn.addEventListener('click', handleClick);
+    maximizeBtn.addEventListener("click", handleClick);
 
     // Cleanup function to remove the event listener and exit fullscreen on component unmount
     return () => {
-      maximizeBtn.removeEventListener('click', handleClick);
+      maximizeBtn.removeEventListener("click", handleClick);
       cleanup();
     };
   }, [isFullScreen]);
@@ -323,10 +346,7 @@ const PipeLine = () => {
               <div className="col-md-8 float-end ms-auto">
                 <div className="d-flex title-head">
                   <div className="view-icons">
-                    <Link
-                      to="#"
-                      className="grid-view btn btn-link"
-                    >
+                    <Link to="#" className="grid-view btn btn-link">
                       <i className="las la-redo-alt" />
                     </Link>
                     <Link
@@ -339,8 +359,11 @@ const PipeLine = () => {
                     </Link>
                     <Link
                       to="#"
-                      className={`list-view btn btn-link ${isFilterVisible ? "active-filter" : ""}`}
-                      id="filter_search" onClick={toggleFilterVisibility}
+                      className={`list-view btn btn-link ${
+                        isFilterVisible ? "active-filter" : ""
+                      }`}
+                      id="filter_search"
+                      onClick={toggleFilterVisibility}
                     >
                       <i className="las la-filter" />
                     </Link>
@@ -358,7 +381,7 @@ const PipeLine = () => {
                   </div>
                   <Link
                     to="#"
-                    className="btn add-btn"
+                    className="btn btn-sm btn-primary add-btn"
                     data-bs-toggle="modal"
                     data-bs-target="#add_pipeline"
                   >
@@ -371,9 +394,9 @@ const PipeLine = () => {
           {/* /Page Header */}
           {/* Search Filter */}
           <div
-            className={`filter-filelds${isFilterVisible ? ' visible' : ''}`}
+            className={`filter-filelds${isFilterVisible ? " visible" : ""}`}
             id="filter_inputs"
-            style={{ display: isFilterVisible ? 'block' : 'none' }}
+            style={{ display: isFilterVisible ? "block" : "none" }}
           >
             <div className="row filter-row custom-filter-row">
               <div className="custom-col">
@@ -392,7 +415,9 @@ const PipeLine = () => {
                     onBlur={handleInputBlur}
                     onChange={handleInputChange}
                   />
-                  <label className="focus-label" onClick={handleLabelClick}>Pipeline Name</label>
+                  <label className="focus-label" onClick={handleLabelClick}>
+                    Pipeline Name
+                  </label>
                 </div>
               </div>
               <div className="custom-col">
@@ -411,13 +436,16 @@ const PipeLine = () => {
                     onBlur={handleInputBlur1}
                     onChange={handleInputChange1}
                   />
-                  <label className="focus-label" onClick={handleLabelClick1}>Deal Value</label>
+                  <label className="focus-label" onClick={handleLabelClick1}>
+                    Deal Value
+                  </label>
                 </div>
               </div>
               <div className="custom-col">
                 <div
-                  className={`input-block mb-3 form-focus ${isFocused ? "focused" : ""
-                    }`}
+                  className={`input-block mb-3 form-focus ${
+                    isFocused ? "focused" : ""
+                  }`}
                 >
                   <div className="cal-icon focused ">
                     <DatePicker
@@ -429,12 +457,13 @@ const PipeLine = () => {
                       dateFormat="dd-MM-yyyy"
                     />
                   </div>
-                  <label className="focus-label" onClick={handleDateFocus}>Created Date</label>
+                  <label className="focus-label" onClick={handleDateFocus}>
+                    Created Date
+                  </label>
                 </div>
               </div>
               <div className="custom-col">
                 <div className="input-block mb-3 form-focus select-focus">
-
                   <Select
                     options={pipelinelist}
                     placeholder="Select"
@@ -459,7 +488,7 @@ const PipeLine = () => {
                 <div className="form-sort value-contain">
                   <i className="las la-sort-alpha-up-alt" />
                   <Select
-                   className='form-sort-two w-100'
+                    className="form-sort-two w-100"
                     options={sortoption}
                     placeholder="Select By Alphabet"
                     styles={customStyles}
@@ -491,7 +520,7 @@ const PipeLine = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
-              <SearchBox/>
+                <SearchBox />
                 <Table
                   className="table table-striped custom-table datatable contact-table"
                   columns={columns}
@@ -509,8 +538,7 @@ const PipeLine = () => {
       <EditPipeLine />
       <DetelePipeLine />
     </div>
+  );
+};
 
-  )
-}
-
-export default PipeLine
+export default PipeLine;

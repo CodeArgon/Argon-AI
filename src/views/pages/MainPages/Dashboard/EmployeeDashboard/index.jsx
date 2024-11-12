@@ -268,7 +268,7 @@ const EmployeeDashboard = () => {
                   <div className="card flex-fill">
                     <div className="card-body">
                       <div className="statistic-header">
-                        <h4>LOL &amp; Leaves</h4>
+                        <h4>Leaves</h4>
                         <div className="dropdown statistic-dropdown">
                           <Link
                             className="dropdown-toggle"

@@ -1,20 +1,35 @@
-import { Table } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Avatar_25, avatar19, avatar20, avatar21, avatar22, avatar23, avatar24, avatar26, avatar27, avatar28 } from '../../../Routes/ImagePath'
-import Select from 'react-select'
-import { Facebook, Mail, MessageSquare, Phone, PhoneCall, Star } from 'react-feather'
-import DateRangePicker from 'react-bootstrap-daterangepicker'
-import ExportLeads from '../../../components/modelpopup/Crm/ExportLeads'
-import DeleteContact from '../../../components/modelpopup/Crm/DeleteContact'
-import AddContact from '../../../components/modelpopup/Crm/AddContact'
-import EditContact from '../../../components/modelpopup/Crm/EditContact'
-import AddNotes from '../../../components/modelpopup/Crm/AddNotes'
-
+import { Table } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Avatar_25,
+  avatar19,
+  avatar20,
+  avatar21,
+  avatar22,
+  avatar23,
+  avatar24,
+  avatar26,
+  avatar27,
+  avatar28,
+} from "../../../Routes/ImagePath";
+import Select from "react-select";
+import {
+  Facebook,
+  Mail,
+  MessageSquare,
+  Phone,
+  PhoneCall,
+  Star,
+} from "react-feather";
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import ExportLeads from "../../../components/modelpopup/Crm/ExportLeads";
+import DeleteContact from "../../../components/modelpopup/Crm/DeleteContact";
+import AddContact from "../../../components/modelpopup/Crm/AddContact";
+import EditContact from "../../../components/modelpopup/Crm/EditContact";
+import AddNotes from "../../../components/modelpopup/Crm/AddNotes";
 
 const ContactList = () => {
-  
-
   const [isFullScreen, setFullScreen] = useState(false);
   const maximizeBtnRef = useRef(null);
 
@@ -39,16 +54,14 @@ const ContactList = () => {
     };
 
     const maximizeBtn = maximizeBtnRef.current;
-    maximizeBtn.addEventListener('click', handleClick);
+    maximizeBtn.addEventListener("click", handleClick);
 
     // Cleanup function to remove the event listener and exit fullscreen on component unmount
     return () => {
-      maximizeBtn.removeEventListener('click', handleClick);
+      maximizeBtn.removeEventListener("click", handleClick);
       cleanup();
     };
   }, [isFullScreen]);
-
-
 
   const [inputValue, setInputValue] = useState("");
   const [focused, setFocused] = useState(false);
@@ -140,18 +153,18 @@ const ContactList = () => {
     timePicker: false,
   };
   const sortoption = [
-    { value: 'Sort By Alphabet', label: 'Sort By Alphabet' },
-    { value: 'Ascending', label: 'Ascending' },
-    { value: 'Descending', label: 'Descending' },
-    { value: 'Recently Viewed', label: 'Recently Viewed' },
-    { value: 'Recently Added', label: 'Recently Added' },
+    { value: "Sort By Alphabet", label: "Sort By Alphabet" },
+    { value: "Ascending", label: "Ascending" },
+    { value: "Descending", label: "Descending" },
+    { value: "Recently Viewed", label: "Recently Viewed" },
+    { value: "Recently Added", label: "Recently Added" },
   ];
   const countrylist = [
-    { value: '--Select--', label: '--Select--' },
-    { value: 'Germany', label: 'Germany' },
-    { value: 'USA', label: 'USA' },
-    { value: 'India', label: 'India' },
-    { value: 'China', label: 'China' },
+    { value: "--Select--", label: "--Select--" },
+    { value: "Germany", label: "Germany" },
+    { value: "USA", label: "USA" },
+    { value: "India", label: "India" },
+    { value: "China", label: "China" },
   ];
 
   const customStyles = {
@@ -183,7 +196,6 @@ const ContactList = () => {
       Rating: "4.2",
       Owner: "Hendry",
       Status: "Active",
-
     },
     {
       Id: 2,
@@ -211,7 +223,7 @@ const ContactList = () => {
       Location: "Canada",
       Rating: "3.5",
       Owner: "Jami",
-      Status: "Inactive"
+      Status: "Inactive",
     },
     {
       Id: 4,
@@ -226,7 +238,6 @@ const ContactList = () => {
       Rating: "4.5",
       Owner: "Theresa",
       Status: "Active",
-
     },
     {
       Id: 5,
@@ -269,7 +280,6 @@ const ContactList = () => {
       Rating: "3.1",
       Owner: "Newell",
       Status: "Active",
-
     },
     {
       Id: 8,
@@ -284,7 +294,6 @@ const ContactList = () => {
       Rating: "5.0",
       Owner: "Janet",
       Status: "Active",
-
     },
     {
       Id: 9,
@@ -344,9 +353,8 @@ const ContactList = () => {
           </ul>
         </div>
       ),
-    }
-  ]
-
+    },
+  ];
 
   const columns = [
     {
@@ -359,7 +367,6 @@ const ContactList = () => {
               <i className={record.stars} />
             </div>
           </div>
-
         </div>
       ),
     },
@@ -371,13 +378,15 @@ const ContactList = () => {
           <Link to="/contact-details" className="avatar">
             <img alt="" src={record.Image} />
           </Link>
-          <Link to="/contact-details" className="profile-split d-flex flex-column">
+          <Link
+            to="/contact-details"
+            className="profile-split d-flex flex-column"
+          >
             {text} <span>{record.Position}</span>
           </Link>
         </h2>
       ),
       sorter: (a, b) => a.Name.length - b.Name.length,
-
     },
     {
       title: "Phone",
@@ -422,8 +431,8 @@ const ContactList = () => {
       title: "Rating",
       dataIndex: "Rating",
       render: (text) => (
-        <div className='set-star'>
-          <i className='fa fa-star filled me-2'></i>
+        <div className="set-star">
+          <i className="fa fa-star filled me-2"></i>
           {text}
         </div>
       ),
@@ -435,8 +444,8 @@ const ContactList = () => {
       sorter: (a, b) => a.Owner.length - b.Owner.length,
     },
     {
-      title: 'Contact',
-      dataIndex: 'Contact', // Assuming you have a 'contact' field in your dataSource
+      title: "Contact",
+      dataIndex: "Contact", // Assuming you have a 'contact' field in your dataSource
       render: () => (
         <ul className="social-links d-flex align-items-center">
           <li>
@@ -469,12 +478,19 @@ const ContactList = () => {
       sorter: (a, b) => a.Rating.length - b.Rating.length,
     },
     {
-      title: 'Status',
-      dataIndex: 'Status',
-      key: 'Status',
+      title: "Status",
+      dataIndex: "Status",
+      key: "Status",
       render: (text) => (
         <div className="dropdown action-label">
-          <Link to="#" className={text === 'Active' ? 'btn btn-white btn-sm badge-outline-success' : 'btn btn-white btn-sm badge-outline-danger'}>
+          <Link
+            to="#"
+            className={
+              text === "Active"
+                ? "btn btn-white btn-sm badge-outline-success"
+                : "btn btn-white btn-sm badge-outline-danger"
+            }
+          >
             {text}
           </Link>
         </div>
@@ -509,8 +525,17 @@ const ContactList = () => {
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
-            <Link className="dropdown-item" to="/contact-details"><i className="fa-regular fa-eye"></i> Preview</Link>
-            <Link className="dropdown-item" to="#" data-bs-toggle="modal" data-bs-target="#add_notes" ><i class="la la-file-prescription"></i> Notes</Link>
+            <Link className="dropdown-item" to="/contact-details">
+              <i className="fa-regular fa-eye"></i> Preview
+            </Link>
+            <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#add_notes"
+            >
+              <i class="la la-file-prescription"></i> Notes
+            </Link>
           </div>
         </div>
       ),
@@ -546,15 +571,22 @@ const ContactList = () => {
                       <i className="las la-redo-alt" />
                     </Link>
 
-                    <Link to="#" className="list-view btn btn-link" id="collapse-header" ref={maximizeBtnRef}>
-
+                    <Link
+                      to="#"
+                      className="list-view btn btn-link"
+                      id="collapse-header"
+                      ref={maximizeBtnRef}
+                    >
                       <i className="las la-expand-arrows-alt" />
                     </Link>
 
                     <Link
                       to="#"
-                      className={`list-view btn btn-link ${isFilterVisible ? "active-filter" : ""}`}
-                      id="filter_search" onClick={toggleFilterVisibility}
+                      className={`list-view btn btn-link ${
+                        isFilterVisible ? "active-filter" : ""
+                      }`}
+                      id="filter_search"
+                      onClick={toggleFilterVisibility}
                     >
                       <i className="las la-filter" />
                     </Link>
@@ -572,7 +604,7 @@ const ContactList = () => {
                   </div>
                   <Link
                     to="#"
-                    className="btn add-btn"
+                    className="btn btn-sm btn-primary add-btn"
                     data-bs-toggle="modal"
                     data-bs-target="#add_contact"
                   >
@@ -585,9 +617,9 @@ const ContactList = () => {
           {/* /Page Header */}
           {/* Search Filter */}
           <div
-            className={`filter-filelds${isFilterVisible ? ' visible' : ''}`}
+            className={`filter-filelds${isFilterVisible ? " visible" : ""}`}
             id="filter_inputs"
-            style={{ display: isFilterVisible ? 'block' : 'none' }}
+            style={{ display: isFilterVisible ? "block" : "none" }}
           >
             <div className="row filter-row">
               <div className="col-xl-2">
@@ -625,7 +657,7 @@ const ContactList = () => {
                     onBlur={handleInputBlur2}
                     onChange={handleInputChange2}
                   />
-                  <label className="focus-label" >Email</label>
+                  <label className="focus-label">Email</label>
                 </div>
               </div>
               <div className="col-xl-2">
@@ -644,7 +676,9 @@ const ContactList = () => {
                     onBlur={handleInputBlur1}
                     onChange={handleInputChange1}
                   />
-                  <label className="focus-label" onClick={handleLabelClick1}>Phone Number</label>
+                  <label className="focus-label" onClick={handleLabelClick1}>
+                    Phone Number
+                  </label>
                 </div>
               </div>
               <div className="col-xl-2">
@@ -660,7 +694,6 @@ const ContactList = () => {
               </div>
               <div className="col-xl-2">
                 <div className="input-block mb-3 form-focus select-focus">
-
                   <Select
                     options={countrylist}
                     placeholder="--Select--"
@@ -699,7 +732,6 @@ const ContactList = () => {
                   <i className="las la-sort-alpha-up-alt" />
                   <Select
                     className="form-sort-two w-100"
-                  
                     options={sortoption}
                     placeholder="Select By Alphabet"
                     styles={customStyles}
@@ -707,8 +739,13 @@ const ContactList = () => {
                 </div>
               </li>
               <li>
-                <div className={`form-sorts dropdown ${isDropdownOpen ? 'table-filter-show' : ''}`}>
-                  <Link onClick={handleToggleDropdown}
+                <div
+                  className={`form-sorts dropdown ${
+                    isDropdownOpen ? "table-filter-show" : ""
+                  }`}
+                >
+                  <Link
+                    onClick={handleToggleDropdown}
                     to="#"
                     className="dropdown-toggle"
                     id="table-filter"
@@ -744,16 +781,44 @@ const ContactList = () => {
                               <li>
                                 <div className="filter-checks">
                                   <label className="checkboxs">
-                                    <input type="checkbox" defaultChecked={true} />
+                                    <input
+                                      type="checkbox"
+                                      defaultChecked={true}
+                                    />
                                     <span className="checkmarks" />
                                   </label>
                                 </div>
                                 <div className="rating">
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
 
                                   <span>5.0</span>
                                 </div>
@@ -766,11 +831,36 @@ const ContactList = () => {
                                   </label>
                                 </div>
                                 <div className="rating">
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
                                   <span>4.0</span>
                                 </div>
                               </li>
@@ -782,11 +872,36 @@ const ContactList = () => {
                                   </label>
                                 </div>
                                 <div className="rating">
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
 
                                   <span>3.0</span>
                                 </div>
@@ -799,12 +914,36 @@ const ContactList = () => {
                                   </label>
                                 </div>
                                 <div className="rating">
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
 
                                   <span>2.0</span>
                                 </div>
@@ -817,11 +956,36 @@ const ContactList = () => {
                                   </label>
                                 </div>
                                 <div className="rating">
-                                  <Star className='me-1' size={18} color='#FFBC34' fill='#FFBC34' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
-                                  <Star className='me-1' size={18} color='#E2E4E6' fill='#E2E4E6' />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#FFBC34"
+                                    fill="#FFBC34"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
+                                  <Star
+                                    className="me-1"
+                                    size={18}
+                                    color="#E2E4E6"
+                                    fill="#E2E4E6"
+                                  />
 
                                   <span>1.0</span>
                                 </div>
@@ -1040,8 +1204,7 @@ const ContactList = () => {
       <DeleteContact />
       <AddNotes />
     </div>
+  );
+};
 
-  )
-}
-
-export default ContactList
+export default ContactList;
