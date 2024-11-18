@@ -32,6 +32,7 @@ const LeadsList = () => {
         if (response.ok) {
           const data = await response.json();
           setData(data);
+          console.log("Data ",data)
         } else {
           console.error("Failed to fetch leads:", response.statusText);
         }

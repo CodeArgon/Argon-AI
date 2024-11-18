@@ -284,7 +284,7 @@ export const SidebarData = [
         icon: "la la-chart-area",
       },
       {
-        menuValue: "Pipeline",
+        menuValue: "Sale Order",
         hasSubRoute: false,
         showSubRoute: false,
         route: "/pipeline",

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Link } from "react-router-dom";
 import UserContext from "../../../contexts/UserContext";
 import { Button } from "@mui/material";
 import { registerUserExperience } from "../../../helpers/users";
@@ -31,7 +32,11 @@ const RegisterExperience = (props) => {
     try {
       const result = await registerUserExperience(data, profileID);
       if (result === true) {
-        // setActiveStep(6);
+        <Link
+          to="/file-manager"
+          className="company-img"
+        >
+        </Link>
         console.log("Move to next page");
       } else {
       }

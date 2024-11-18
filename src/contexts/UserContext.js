@@ -52,12 +52,6 @@ export const AppProvider = ({ children }) => {
         setFormData,
         profileID, 
         setprofileID,
-        activeStep,
-        setActiveStep,
-        formData,
-        setFormData,
-        profileID,
-        setprofileID,
         leadData,
         setLeadData,
       }}

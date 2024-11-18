@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useContext } from 'react'
 import Select from 'react-select'
 import axios from 'axios'
-
+import UserContext from "../../../contexts/UserContext";
 import { BASE_URL } from '../../../constants/urls'
-
+import {registerLeadActivities} from "../../../helpers/users";
+// import { string } from 'yup';
 const AddLeads = ({ setLeadData }) => {
   const [leadName, setLeadName] = useState('')
   const [leadGenManager, setLeadGenManager] = useState(null)
@@ -21,7 +22,7 @@ const AddLeads = ({ setLeadData }) => {
   const [users, setUsers] = useState([])
   const [dl, setDL] = useState([])
   const [selectedFiles, setSelectedFiles] = useState([])
-
+  const { userData } = useContext(UserContext);
   //For Medium List
   useEffect(() => {
     const authToken = localStorage.getItem('BearerToken')
@@ -205,6 +206,14 @@ const AddLeads = ({ setLeadData }) => {
         }
       })
       console.log('Lead saved successfully:', response.data)
+      console.log('Lead ',leadName,"is created by ",userData?.user?.username)
+      const str = `Lead ${leadName} is created by ${userData?.user?.username}`;
+
+      const result = await registerLeadActivities(response.data.id,userData?.user?.username,str);
+      if (result === true) {
+        console.log("result ",result)
+       
+      }
       //setLeadData(leadData)
       //window.location.reload()
     } catch (error) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState,useContext } from 'react'
 import { Link } from 'react-router-dom'
 import {
   avatar1,
@@ -21,8 +21,10 @@ import AddLeads from '../../../components/modelpopup/Crm/AddLeads'
 import { useLocation } from 'react-router-dom'
 import { BASE_URL } from '../../../constants/urls'
 import AddQuotation from '../../../components/modelpopup/Crm/AddQuotation'
-
+import UserContext from "../../../contexts/UserContext";
+import {registerLeadActivities} from "../../../helpers/users";
 const LeadsDetails = () => {
+  const { userData } = useContext(UserContext);
   const location = useLocation()
   const initialLead =
     location.state?.leadData ||
@@ -40,8 +42,11 @@ const LeadsDetails = () => {
   useEffect(() => {
     localStorage.setItem('leadData', JSON.stringify(leadData))
   }, [location.state, leadData])
-
+  
   const [lead, setLead] = useState(initialLead)
+  useEffect(() => {
+    localStorage.getItem('leadData')
+  },)
 
   const updateStatusInBackend = async () => {
     const formData = new FormData()
@@ -65,6 +70,14 @@ const LeadsDetails = () => {
       setLead(updatedLead)
       setleadData(updatedLead)
       setVisibleItems(prevItems => [...prevItems, 'Opportunity'])
+      console.log("formData ",formData)
+      console.log("updatedLead ",updatedLead)
+      const str = `Lead ${lead.name} is marked as opportunity by ${userData?.user?.username}`;
+      console.log("String ",str);
+      const result = await registerLeadActivities(lead.id,userData?.user?.username,str);
+      if (result === true) {
+        console.log("result ",result)
+       }
     } catch (error) {
       console.error('Failed to update status:', error)
     }
@@ -237,6 +250,57 @@ const LeadsDetails = () => {
                       <p>
                         <i className='las la-points' /> {leadData.notes}
                       </p>
+                    </div>
+                  </div>
+                <div >
+                    <div className="row"  >
+                      {lead.approval_status === "open" && (
+                        <Link
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          // onClick={}
+                        >
+                          <i className="la" /> Open
+                        </Link>
+                      )}
+                      {lead.approval_status === "disapproved" && (
+                        <Link
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#add_quotations"
+                          style={{backgroundColor:'red',borderWidth:0}}
+                        >
+                          <i className="la" /> Disapproved
+                        </Link>
+                      )}
+                      {lead.approval_status === "approved" && (
+                        <Link to="#" className="btn btn-sm btn-primary add-btn" style={{backgroundColor:'#55CE63',borderWidth:0}}>
+                          <i className="la" /> Approved
+                        </Link>
+                      )}
+                      {lead.approval_status === "pending" && (
+                        <ul className="pending-actions" style={{display:'flex',flexDirection:'row'}}>
+                          <li>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{backgroundColor:'#55CE63',borderWidth:0}}
+                              >
+                              <i className="la" /> Approve
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{backgroundColor:'red',borderWidth:0}}
+                            >
+                              <i className="la" /> Disapprove
+                            </Link>
+                          </li>
+                        </ul>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -78,6 +78,35 @@ export async function registerUserEdu(data,profileID) {
     console.error("Error:", error);
   }
 }
+export async function registerLeadActivities(leadData,profileID,txt) {
+  const authToken = localStorage.getItem("BearerToken");
+  const url = `${BASE_URL}activity/`;
+  const activityData = {
+    lead: leadData,
+    user: profileID,
+    text: txt,
+
+  };
+
+  try {
+    console.log(activityData)
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization:  `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(activityData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return true;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 
 export async function registerUserExperience(data,profileID) {
   const authToken = localStorage.getItem("BearerToken");

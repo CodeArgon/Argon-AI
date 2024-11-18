@@ -5,19 +5,18 @@ import { Link } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 const Profile = () => {
-
   const userDataString = localStorage.getItem("user");
   const [userData, setUserData] = useState(JSON.parse(userDataString));
 
   useEffect(() => {
     // Fetch and parse the user data from localStorage when the component mounts
-    console.log("Yooo",userDataString)
-
+    console.log("Yooo", userDataString);
   }, []); //
 
   useEffect(() => {
     // This will log whenever userData is updated
     console.log("Updated userData:", userData);
+    console.log("Image", userData?.user?.profile?.profile_photo);
   }, [userData]);
   return (
     <>
@@ -38,8 +37,11 @@ const Profile = () => {
                     <div className="profile-img-wrap">
                       <div className="profile-img">
                         <Link to="#">
-                          <img src={Avatar_02} alt="User Image" />
-                          <img src={userData?.user?.profile?.profile_photo} alt="User Image" />
+                          {/* <img src={Avatar_02} alt="User Image" /> */}
+                          <img
+                            src={`http://10.3.1.181:8000${userData?.user?.profile?.profile_photo}`}
+                            alt="User Image"
+                          />
                         </Link>
                       </div>
                     </div>
@@ -50,21 +52,24 @@ const Profile = () => {
                             <h3 className="user-name m-t-0 mb-0">
                               {userData?.user.first_name}
                             </h3>
-                            <h6 className="text-muted">{userData?.user?.role}</h6>
+                            <h6 className="text-muted">
+                              Role: {userData?.user?.role}
+                            </h6>
                             <small className="text-muted">
-                              {userData?.user?.profile?.designation}
+                              Designation: {userData?.user?.profile?.designation}
                             </small>
                             <div className="staff-id">
                               Employee ID : {userData?.user?.id}
                             </div>
                             <div className="small doj text-muted">
-                              Date of Join : {userData?.user?.profile?.date_of_joining}
+                              Date of Join :{" "}
+                              {userData?.user?.profile?.date_of_joining}
                             </div>
-                            <div className="staff-msg">
+                            {/* <div className="staff-msg">
                               <Link className="btn btn-custom" to="/call/chat">
                                 Send Message
                               </Link>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                         <div className="col-md-7">
@@ -72,7 +77,9 @@ const Profile = () => {
                             <li>
                               <div className="title">Phone:</div>
                               <div className="text">
-                                <Link to={`tel:${userData?.user?.profile?.mobile_number}`}>
+                                <Link
+                                  to={`tel:${userData?.user?.profile?.mobile_number}`}
+                                >
                                   {userData?.user?.profile?.mobile_number}
                                 </Link>
                               </div>
@@ -80,22 +87,34 @@ const Profile = () => {
                             <li>
                               <div className="title">Email:</div>
                               <div className="text">
-                                <Link to={`mailto:${userData?.user?.email}`}>
-                                  {userData?.user?.email}
+                                <Link to={`mailto:${userData?.user?.profile?.email}`}>
+                                  {userData?.user?.profile?.email}
                                 </Link>
                               </div>
+                              {/* <div className="title">Email:</div>
+                              <div className="text">
+                                <a href={`mailto:${userData?.user?.email}`}>
+                                  {userData?.user?.email}
+                                </a>
+                              </div> */}
                             </li>
                             <li>
                               <div className="title">Birthday:</div>
-                              <div className="text">{userData?.user?.profile?.date_of_birth}</div>
+                              <div className="text">
+                                {userData?.user?.profile?.date_of_birth}
+                              </div>
                             </li>
                             <li>
                               <div className="title">Address:</div>
-                              <div className="text">{userData?.user?.profile?.address}</div>
+                              <div className="text">
+                                {userData?.user?.profile?.address}
+                              </div>
                             </li>
                             <li>
                               <div className="title">Gender:</div>
-                              <div className="text">{userData?.user?.profile?.gender}</div>
+                              <div className="text">
+                                {userData?.user?.profile?.gender}
+                              </div>
                             </li>
                             <li>
                               <div className="title">Reports to:</div>
@@ -130,7 +149,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="card tab-box">
+          {/* <div className="card tab-box">
             <div className="row user-tabs">
               <div className="col-lg-12 col-md-12 col-sm-12 line-tabs">
                 <ul className="nav nav-tabs nav-tabs-bottom">
@@ -152,7 +171,7 @@ const Profile = () => {
                       Projects
                     </Link>
                   </li>
-                  {/* <li className="nav-item">
+                  <li className="nav-item">
                     <Link
                       to="#bank_statutory"
                       data-bs-toggle="tab"
@@ -161,7 +180,7 @@ const Profile = () => {
                       Bank &amp; Statutory
                       <small className="text-danger ms-1">(Admin Only)</small>
                     </Link>
-                  </li> */}
+                  </li>
                   <li className="nav-item">
                     <Link
                       to="#emp_assets"
@@ -174,7 +193,7 @@ const Profile = () => {
                 </ul>
               </div>
             </div>
-          </div>
+          </div> */}
           {/* Profile Info Tab */}
           <ProfileTab />
         </div>

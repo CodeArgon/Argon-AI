@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PersonalInformationModelPopup from "../../../components/modelpopup/PersonalInformationModelPopup";
 import { ListItem, ProjectDetails } from "./ProfileContent";
@@ -9,7 +9,7 @@ const ProfileTab = () => {
 
   const personalInfoData = [
     { id: 1, title: "CNIC No.", text: userData?.user?.profile.cnic },
-    { id: 2, title: "CNIC Exp Date.", text: "9876543210" },
+    // { id: 2, title: "CNIC Exp Date.", text: "9876543210" },
     { id: 3, title: "Tel", text: userData?.user?.profile.mobile_number },
     { id: 4, title: "Nationality", text: userData?.user?.profile.nationality },
     { id: 5, title: "Religion", text: userData?.user?.profile.religion },
@@ -102,15 +102,7 @@ const ProfileTab = () => {
   //     phone: "9876543210",
   //   },
   // ];
-  const familyInfoData = [
-    {
-      id: 1,
-      name: "Leo",
-      relationship: "Brother",
-      dob: "Feb 16th, 2019",
-      phone: "9876543210",
-    },
-  ];
+  
 
   return (
     <>
@@ -210,6 +202,45 @@ const ProfileTab = () => {
               <div className="card profile-box flex-fill">
                 <div className="card-body">
                   <h3 className="card-title">
+                    Experience{" "}
+                    <Link
+                      to="#"
+                      className="edit-icon"
+                      data-bs-toggle="modal"
+                      data-bs-target="#experience_info"
+                    >
+                      <i className="fa fa-pencil" />
+                    </Link>
+                  </h3>
+                  <div className="experience-box">
+                    <ul className="experience-list">
+                      {userData?.user?.experience?.map((item) => (
+                        <li key={item.id}>
+                          <div className="experience-user">
+                            <div className="before-circle" />
+                          </div>
+                          <div className="experience-content">
+                            <div className="timeline-content">
+                              <Link to="/" className="name">
+                                {item.company_name}
+                              </Link>
+                              <span className="time">{item.job_title}</span>
+                              <span className="time">
+                                {item.duration} Years
+                              </span>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* <div className="col-md-6 d-flex">
+              <div className="card profile-box flex-fill">
+                <div className="card-body">
+                  <h3 className="card-title">
                     Family Informations{" "}
                     <Link
                       to="#"
@@ -265,7 +296,7 @@ const ProfileTab = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="row">
             <div className="col-md-6 d-flex">
@@ -305,51 +336,10 @@ const ProfileTab = () => {
                 </div>
               </div>
             </div>
-
-            <div className="col-md-6 d-flex">
-              <div className="card profile-box flex-fill">
-                <div className="card-body">
-                  <h3 className="card-title">
-                    Experience{" "}
-                    <Link
-                      to="#"
-                      className="edit-icon"
-                      data-bs-toggle="modal"
-                      data-bs-target="#experience_info"
-                    >
-                      <i className="fa fa-pencil" />
-                    </Link>
-                  </h3>
-                  <div className="experience-box">
-                    <ul className="experience-list">
-                      {userData?.user?.experience?.map((item) => (
-                        <li key={item.id}>
-                          <div className="experience-user">
-                            <div className="before-circle" />
-                          </div>
-                          <div className="experience-content">
-                            <div className="timeline-content">
-                              <Link to="/" className="name">
-                                {item.company_name}
-                              </Link>
-                              <span className="time">{item.job_title}</span>
-                              <span className="time">
-                                {item.duration} Years
-                              </span>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <ProjectDetails />
         {/* Bank Statutory Tab */}
-
         {/* Bank Statutory Tab */}
         {/*  Bank Tab */}
       </div>

@@ -561,7 +561,7 @@ const Sidebar = () => {
                         }
                         to="/pipeline"
                       >
-                        {t("Pipeline")}
+                        {t("Sale Order")}
                       </Link>
                     </li>
                     <li>
@@ -3037,7 +3037,7 @@ const Sidebar = () => {
                         }
                         to="/pipeline"
                       >
-                        {t("Pipeline")}
+                        {t("Sale Order")}
                       </Link>
                     </li>
                     <li>

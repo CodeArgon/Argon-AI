@@ -34,7 +34,8 @@ const Header = (props) => {
   const [flagImage, setFlagImage] = useState(lnEnglish);
   const [userData, setUserData] = useState();
   const [Useremail, setUserName] = useState();
-
+  const userDataString = localStorage.getItem("user");
+  const [usserData, setUsserData] = useState(JSON.parse(userDataString));
   useEffect(() => {
     const current_user = fetchCurrentUser();
     setUserData(current_user);
@@ -96,8 +97,8 @@ const Header = (props) => {
   // const Credencial = localStorage.getItem("credencial");
   // const Value = JSON.parse(Credencial);
   const UserName = Useremail?.email?.split("@")[0];
-  const ProfileName = UserName?.charAt(0).toUpperCase() + UserName?.slice(1);
-
+  const ProfileName = usserData?.user?.first_name?.charAt(0).toUpperCase();
+  // const ProfileName = usserData?.user?.first_name?.charAt(0).toUpperCase() + usserData?.user?.first_name?.slice(1);
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
@@ -372,10 +373,10 @@ const Header = (props) => {
           >
             {" "}
             <span className="user-img me-1">
-              <img src={Avatar_02} alt="img" />
+              <img src={`http://10.3.1.181:8000${usserData?.user?.profile?.profile_photo}`} alt="img" />
               <span className="status online" />
             </span>
-            <span>{ProfileName ? `${ProfileName}` : ""}</span>
+            <span>{ProfileName ? `${usserData?.user?.first_name}  ` : ""}</span>
           </Link>
           <div
             className={`dropdown-menu dropdown-menu-end ${

@@ -170,7 +170,7 @@ const Login = () => {
                   <div className="account-footer">
                     <p>
                       Don't have an account yet?{" "}
-                      <Link to="/register">Register</Link>
+                      <Link to="/profile-stepper">Register</Link>
                     </p>
                   </div>
                 </div>

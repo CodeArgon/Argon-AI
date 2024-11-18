@@ -8,9 +8,11 @@ import AddPipeLine from "../../../components/modelpopup/Crm/AddPipeLine";
 import SearchBox from "../../../components/SearchBox";
 import EditPipeLine from "../../../components/modelpopup/Crm/EditPipeLine";
 import DetelePipeLine from "../../../components/modelpopup/Crm/DetelePipeLine";
-
+import { BASE_URL } from "../../../constants/urls";
 const PipeLine = () => {
+  const [data, setData] = useState([]);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prevVisibility) => !prevVisibility);
   };
@@ -33,7 +35,33 @@ const PipeLine = () => {
       setFocused(true);
     }
   };
-  //
+
+  useEffect(() => {
+    const authToken = localStorage.getItem("BearerToken");
+    const fetchLeads = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}lead-summary/`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setData(data);
+          console.log("Data ",data)
+        } else {
+          console.error("Failed to fetch leads:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching leads:", error);
+      } finally {
+      }
+    };
+
+    fetchLeads();
+  }, []);
+
   const [inputValue1, setInputValue1] = useState("");
 
   const [focused1, setFocused1] = useState(false);
@@ -54,12 +82,12 @@ const PipeLine = () => {
     }
   };
   const sortoption = [
-    { value: "Sort By Alphabet", label: "Sort By Alphabet" },
-    { value: "Ascending", label: "Ascending" },
-    { value: "Descending", label: "Descending" },
-    { value: "Recently Viewed", label: "Recently Viewed" },
-    { value: "Recently Added", label: "Recently Added" },
+    { value: "open", label: "Open" },
+    { value: "opportunity", label: "Opportunity" },
+    { value: "win", label: "Win" },
+    { value: "lost", label: "Lost" },
   ];
+ 
   const pipelinelist = [
     { value: "--Select--", label: "--Select--" },
     { value: "Win", label: "Win" },
@@ -79,148 +107,54 @@ const PipeLine = () => {
       },
     }),
   };
-  const data = [
-    {
-      PipeLine: "Sales",
-      TotalDealValue: "$04,51,000",
-      NoofDeals: "315",
-      Stages: "Win",
-      CreatedDate: "10 Feb 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Marketing",
-      TotalDealValue: "$03,12,500",
-      NoofDeals: "447",
-      Stages: "Win",
-      CreatedDate: "24 Feb 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Calls",
-      TotalDealValue: "$04,14,400",
-      NoofDeals: "654",
-      Stages: "In PipeLine",
-      CreatedDate: "05 Mar 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Email",
-      TotalDealValue: "$09,14,400",
-      NoofDeals: "545",
-      Stages: "Win",
-      CreatedDate: "17 Mar 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Chats",
-      TotalDealValue: "$11,14,400",
-      NoofDeals: "787",
-      Stages: "Win",
-      CreatedDate: "08 Apr 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Operational",
-      TotalDealValue: "$16,11,400",
-      NoofDeals: "142",
-      Stages: "Conversation",
-      CreatedDate: "20 Apr 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Collabrative",
-      TotalDealValue: "$78,11,800",
-      NoofDeals: "315",
-      Stages: "Follow Up",
-      CreatedDate: "12 May 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Differentiate",
-      TotalDealValue: "$09,05,947",
-      NoofDeals: "478",
-      Stages: "Schedule Service",
-      CreatedDate: "26 May 2024",
-      Status: "Inactive",
-    },
-    {
-      PipeLine: "Interact",
-      TotalDealValue: "$04,51,000",
-      NoofDeals: "664",
-      Stages: "Win",
-      CreatedDate: "13 June 2024",
-      Status: "Active",
-    },
-    {
-      PipeLine: "Identify",
-      TotalDealValue: "$72,14,078",
-      NoofDeals: "128",
-      Stages: "Lost",
-      CreatedDate: "28 June 2024",
-      Status: "Active",
-    },
-  ];
+ 
   const columns = [
     {
-      title: "Pipeline Name",
-      dataIndex: "PipeLine",
-
-      sorter: (a, b) => a.PipeLine.length - b.PipeLine.length,
+      title: "Lead Name",
+      dataIndex: "name",
+      sorter: (a, b) => a.name.length - b.name.length,
     },
     {
-      title: "Total Deal Value",
-      dataIndex: "TotalDealValue",
-      sorter: (a, b) => a.TotalDealValue.length - b.TotalDealValue.length,
+      title: "Total Order Value",
+      dataIndex: "total_order_value",
+      sorter: (a, b) => a.total_order_value.length - b.total_order_value.length,
     },
     {
-      title: "No of Deals",
-      dataIndex: "NoofDeals",
-      sorter: (a, b) => a.NoofDeals.length - b.NoofDeals.length,
+      title: "No of Orders",
+      dataIndex: "order_count",
+      sorter: (a, b) => a.order_count.length - b.order_count.length,
     },
     {
       title: "Stages",
-      dataIndex: "Stages",
+      dataIndex: "status",
       render: (text, record) => (
         <div className="pipeline-progress d-flex align-items-center">
           <div className="progress">
-            {text === "In Pipeline" && (
+            {text === "opportunity" && (
               <div
                 className="progress-bar progress-bar-violet"
                 role="progressbar"
               ></div>
             )}
-            {text === "Win" && (
+            {text === "win" && (
               <div
                 className="progress-bar progress-bar-success"
                 role="progressbar"
               ></div>
             )}
-            {text === "Follow Up" && (
-              <div
-                className="progress-bar progress-bar-warning"
-                role="progressbar"
-              ></div>
-            )}
-            {text === "In PipeLine" && (
-              <div
-                className="progress-bar progress-bar-violet"
-                role="progressbar"
-              ></div>
-            )}
-            {text === "Schedule Service" && (
+            {text === "quotation" && (
               <div
                 className="progress-bar progress-bar-pink"
                 role="progressbar"
               ></div>
             )}
-            {text === "Lost" && (
+            {text === "lost" && (
               <div
                 className="progress-bar progress-bar-danger"
                 role="progressbar"
               ></div>
             )}
-            {text === "Conversation" && (
+            {text === "open" && (
               <div
                 className="progress-bar progress-bar-info"
                 role="progressbar"
@@ -230,12 +164,12 @@ const PipeLine = () => {
           <span>{text}</span>
         </div>
       ),
-      sorter: (a, b) => a.Stages.length - b.Stages.length,
+      sorter: (a, b) => a.status.length - b.status.length,
     },
     {
       title: "Created Date",
-      dataIndex: "CreatedDate",
-      sorter: (a, b) => a.CreatedDate.length - b.CreatedDate.length,
+      dataIndex: "created_date",
+      sorter: (a, b) => a.created_date.length - b.created_date.length,
     },
     {
       title: "Action",
@@ -250,7 +184,7 @@ const PipeLine = () => {
             <i className="material-icons">more_vert</i>
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            <Link
+            {/* <Link
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
@@ -265,7 +199,7 @@ const PipeLine = () => {
               data-bs-target="#delete_pipeline"
             >
               <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+            </Link> */}
             <Link class="dropdown-item" to="/leads-details">
               <i class="fa-regular fa-eye"></i> Preview
             </Link>
@@ -275,13 +209,52 @@ const PipeLine = () => {
       sorter: (a, b) => a.length - b.length,
     },
   ];
-  //datepicker
+
   const [selectedDate, setSelectedDate] = useState();
   const [isFocused, setIsFocused] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  const fetchLeads = async () => {
+    try {
+      const authToken = localStorage.getItem("BearerToken");
+
+      // Extract year and month from the selected date
+      const year = selectedDate ? selectedDate.getFullYear() : null;
+      const month = selectedDate ? selectedDate.getMonth() + 1 : null;
+
+      // Include year and month in the API request if available
+      let apiUrl = `${BASE_URL}lead-summary/`;
+      if (year && month) {
+        apiUrl += `?year=${year}&month=${month}`;
+      }
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setData(data);
+        console.log("Data: ", data);
+      } else {
+        console.error("Failed to fetch leads:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDate) {
+      fetchLeads();
+    }
+  }, [selectedDate]);
+
   const handleFocus = () => {
     setIsFocused(true);
   };
@@ -335,12 +308,12 @@ const PipeLine = () => {
           <div className="page-header">
             <div className="row align-items-center">
               <div className="col-md-4">
-                <h3 className="page-title">Pipeline</h3>
+                <h3 className="page-title">Sale Order</h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link to="/admin-dashboard">Dashboard</Link>
                   </li>
-                  <li className="breadcrumb-item active">Pipeline</li>
+                  <li className="breadcrumb-item active">Sale Order</li>
                 </ul>
               </div>
               <div className="col-md-8 float-end ms-auto">
@@ -369,7 +342,7 @@ const PipeLine = () => {
                     </Link>
                   </div>
                   <div className="form-sort">
-                    <Link
+                    {/* <Link
                       to="#"
                       className="list-view btn btn-link"
                       data-bs-toggle="modal"
@@ -377,16 +350,16 @@ const PipeLine = () => {
                     >
                       <i className="las la-file-export" />
                       Export
-                    </Link>
+                    </Link> */}
                   </div>
-                  <Link
+                  {/* <Link
                     to="#"
                     className="btn btn-sm btn-primary add-btn"
                     data-bs-toggle="modal"
                     data-bs-target="#add_pipeline"
                   >
                     <i className="la la-plus-circle" /> Add PipeLine
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
@@ -407,7 +380,7 @@ const PipeLine = () => {
                       : "input-block mb-3 form-focus"
                   }
                 >
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control floating"
                     value={inputValue}
@@ -417,7 +390,7 @@ const PipeLine = () => {
                   />
                   <label className="focus-label" onClick={handleLabelClick}>
                     Pipeline Name
-                  </label>
+                  </label> */}
                 </div>
               </div>
               <div className="custom-col">
@@ -428,7 +401,7 @@ const PipeLine = () => {
                       : "input-block mb-3 form-focus"
                   }
                 >
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control floating"
                     value={inputValue1}
@@ -438,7 +411,18 @@ const PipeLine = () => {
                   />
                   <label className="focus-label" onClick={handleLabelClick1}>
                     Deal Value
-                  </label>
+                  </label> */}
+                </div>
+              </div>
+              
+              <div className="custom-col">
+                <div className="input-block mb-3 form-focus select-focus">
+                  {/* <Select
+                    options={pipelinelist}
+                    placeholder="Select"
+                    styles={customStyles}
+                  />
+                  <label className="focus-label">Stages</label> */}
                 </div>
               </div>
               <div className="custom-col">
@@ -463,16 +447,6 @@ const PipeLine = () => {
                 </div>
               </div>
               <div className="custom-col">
-                <div className="input-block mb-3 form-focus select-focus">
-                  <Select
-                    options={pipelinelist}
-                    placeholder="Select"
-                    styles={customStyles}
-                  />
-                  <label className="focus-label">Stages</label>
-                </div>
-              </div>
-              <div className="custom-col">
                 <Link to="#" className="btn btn-success w-100">
                   {" "}
                   Search{" "}
@@ -482,45 +456,12 @@ const PipeLine = () => {
           </div>
           <hr />
           {/* /Search Filter */}
-          <div className="filter-section">
-            <ul>
-              <li>
-                <div className="form-sort value-contain">
-                  <i className="las la-sort-alpha-up-alt" />
-                  <Select
-                    className="form-sort-two w-100"
-                    options={sortoption}
-                    placeholder="Select By Alphabet"
-                    styles={customStyles}
-                  />
-                </div>
-              </li>
-              <li>
-                <div className="search-set">
-                  <div className="search-input">
-                    <Link to="#" className="btn btn-searchset">
-                      <i className="las la-search" />
-                    </Link>
-                    <div className="dataTables_filter">
-                      <label>
-                        {" "}
-                        <input
-                          type="search"
-                          className="form-control form-control-sm"
-                          placeholder="Search"
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
+          
           <br />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
-                <SearchBox />
+                {/* <SearchBox /> */}
                 <Table
                   className="table table-striped custom-table datatable contact-table"
                   columns={columns}
@@ -542,3 +483,24 @@ const PipeLine = () => {
 };
 
 export default PipeLine;
+{/* <div className="custom-col">
+                <div
+                  className={`input-block mb-3 form-focus ${
+                    isFocused ? "focused" : ""
+                  }`}
+                >
+                  <div className="cal-icon focused ">
+                    <DatePicker
+                      className="form-control floating datetimepicker"
+                      selected={selectedDate}
+                      onChange={handleDateChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      dateFormat="dd-MM-yyyy"
+                    />
+                  </div>
+                  <label className="focus-label" onClick={handleDateFocus}>
+                    Created Date
+                  </label>
+                </div>
+              </div> */}

@@ -10,6 +10,7 @@ import CrmDeleteModal from "../../../components/modelpopup/Crm/CrmDeleteModal";
 import EditLeads from "../../../components/modelpopup/Crm/EditLeads";
 import SearchBox from "../../../components/SearchBox";
 import { BASE_URL } from "../../../constants/urls";
+import CountUp from "react-countup";
 
 const BdLeadsList = () => {
   const { userData, profileID } = useContext(UserContext);
@@ -468,7 +469,9 @@ const BdLeadsList = () => {
               <div className="card">
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>Total Leads</h5>
-                  <h6 className="counter">3,000</h6>
+                  <h6 className="counter">
+                    <CountUp end={3000} />
+                  </h6>
                 </div>
               </div>
             </div>
@@ -476,7 +479,9 @@ const BdLeadsList = () => {
               <div className="card">
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>In process</h5>
-                  <h6 className="counter">1,500</h6>
+                  <h6 className="counter">
+                    <CountUp end={1500} />
+                  </h6>
                 </div>
               </div>
             </div>
@@ -484,7 +489,9 @@ const BdLeadsList = () => {
               <div className="card">
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>Total Won</h5>
-                  <h6 className="counter">1050</h6>
+                  <h6 className="counter">
+                    <CountUp end={1050} />
+                  </h6>
                 </div>
               </div>
             </div>
@@ -492,7 +499,9 @@ const BdLeadsList = () => {
               <div className="card">
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>Total Lost</h5>
-                  <h6 className="counter">450</h6>
+                  <h6 className="counter">
+                    <CountUp end={450} />
+                  </h6>
                 </div>
               </div>
             </div>

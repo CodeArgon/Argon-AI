@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import Select from 'react-select'
 import { BASE_URL } from '../../../constants/urls'
 import UserContext from '../../../contexts/UserContext'
-
+import {registerLeadActivities} from "../../../helpers/users";
 const AddQuotation = () => {
   const [paymentTerm, setPaymentTerm] = useState(null)
   const [paymentList, setPaymentList] = useState(null)
   const [customer, setCustomer] = useState('')
   const [approvedBy, setApprovedBy] = useState(null)
   const [dl, setDL] = useState([])
-  const { leadData, setLeadData } = useContext(UserContext)
+  const { leadData, setLeadData,userData } = useContext(UserContext)
 
   const initialLead = JSON.parse(localStorage.getItem('leadData')) || {}
   const [lead, setLead] = useState(initialLead)
@@ -117,6 +117,12 @@ const AddQuotation = () => {
           setLead(updatedLead)
           setLeadData(updatedLead)
           setVisibleItems(prevItems => [...prevItems, 'Opportunity'])
+          const str = `Lead ${lead.name} is marked as opportunity by ${userData?.user?.username}`;
+      console.log("String ",str,"Lead ID ",lead.id);
+      const result = await registerLeadActivities(lead.id,userData?.user?.username,str);
+      if (result === true) {
+        console.log("result ",result)
+       }
         } catch (error) {
           console.error('Failed to update status:', error)
         }

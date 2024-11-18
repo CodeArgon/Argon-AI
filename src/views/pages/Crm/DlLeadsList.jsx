@@ -73,8 +73,9 @@ const DlLeadsList = () => {
     {
       title: "Lead Name",
       dataIndex: "name",
-      render: (text) => (
-        <Link to="/leads-details" className="company-img">
+      render: (text,record) => (
+        <Link to="/leads-details" className="company-img"
+        state={{ leadData: record }}>
           {text}
         </Link>
       ),
@@ -102,7 +103,27 @@ const DlLeadsList = () => {
       dataIndex: "assigned_to",
       sorter: (a, b) => a.division_lead.length - b.division_lead.length,
     },
-
+    {
+      title: "Lead Status",
+      dataIndex: "LeadStatus",
+      render: (text) => (
+        <div>
+          {text === "Closed" && (
+            <span className="badge badge-soft-success">{text}</span>
+          )}
+          {text === "Not Contacted" && (
+            <span className="badge badge-soft-info">{text}</span>
+          )}
+          {text === "Contacted" && (
+            <span className="badge badge-soft-warning">{text}</span>
+          )}
+          {text === "Lost" && (
+            <span className="badge badge-soft-danger">{text}</span>
+          )}
+        </div>
+      ),
+      sorter: (a, b) => a.LeadStatus.length - b.LeadStatus.length,
+    },
     {
       title: "Approval Status",
       // title: "Lead Status",
@@ -325,12 +346,12 @@ const DlLeadsList = () => {
           <div className="page-header">
             <div className="row align-items-center">
               <div className="col-md-4">
-                <h3 className="page-title">My Leads</h3>
+                <h3 className="page-title">DL Leads</h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link to="/admin-dashboard">Dashboard</Link>
                   </li>
-                  <li className="breadcrumb-item active">My Leads</li>
+                  <li className="breadcrumb-item active">DL Leads</li>
                 </ul>
                 
               </div>
