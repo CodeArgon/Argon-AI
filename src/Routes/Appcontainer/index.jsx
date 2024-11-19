@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+<<<<<<< Updated upstream
 import React, { useEffect, useState } from "react";
 import { Outlet, Route, Routes, Navigate } from "react-router-dom";
 import Header from "../../views/layout/Header";
@@ -23,21 +24,49 @@ import GoalType from "../../views/pages/Performance/Goals/GoalType";
 import Trainers from "../../views/pages/Performance/Training/Trainers";
 import Training from "../../views/pages/Performance/Training/Training";
 import TrainingType from "../../views/pages/Performance/Training/TrainingType";
+=======
+import React, { useEffect, useState } from 'react'
+import { Outlet, Route, Routes, Navigate } from 'react-router-dom'
+import Header from '../../views/layout/Header'
+import Sidebar from '../../views/layout/Sidebar'
+import ChatSidebar from '../../components/Mainpages/chatSidebar'
+import ComponentSidebar from '../../components/ComponentSidebar'
+import EmailSidebar from '../../components/Mainpages/emailSidebar'
+import SettingsSidebar from '../../components/SettingsSidebar'
+import BasicInputs from '../../views/pages/Ui_Interface/Forms/BasicInputs'
+import InputGroups from '../../views/pages/Ui_Interface/Forms/InputGroups'
+import HorizontalForm from '../../views/pages/Ui_Interface/Forms/HorizontalForm'
+import VerticalForm from '../../views/pages/Ui_Interface/Forms/VerticalForm'
+import Formmask from '../../views/pages/Ui_Interface/Forms/Formmask'
+import Formvalidation from '../../views/pages/Ui_Interface/Forms/Formvalidation'
+import TablesBasic from '../../views/pages/Ui_Interface/Tables/TablesBasic'
+import DataTables from '../../views/pages/Ui_Interface/Tables/DataTables'
+import PerformanceIndicator from '../../views/pages/Performance/Performance/PerformanceIndicator'
+import PerformanceReview from '../../views/pages/Performance/Performance/PerformanceReview'
+import PerformanceAppraisal from '../../views/pages/Performance/Performance/PerformanceAppraisal'
+import GoalTracking from '../../views/pages/Performance/Goals/GoalTracking'
+import GoalType from '../../views/pages/Performance/Goals/GoalType'
+import Trainers from '../../views/pages/Performance/Training/Trainers'
+import Training from '../../views/pages/Performance/Training/Training'
+import TrainingType from '../../views/pages/Performance/Training/TrainingType'
+import ProfileStepper from '../../views/pages/Authentication/ProfileStepper'
+>>>>>>> Stashed changes
 
 // import EmployeeProfile from "../../views/pages/Pages/profile/Employeeprofile";
-import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard";
-import EmployeeDashboard from "../../views/pages/MainPages/Dashboard/EmployeeDashboard";
-import Chat from "../../views/pages/MainPages/Apps/chat";
-import VoiceCall from "../../views/pages/MainPages/Apps/calls/voiceCall";
-import VideoCall from "../../views/pages/MainPages/Apps/calls/VideoCall";
-import Outgoing from "../../views/pages/MainPages/Apps/calls/outgoingCall";
-import IncomingCall from "../../views/pages/MainPages/Apps/calls/incomingCall";
-import Calendar from "../../views/pages/MainPages/Apps/calendar";
-import Contacts from "../../views/pages/MainPages/Apps/contacts";
-import Email from "../../views/pages/MainPages/Apps/Email";
-import FileManager from "../../views/pages/MainPages/Apps/FileManager";
-import Editer from "../../components/Editer/Editer";
+import AdminDashboard from '../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard'
+import EmployeeDashboard from '../../views/pages/MainPages/Dashboard/EmployeeDashboard'
+import Chat from '../../views/pages/MainPages/Apps/chat'
+import VoiceCall from '../../views/pages/MainPages/Apps/calls/voiceCall'
+import VideoCall from '../../views/pages/MainPages/Apps/calls/VideoCall'
+import Outgoing from '../../views/pages/MainPages/Apps/calls/outgoingCall'
+import IncomingCall from '../../views/pages/MainPages/Apps/calls/incomingCall'
+import Calendar from '../../views/pages/MainPages/Apps/calendar'
+import Contacts from '../../views/pages/MainPages/Apps/contacts'
+import Email from '../../views/pages/MainPages/Apps/Email'
+import FileManager from '../../views/pages/MainPages/Apps/FileManager'
+import Editer from '../../components/Editer/Editer'
 
+<<<<<<< Updated upstream
 import Compose from "../../views/pages/MainPages/Apps/Email/compose";
 import Estimates from "../../views/pages/HR/Sales/Estimates";
 import CreateEstimate from "../../views/pages/HR/Sales/Estimates/createEstimate";
@@ -198,23 +227,187 @@ import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 import ProposalCreation from "../../views/pages/MainPages/Apps/FileManager/proposalcreation.jsx";
 import ArchieveProjectDetails from "../../views/pages/MainPages/Apps/FileManager/projectdetails.jsx";
 import ProposalDetails from "../../views/pages/MainPages/Apps/FileManager/proposaldetails.jsx";
+=======
+import Compose from '../../views/pages/MainPages/Apps/Email/compose'
+import Estimates from '../../views/pages/HR/Sales/Estimates'
+import CreateEstimate from '../../views/pages/HR/Sales/Estimates/createEstimate'
+import EditEstimate from '../../views/pages/HR/Sales/Estimates/EditEstimate'
+import Invoices from '../../views/pages/HR/Sales/Invoices/Index'
+import CreateInvoice from '../../views/pages/HR/Sales/Invoices/createInvoice'
+import EditInvoice from '../../views/pages/HR/Sales/Invoices/editInvoice'
+import InvoiceView from '../../views/pages/HR/Sales/Invoices/invoiceView'
+import Payments from '../../views/pages/HR/Sales/payments'
+import Promotion from '../../views/pages/Performance/Promotion'
+import Resignation from '../../views/pages/Performance/Resignation'
+import Termination from '../../views/pages/Performance/Termination'
+import Components from '../../views/pages/Ui_Interface/Components/Components'
+import Settings from '../../views/pages/Administration/Settings/Settings'
+import Localization from '../../views/pages/Administration/Settings/Localization'
+import ThemeSettings from '../../views/pages/Administration/Settings/ThemeSettings'
+import RolesPermissions from '../../views/pages/Administration/Settings/RolesPermissions'
+import EmailSettings from '../../views/pages/Administration/Settings/EmailSettings'
+import PerformanceSetting from '../../views/pages/Administration/Settings/Performance/PerformanceSetting'
+import ApprovalSetting from '../../views/pages/Administration/Settings/ApprovalSetting'
+import InvoiceSettings from '../../views/pages/Administration/Settings/InvoiceSettings'
+import SalarySettings from '../../views/pages/Administration/Settings/SalarySettings'
+import NotificationSettings from '../../views/pages/Administration/Settings/NotificationSettings'
+import LeaveType from '../../views/pages/Administration/Settings/LeaveType'
+import ToxboxSetting from '../../views/pages/Administration/Settings/ToxboxSetting'
+import CronSetting from '../../views/pages/Administration/Settings/CronSetting'
+import AllEmpoyee from '../../views/pages/Employees/AllEmpoyee'
+import Holidays from '../../views/pages/Employees/Holidays'
+import AdminLeave from '../../views/pages/Employees/AdminLeave'
+import EmployeeLeave from '../../views/pages/Employees/EmployeeLeave'
+import LeaveSettings from '../../views/pages/Employees/LeaveSetting'
+import AttendenceAdmin from '../../views/pages/Employees/Attendenceadmin'
+import AttendanceEmployee from '../../views/pages/Employees/AttendenceEmployee'
+import Department from '../../views/pages/Employees/Department'
+import Designation from '../../views/pages/Employees/Designation'
+import TimeSheet from '../../views/pages/Employees/TimeSheet'
+import ShiftScheduling from '../../views/pages/Employees/ShiftandSchedule'
+import ShiftList from '../../views/pages/Employees/ShiftList'
+import OverTime from '../../views/pages/Employees/OverTime'
+import Clients from '../../views/pages/Employees/Clients'
+import Project from '../../views/pages/Employees/Projects/Project'
+import ClientList from '../../views/pages/Employees/ClientList'
+import Tasks from '../../views/pages/Employees/Projects/Tasks'
+import { SidebarProject } from '../../views/pages/Employees/Projects/SidebarProject'
+import TaskBoard from '../../views/pages/Employees/Projects/TaskBoard'
+import Leads from '../../views/pages/Employees/Leads'
+import Ticket from '../../views/pages/Employees/Ticket'
+import ClientProfile from '../../views/pages/Profile/ClientProfile'
+import Profile from '../../views/pages/Profile/Profile'
+import Subscribtions from '../../views/pages/Subscribtions/Subscribtions'
+import SubscribedCompany from '../../views/pages/Subscribtions/SubscribedCompany'
+import SubscribtionsCompany from '../../views/pages/Subscribtions/SubscribtionsCompany'
+import Search from '../../views/pages/Pages/Search/Search'
+import Faq from '../../views/pages/Pages/Faq'
+import Terms from '../../views/pages/Pages/Terms'
+import PrivacyPolicy from '../../views/pages/Pages/PrivacyPolicy'
+import BlankPage from '../../views/pages/Pages/BlankPage'
+import KnowledgeBase from '../../views/pages/Administration/Knowledgebase/KnowledgeBase'
+import KnowledgeBaseView from '../../views/pages/Administration/Knowledgebase/KnowledgeBaseView'
+import EmployeeList from '../../views/pages/Employees/EmployeeList'
+import Expenses from '../../views/pages/HR/Sales/Expenses'
+import Activities from '../../views/pages/Administration/Activities'
+import ProvidentFund from '../../views/pages/HR/Sales/ProvidentFund'
+import Taxes from '../../views/pages/HR/Sales/Taxes'
+import Categories from '../../views/pages/HR/Accounting/Categories'
+import SubCategory from '../../views/pages/HR/Accounting/Categories/subCategory'
+import Budgets from '../../views/pages/HR/Accounting/Budgets.jsx'
+import BudgetExpenses from '../../views/pages/HR/Accounting/BudgetExpenses'
+import BudgetRevenues from '../../views/pages/HR/Accounting/BudgetRevenue'
+import EmployeeSalary from '../../views/pages/HR/Payroll/EmployeeSalary.jsx'
+import PaySlip from '../../views/pages/HR/Payroll/Payslip'
+import PayrollItems from '../../views/pages/HR/Payroll/PayrollItems.jsx'
+import Policies from '../../views/pages/HR/Policies'
+import ExpenseReport from '../../views/pages/HR/Reports/ExpenseReport'
+import InvoiceReport from '../../views/pages/HR/Reports/InvoiceReport'
+import PaymentReport from '../../views/pages/HR/Reports/PaymentReport'
+import ProjectReport from '../../views/pages/HR/Reports/ProjectReport'
+import TaskReport from '../../views/pages/HR/Reports/TaskReport'
+import UserReport from '../../views/pages/HR/Reports/UserReport'
+import EmployeeReport from '../../views/pages/HR/Reports/EmployeeReports'
+import PaySlipReports from '../../views/pages/HR/Reports/PaySlipReports'
+import AttendanceReport from '../../views/pages/HR/Reports/AttendanceReport'
+import LeaveReport from '../../views/pages/HR/Reports/LeaveReport'
+import DailyReports from '../../views/pages/HR/Reports/DailyReports'
+import Assets from '../../views/pages/Administration/Assets'
+import UserDashboard from '../../views/pages/Administration/Jobs/UserJob/UserDashboard'
+import UserAllJobs from '../../views/pages/Administration/Jobs/UserJob/UserAllJobs'
+import SavedJobs from '../../views/pages/Administration/Jobs/UserJob/SavedJobs'
+import AppliedJobs from '../../views/pages/Administration/Jobs/UserJob/AppliedJobs'
+import Interviewing from '../../views/pages/Administration/Jobs/UserJob/Interviewing'
+import JobAptitude from '../../views/pages/Administration/Jobs/UserJob/JobAptitude'
+import Questions from '../../views/pages/Administration/Jobs/UserJob/Questions'
+import UserOfferedJobs from '../../views/pages/Administration/Jobs/UserJob/UserOfferedJobs'
+import VisitedJobs from '../../views/pages/Administration/Jobs/UserJob/VisitedJobs'
+import ArchivedJobs from '../../views/pages/Administration/Jobs/UserJob/ArchivedJobs'
+import JobsDashboard from '../../views/pages/Administration/Jobs/JobDashboard'
+import ManageJobs from '../../views/pages/Administration/Jobs/ManageJobs'
+import ManageJobResumes from '../../views/pages/Administration/Jobs/ManageResumes'
+import ShortListCandidates from '../../views/pages/Administration/Jobs/ShortListCandidates'
+import InterviewingQuestions from '../../views/pages/Administration/Jobs/InterviewingQuestions'
+import OfferApprovals from '../../views/pages/Administration/Jobs/OfferApprovals'
+import ExperienceLevel from '../../views/pages/Administration/Jobs/ExperienceLevel'
+import CanditatesList from '../../views/pages/Administration/Jobs/CanditatesList'
+import ScheduleTiming from '../../views/pages/Administration/Jobs/ScheduleTiming.jsx'
+import AptitudeResults from '../../views/pages/Administration/Jobs/AptitudeResults'
+import Users from '../../views/pages/Administration/Users'
+import ProjectList from '../../views/pages/Employees/Projects/ProjectList'
+import ProjectView from '../../views/pages/Employees/Projects/ProjectView'
+import OffCanvas from '../../components/OffCanvas'
+import FormSelectTwo from '../../views/pages/Ui_Interface/Forms/FormSelectTwo.jsx'
+import FileUpload from '../../views/pages/Ui_Interface/Forms/FileUpload.jsx'
+import Ribbon from '../../views/pages/Ui_Interface/Elements/Ribbon.jsx'
+import Clipboard from '../../views/pages/Ui_Interface/Elements/Clipboard.jsx'
+import Dragdrop from '../../views/pages/Ui_Interface/Elements/Dragdrop.jsx'
+import Ratings from '../../views/pages/Ui_Interface/Elements/Rating.jsx'
+import Texteditor from '../../views/pages/Ui_Interface/Elements/Texteditor.jsx'
+import Counter from '../../views/pages/Ui_Interface/Elements/Counter.jsx'
+import Scrollbar from '../../views/pages/Ui_Interface/Elements/Scrollbar.jsx'
+import Notification from '../../views/pages/Ui_Interface/Elements/Notification.jsx'
+import Stickynotes from '../../views/pages/Ui_Interface/Elements/Stickynote.jsx'
+import Timeline from '../../views/pages/Ui_Interface/Elements/Timeline.jsx'
+import Formwizard from '../../views/pages/Ui_Interface/Elements/Formwizard.jsx'
+import Apexchart from '../../views/pages/Ui_Interface/Charts/Apexcharts.jsx'
+import ChartJs from '../../views/pages/Ui_Interface/Charts/Chartjs.jsx'
+import MorrisCharts from '../../views/pages/Ui_Interface/Charts/Morrischarts.jsx'
+import FlotCharts from '../../views/pages/Ui_Interface/Charts/Flotcharts.jsx'
+import PeityCharts from '../../views/pages/Ui_Interface/Charts/Peitycharts.jsx'
+import C3Charts from '../../views/pages/Ui_Interface/Charts/C3charts.jsx'
+import FontAwesomeicons from '../../views/pages/Ui_Interface/Icons/Fontawesomeicons.jsx'
+import FeatherIcons from '../../views/pages/Ui_Interface/Icons/Feathericons.jsx'
+import IonicIcon from '../../views/pages/Ui_Interface/Icons/Ionicicons.jsx'
+import MaterialIcons from '../../views/pages/Ui_Interface/Icons/Materialicons.jsx'
+import Pe7Icon from '../../views/pages/Ui_Interface/Icons/Pe7icons.jsx'
+import SimpleLine from '../../views/pages/Ui_Interface/Icons/Simpleicons.jsx'
+import Themifyicons from '../../views/pages/Ui_Interface/Icons/Themifyicons.jsx'
+import WeatherIcons from '../../views/pages/Ui_Interface/Icons/Weathericons.jsx'
+import Typicons from '../../views/pages/Ui_Interface/Icons/Typicons.jsx'
+import FlagIcons from '../../views/pages/Ui_Interface/Icons/Flagicons.jsx'
+import ContactList from '../../views/pages/Crm/ContactList.jsx'
+import ContactGrid from '../../views/pages/Crm/ContactGrid.jsx'
+import DealsDashboard from '../../views/pages/MainPages/Dashboard/DealsDashboard/index.jsx'
+import LeadsDashboard from '../../views/pages/MainPages/Dashboard/LeadsDashboard/index.jsx'
+import TicketDetails from '../../views/pages/Employees/TicketDetails.jsx'
+import Companies from '../../views/pages/Crm/companies.jsx'
+import ContactDetails from '../../views/pages/Crm/ContactDetails.jsx'
+import LeadsList from '../../views/pages/Crm/LeadsList.jsx'
+import BdLeadsList from '../../views/pages/Crm/BdLeadsList.jsx'
+import DlLeadsList from '../../views/pages/Crm/DlLeadsList.jsx'
+import LeadsKanban from '../../views/pages/Crm/LeadsKanban.jsx'
+import LeadsDetails from '../../views/pages/Crm/LeadsDetails.jsx'
+import PipeLine from '../../views/pages/Crm/PipeLine.jsx'
+import CompaniesGrid from '../../views/pages/Crm/CompaniesGrid.jsx'
+import CompanyDetails from '../../views/pages/Crm/CompanyDetails.jsx'
+import Deals from '../../views/pages/Crm/Deals.jsx'
+import DealsKanban from '../../views/pages/Crm/DealsKanban.jsx'
+import Analytics from '../../views/pages/Crm/Analytics.jsx'
+import EmailContent from '../../views/pages/MainPages/Apps/Email/emailContent.jsx'
+import EmailView from '../../views/pages/MainPages/Apps/Email/emailView.jsx'
+import DealsDetails from '../../views/pages/Crm/DealsDetails.jsx'
+import ProposalCreation from '../../views/pages/MainPages/Apps/FileManager/proposalcreation.jsx'
+import ArchieveProjectDetails from '../../views/pages/MainPages/Apps/FileManager/projectdetails.jsx'
+import ProposalDetails from '../../views/pages/MainPages/Apps/FileManager/proposaldetails.jsx'
+>>>>>>> Stashed changes
 
-import ProposalList from "../../views/pages/MainPages/Apps/FileManager/ProposalList.jsx";
+import ProposalList from '../../views/pages/MainPages/Apps/FileManager/ProposalList.jsx'
 
-import ProtectedRoute from "../../reducers/ProtectedRoute";
-import { ProtectedRoutesProvider } from "../../reducers/ProtectedRoutesReducer";
+import ProtectedRoute from '../../reducers/ProtectedRoute'
+import { ProtectedRoutesProvider } from '../../reducers/ProtectedRoutesReducer'
 
 const AppContainer = () => {
   useEffect(() => {
-    localStorage.setItem("colorschema", "purple");
-    localStorage.setItem("layout", "vertical");
-    localStorage.setItem("layoutwidth", "fixed");
-    localStorage.setItem("layoutpos", "fluid");
-    localStorage.setItem("topbartheme", "light");
-    localStorage.setItem("layoutSized", "lg");
-    localStorage.setItem("layoutStyling", "default");
-    localStorage.setItem("layoutSidebarStyle", "dark");
-  }, []);
+    localStorage.setItem('colorschema', 'purple')
+    localStorage.setItem('layout', 'vertical')
+    localStorage.setItem('layoutwidth', 'fixed')
+    localStorage.setItem('layoutpos', 'fluid')
+    localStorage.setItem('topbartheme', 'light')
+    localStorage.setItem('layoutSized', 'lg')
+    localStorage.setItem('layoutStyling', 'default')
+    localStorage.setItem('layoutSidebarStyle', 'dark')
+  }, [])
 
   //   const ProtectedRoute = ({ allowedRoles, children }) => {
   //   const {userRole} = useSelector((state) => state.authSlice);
@@ -224,117 +417,125 @@ const AppContainer = () => {
   const routingObjects = [
     {
       id: 1,
-      path: "form-basic-inputs",
+      path: 'form-basic-inputs',
       element: <BasicInputs />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 2,
-      path: "admin-dashboard",
+      path: 'admin-dashboard',
       element: <AdminDashboard />,
-      allowedRoles: ["admin", "Employee"], // Only admin can access this route
+      allowedRoles: ['admin', 'Employee'] // Only admin can access this route
     },
     {
       id: 3,
-      path: "form-horizontal",
+      path: 'form-horizontal',
       element: <HorizontalForm />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 4,
-      path: "form-vertical",
+      path: 'form-vertical',
       element: <VerticalForm />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 5,
-      path: "form-mask",
+      path: 'form-mask',
       element: <Formmask />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 6,
-      path: "form-validation",
+      path: 'form-validation',
       element: <Formvalidation />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 7,
-      path: "tables-basic",
+      path: 'tables-basic',
       element: <TablesBasic />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 8,
-      path: "data-tables",
+      path: 'data-tables',
       element: <DataTables />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 9,
-      path: "performance-indicator",
+      path: 'performance-indicator',
       element: <PerformanceIndicator />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 10,
-      path: "performance",
+      path: 'performance',
       element: <PerformanceReview />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 11,
-      path: "performance-appraisal",
+      path: 'performance-appraisal',
       element: <PerformanceAppraisal />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 12,
-      path: "goal-tracking",
+      path: 'goal-tracking',
       element: <GoalTracking />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 13,
-      path: "goal-type",
+      path: 'goal-type',
       element: <GoalType />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 14,
-      path: "trainers",
+      path: 'trainers',
       element: <Trainers />,
-      allowedRoles: ["admin", "Employee"], // Allowed roles for this route
+      allowedRoles: ['admin', 'Employee'] // Allowed roles for this route
     },
     {
       id: 15,
-      path: "training",
+      path: 'training',
       element: <Training />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 16,
-      path: "training-type",
+      path: 'training-type',
       element: <TrainingType />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 17,
-      path: "Employee-dashboard",
+      path: 'Employee-dashboard',
       element: <EmployeeDashboard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: [
+        'Admin',
+        'Employee',
+        'BD',
+        'HR',
+        'IT',
+        'Project Manager',
+        'Division Lead'
+      ]
     },
     {
       id: 18,
-      path: "activities",
+      path: 'activities',
       element: <Activities />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 19,
-      path: "form-input-groups",
+      path: 'form-input-groups',
       element: <InputGroups />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     // {
     //   id: 20,
@@ -343,1038 +544,1060 @@ const AppContainer = () => {
     // },
     {
       id: 21,
-      path: "events",
+      path: 'events',
       element: <Calendar />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 22,
-      path: "contacts",
+      path: 'contacts',
       element: <Contacts />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
 
     {
       id: 23,
-      path: "file-manager",
+      path: 'file-manager',
       element: <FileManager />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'Employee', 'Project Manager', 'Division Lead']
     },
     {
       id: 24,
-      path: "estimates",
+      path: 'estimates',
       element: <Estimates />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 25,
-      path: "create-estimate",
+      path: 'create-estimate',
       element: <CreateEstimate />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 26,
-      path: "edit-estimate",
+      path: 'edit-estimate',
       element: <EditEstimate />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 27,
-      path: "invoices",
+      path: 'invoices',
       element: <Invoices />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 28,
-      path: "create-invoice",
+      path: 'create-invoice',
       element: <CreateInvoice />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 29,
-      path: "edit-invoice",
+      path: 'edit-invoice',
       element: <EditInvoice />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 30,
-      path: "invoice-view",
+      path: 'invoice-view',
       element: <InvoiceView />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 31,
-      path: "payments",
+      path: 'payments',
       element: <Payments />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 32,
-      path: "promotion",
+      path: 'promotion',
       element: <Promotion />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 33,
-      path: "resignation",
+      path: 'resignation',
       element: <Resignation />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 34,
-      path: "termination",
+      path: 'termination',
       element: <Termination />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 34,
-      path: "Employees",
+      path: 'Employees',
       element: <AllEmpoyee />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 35,
-      path: "holidays",
+      path: 'holidays',
       element: <Holidays />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 36,
-      path: "adminleaves",
+      path: 'adminleaves',
       element: <AdminLeave />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 37,
-      path: "leaves-Employee",
+      path: 'leaves-Employee',
       element: <EmployeeLeave />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 38,
-      path: "leave-settings",
+      path: 'leave-settings',
       element: <LeaveSettings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 39,
-      path: "adminattendance",
+      path: 'adminattendance',
       element: <AttendenceAdmin />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 40,
-      path: "attendance-Employee",
+      path: 'attendance-Employee',
       element: <AttendanceEmployee />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 41,
-      path: "departments",
+      path: 'departments',
       element: <Department />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 42,
-      path: "designations",
+      path: 'designations',
       element: <Designation />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 43,
-      path: "timesheet",
+      path: 'timesheet',
       element: <TimeSheet />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 43,
-      path: "shift-scheduling",
+      path: 'shift-scheduling',
       element: <ShiftScheduling />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 44,
-      path: "shift-list",
+      path: 'shift-list',
       element: <ShiftList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 45,
-      path: "overtime",
+      path: 'overtime',
       element: <OverTime />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 46,
-      path: "clients",
+      path: 'clients',
       element: <Clients />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 47,
-      path: "projects",
+      path: 'projects',
       element: <Project />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 48,
-      path: "clients-list",
+      path: 'clients-list',
       element: <ClientList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 49,
-      path: "task-board",
+      path: 'task-board',
       element: <TaskBoard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 50,
-      path: "leads",
+      path: 'leads',
       element: <Leads />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'HR']
     },
     {
       id: 51,
-      path: "tickets",
+      path: 'tickets',
       element: <Ticket />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 52,
-      path: "client-profile",
+      path: 'client-profile',
       element: <ClientProfile />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 53,
-      path: "profile",
+      path: 'profile',
       element: <Profile />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 54,
-      path: "subscriptions",
+      path: 'subscriptions',
       element: <Subscribtions />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 55,
-      path: "subscribed-companies",
+      path: 'subscribed-companies',
       element: <SubscribedCompany />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 56,
-      path: "subscriptions-company",
-      allowedRoles: ["admin", "Employee"],
-      element: <SubscribtionsCompany />,
+      path: 'subscriptions-company',
+      allowedRoles: ['admin', 'Employee'],
+      element: <SubscribtionsCompany />
     },
     {
       id: 57,
-      path: "search",
+      path: 'search',
       element: <Search />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 58,
-      path: "faq",
+      path: 'faq',
       element: <Faq />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 59,
-      path: "terms",
+      path: 'terms',
       element: <Terms />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 60,
-      path: "terms",
+      path: 'terms',
       element: <Terms />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 61,
-      path: "privacy-policy",
+      path: 'privacy-policy',
       element: <PrivacyPolicy />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 62,
-      path: "blank-page",
+      path: 'blank-page',
       element: <BlankPage />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 63,
-      path: "knowledgebase",
+      path: 'knowledgebase',
       element: <KnowledgeBase />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 64,
-      path: "knowledgebase-view",
+      path: 'knowledgebase-view',
       element: <KnowledgeBaseView />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 64,
-      path: "Employees-list",
+      path: 'Employees-list',
       element: <EmployeeList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 65,
-      path: "expenses",
+      path: 'expenses',
       element: <Expenses />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 66,
-      path: "provident-fund",
+      path: 'provident-fund',
       element: <ProvidentFund />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 67,
-      path: "taxes",
+      path: 'taxes',
       element: <Taxes />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 68,
-      path: "categories",
+      path: 'categories',
       element: <Categories />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 69,
-      path: "sub-category",
+      path: 'sub-category',
       element: <SubCategory />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 70,
-      path: "budgets",
+      path: 'budgets',
       element: <Budgets />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 71,
-      path: "budget-expenses",
+      path: 'budget-expenses',
       element: <BudgetExpenses />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 72,
-      path: "budget-revenues",
+      path: 'budget-revenues',
       element: <BudgetRevenues />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 73,
-      path: "salary-view",
+      path: 'salary-view',
       element: <PaySlip />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 74,
-      path: "payroll-items",
+      path: 'payroll-items',
       element: <PayrollItems />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 75,
-      path: "policies",
+      path: 'policies',
       element: <Policies />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 76,
-      path: "salary",
+      path: 'salary',
       element: <EmployeeSalary />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 77,
-      path: "expense-reports",
+      path: 'expense-reports',
       element: <ExpenseReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 78,
-      path: "invoice-reports",
+      path: 'invoice-reports',
       element: <InvoiceReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
 
     {
       id: 79,
-      path: "payments-reports",
+      path: 'payments-reports',
       element: <PaymentReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 80,
-      path: "project-reports",
+      path: 'project-reports',
       element: <ProjectReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 81,
-      path: "task-reports",
+      path: 'task-reports',
       element: <TaskReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 82,
-      path: "user-reports",
+      path: 'user-reports',
       element: <UserReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 83,
-      path: "Employee-reports",
+      path: 'Employee-reports',
       element: <EmployeeReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 84,
-      path: "payslip-reports",
+      path: 'payslip-reports',
       element: <PaySlipReports />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 85,
-      path: "attendance-reports",
+      path: 'attendance-reports',
       element: <AttendanceReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 86,
-      path: "attendance-reports",
+      path: 'attendance-reports',
       element: <AttendanceReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
 
     {
       id: 87,
-      path: "leave-reports",
+      path: 'leave-reports',
       element: <LeaveReport />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 88,
-      path: "daily-reports",
+      path: 'daily-reports',
       element: <DailyReports />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 89,
-      path: "project-list",
+      path: 'project-list',
       element: <ProjectList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 90,
-      path: "project-view",
+      path: 'project-view',
       element: <ProjectView />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 91,
-      path: "form-select2",
+      path: 'form-select2',
       element: <FormSelectTwo />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 92,
-      path: "file-upload",
+      path: 'file-upload',
       element: <FileUpload />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 93,
-      path: "ribbon",
+      path: 'ribbon',
       element: <Ribbon />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 94,
-      path: "clipboard",
+      path: 'clipboard',
       element: <Clipboard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 95,
-      path: "dragdrop",
+      path: 'dragdrop',
       element: <Dragdrop />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 96,
-      path: "rating",
+      path: 'rating',
       element: <Ratings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 97,
-      path: "text-editor",
+      path: 'text-editor',
       element: <Texteditor />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 98,
-      path: "counter",
+      path: 'counter',
       element: <Counter />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 99,
-      path: "scrollbar",
+      path: 'scrollbar',
       element: <Scrollbar />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 100,
-      path: "notification",
+      path: 'notification',
       element: <Notification />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 101,
-      path: "stickynote",
+      path: 'stickynote',
       element: <Stickynotes />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 102,
-      path: "timeline",
+      path: 'timeline',
       element: <Timeline />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
 
     {
       id: 103,
-      path: "form-wizard",
+      path: 'form-wizard',
       element: <Formwizard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 104,
-      path: "apex-charts",
+      path: 'apex-charts',
       element: <Apexchart />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 105,
-      path: "chartjs",
+      path: 'chartjs',
       element: <ChartJs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 106,
-      path: "morris-charts",
+      path: 'morris-charts',
       element: <MorrisCharts />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 107,
-      path: "flot-charts",
+      path: 'flot-charts',
       element: <FlotCharts />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 108,
-      path: "peity-charts",
+      path: 'peity-charts',
       element: <PeityCharts />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 109,
-      path: "charts-c3",
+      path: 'charts-c3',
       element: <C3Charts />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 110,
-      path: "fontawesome-icons",
+      path: 'fontawesome-icons',
       element: <FontAwesomeicons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 111,
-      path: "feather-icons",
+      path: 'feather-icons',
       element: <FeatherIcons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 112,
-      path: "ionic-icons",
+      path: 'ionic-icons',
       element: <IonicIcon />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 113,
-      path: "material-icons",
+      path: 'material-icons',
       element: <MaterialIcons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 114,
-      path: "pe7-icons",
+      path: 'pe7-icons',
       element: <Pe7Icon />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 115,
-      path: "simpleline-icons",
+      path: 'simpleline-icons',
       element: <SimpleLine />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 116,
-      path: "themify-icons",
+      path: 'themify-icons',
       element: <Themifyicons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 117,
-      path: "weather-icons",
+      path: 'weather-icons',
       element: <WeatherIcons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 118,
-      path: "typicons",
+      path: 'typicons',
       element: <Typicons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 119,
-      path: "flag-icons",
+      path: 'flag-icons',
       element: <FlagIcons />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 120,
-      path: "contact-list",
+      path: 'contact-list',
       element: <ContactList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 121,
-      path: "contact-grid",
+      path: 'contact-grid',
       element: <ContactGrid />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 122,
-      path: "deals-dashboard",
+      path: 'deals-dashboard',
       element: <DealsDashboard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 123,
-      path: "leads-dashboard",
+      path: 'leads-dashboard',
       element: <LeadsDashboard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 124,
-      path: "ticket-details",
+      path: 'ticket-details',
       element: <TicketDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 125,
-      path: "companies",
+      path: 'companies',
       element: <Companies />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 126,
-      path: "contact-details",
+      path: 'contact-details',
       element: <ContactDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 126,
-      path: "leads-list",
+      path: 'leads-list',
       element: <LeadsList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'HR']
     },
     {
       id: 127,
-      path: "leads-kanban",
+      path: 'leads-kanban',
       element: <LeadsKanban />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'HR']
     },
     {
       id: 128,
-      path: "leads-details",
+      path: 'leads-details',
       element: <LeadsDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'HR']
     },
     {
       id: 128,
-      path: "pipeline",
+      path: 'pipeline',
       element: <PipeLine />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 129,
-      path: "Companies-grid",
+      path: 'Companies-grid',
       element: <CompaniesGrid />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 130,
-      path: "company-details",
+      path: 'company-details',
       element: <CompanyDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 131,
-      path: "deals",
+      path: 'deals',
       element: <Deals />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 132,
-      path: "deals-kanban",
+      path: 'deals-kanban',
       element: <DealsKanban />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 130,
-      path: "analytics",
+      path: 'analytics',
       element: <Analytics />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 131,
-      path: "deals-details",
+      path: 'deals-details',
       element: <DealsDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 137,
-      path: "view-project-details",
+      path: 'view-project-details',
       element: <ArchieveProjectDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 139,
-      path: "view-proposal-details",
+      path: 'view-proposal-details',
       element: <ProposalDetails />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 136,
-      path: "proposal-creation",
+      path: 'proposal-creation',
       element: <ProposalCreation />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
     },
     {
       id: 138,
-      path: "proposal-list",
+      path: 'proposal-list',
       element: <ProposalList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
     },
     {
       id: 136,
-      path: "editer",
+      path: 'editer',
       element: <Editer />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
     },
+<<<<<<< Updated upstream
   ];
+=======
+    {
+      id: 140,
+      path: 'profile-stepper',
+      element: <ProfileStepper />,
+      allowedRoles: ['IT']
+    },
+    {
+      id: 126,
+      path: 'bd-leads-list',
+      element: <BdLeadsList />,
+      allowedRoles: ['BD']
+    },
+    {
+      id: 127,
+      path: 'dl-leads-list',
+      element: <DlLeadsList />,
+      allowedRoles: ['DL']
+    }
+  ]
+>>>>>>> Stashed changes
 
   const ChatRoutingeObjects = [
     {
       id: 1,
-      path: "chat",
+      path: 'chat',
       element: <Chat />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 2,
-      path: "voice-call",
+      path: 'voice-call',
       element: <VoiceCall />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 3,
-      path: "video-call",
+      path: 'video-call',
       element: <VideoCall />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 4,
-      path: "outgoing-call",
+      path: 'outgoing-call',
       element: <Outgoing />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 5,
-      path: "incoming-call",
+      path: 'incoming-call',
       element: <IncomingCall />,
-      allowedRoles: ["admin", "Employee"],
-    },
-  ];
+      allowedRoles: ['admin', 'Employee']
+    }
+  ]
   const ComponentsRoutingeObjects = [
     {
       id: 1,
-      path: "components",
+      path: 'components',
       element: <Components />,
-      allowedRoles: ["admin", "Employee"],
-    },
-  ];
+      allowedRoles: ['admin', 'Employee']
+    }
+  ]
   const EmailRoutingeObjects = [
     {
       id: 1,
-      path: "inbox",
+      path: 'inbox',
       element: <Email />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 2,
-      path: "compose",
+      path: 'compose',
       element: <Compose />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 3,
-      path: "mail-view",
+      path: 'mail-view',
       element: <EmailView />,
-      allowedRoles: ["admin", "Employee"],
-    },
-  ];
+      allowedRoles: ['admin', 'Employee']
+    }
+  ]
   const SettingsRoutingeObjects = [
     {
       id: 1,
-      path: "company-settings",
+      path: 'company-settings',
       element: <Settings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 2,
-      path: "localization",
+      path: 'localization',
       element: <Localization />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 3,
-      path: "theme-settings",
+      path: 'theme-settings',
       element: <ThemeSettings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 4,
-      path: "roles-permissions",
+      path: 'roles-permissions',
       element: <RolesPermissions />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 5,
-      path: "email-settings",
+      path: 'email-settings',
       element: <EmailSettings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 6,
-      path: "performance-setting",
+      path: 'performance-setting',
       element: <PerformanceSetting />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 7,
-      path: "approval-setting",
+      path: 'approval-setting',
       element: <ApprovalSetting />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 8,
-      path: "invoice-settings",
+      path: 'invoice-settings',
       element: <InvoiceSettings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 9,
-      path: "salary-settings",
+      path: 'salary-settings',
       element: <SalarySettings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 10,
-      path: "notifications-settings",
+      path: 'notifications-settings',
       element: <NotificationSettings />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 11,
-      path: "leave-type",
+      path: 'leave-type',
       element: <LeaveType />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 14,
-      path: "toxbox-setting",
+      path: 'toxbox-setting',
       element: <ToxboxSetting />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 15,
-      path: "cron-setting",
+      path: 'cron-setting',
       element: <CronSetting />,
-      allowedRoles: ["admin", "Employee"],
-    },
-  ];
+      allowedRoles: ['admin', 'Employee']
+    }
+  ]
   const ProjectRoutingeObjects = [
     {
       id: 1,
-      path: "tasks",
+      path: 'tasks',
       element: <Tasks />,
-      allowedRoles: ["admin", "Employee"],
-    },
-  ];
+      allowedRoles: ['admin', 'Employee']
+    }
+  ]
 
   const AdministrationRoutingeObjects = [
     {
       id: 1,
-      path: "assets",
+      path: 'assets',
       element: <Assets />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 2,
-      path: "user-dashboard",
+      path: 'user-dashboard',
       element: <UserDashboard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 3,
-      path: "user-all-jobs",
+      path: 'user-all-jobs',
       element: <UserAllJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 4,
-      path: "saved-jobs",
+      path: 'saved-jobs',
       element: <SavedJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 5,
-      path: "applied-jobs",
+      path: 'applied-jobs',
       element: <AppliedJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
 
     {
       id: 6,
-      path: "interviewing",
+      path: 'interviewing',
       element: <Interviewing />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 7,
-      path: "job-aptitude",
+      path: 'job-aptitude',
       element: <JobAptitude />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 8,
-      path: "questions",
+      path: 'questions',
       element: <Questions />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 9,
-      path: "offered-jobs",
+      path: 'offered-jobs',
       element: <UserOfferedJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 10,
-      path: "visited-jobs",
+      path: 'visited-jobs',
       element: <VisitedJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 11,
-      path: "archived-jobs",
+      path: 'archived-jobs',
       element: <ArchivedJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 12,
-      path: "jobs-dashboard",
+      path: 'jobs-dashboard',
       element: <JobsDashboard />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 13,
-      path: "jobs",
+      path: 'jobs',
       element: <ManageJobs />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 14,
-      path: "manage-resumes",
+      path: 'manage-resumes',
       element: <ManageJobResumes />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 15,
-      path: "shortlist-candidates",
+      path: 'shortlist-candidates',
       element: <ShortListCandidates />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 16,
-      path: "interview-questions",
+      path: 'interview-questions',
       element: <InterviewingQuestions />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 17,
-      path: "offer_approvals",
+      path: 'offer_approvals',
       element: <OfferApprovals />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 18,
-      path: "experiance-level",
+      path: 'experiance-level',
       element: <ExperienceLevel />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 19,
-      path: "candidates",
+      path: 'candidates',
       element: <CanditatesList />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 21,
-      path: "schedule-timing",
+      path: 'schedule-timing',
       element: <ScheduleTiming />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 22,
-      path: "apptitude-result",
+      path: 'apptitude-result',
       element: <AptitudeResults />,
-      allowedRoles: ["admin", "Employee"],
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 23,
-      path: "users",
+      path: 'users',
       element: <Users />,
-      allowedRoles: ["admin", "Employee"],
-    },
-  ];
+      allowedRoles: ['admin', 'Employee']
+    }
+  ]
 
   const SidebarLayout = () => (
     <>
@@ -1383,62 +1606,62 @@ const AppContainer = () => {
       <OffCanvas />
       <Outlet />
     </>
-  );
-  const AuthendicationLayout = () => <div></div>;
+  )
+  const AuthendicationLayout = () => <div></div>
   const ChatSidebarLayout = () => (
     <>
       <Header />
       <ChatSidebar />
       <Outlet />
     </>
-  );
+  )
   const ComponentSidebarLayout = () => (
     <>
       <Header />
       <ComponentSidebar />
       <Outlet />
     </>
-  );
+  )
   const EmailSidebarLayout = () => (
     <>
       <Header />
       <EmailSidebar />
       <Outlet />
     </>
-  );
+  )
   const SettingsSidebarLayout = () => (
     <>
       <Header />
       <SettingsSidebar />
       <Outlet />
     </>
-  );
+  )
   const ProjectSidebarLayout = () => (
     <>
       <Header />
       <SidebarProject />
       <Outlet />
     </>
-  );
+  )
 
-  const mobileResponsive = (event) => {
-    const excludedHeader = document.querySelector(".header");
-    const excludedSidebar = document.querySelector(".sidebar");
+  const mobileResponsive = event => {
+    const excludedHeader = document.querySelector('.header')
+    const excludedSidebar = document.querySelector('.sidebar')
 
     if (
       !excludedHeader.contains(event.target) &&
       !excludedSidebar.contains(event.target)
     ) {
-      document.body.classList.remove("slide-nav");
+      document.body.classList.remove('slide-nav')
     }
-  };
+  }
 
   return (
     <ProtectedRoutesProvider>
-      <div className="main-wrapper" onClick={mobileResponsive}>
+      <div className='main-wrapper' onClick={mobileResponsive}>
         <Routes>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {routingObjects.map((item) => (
+          <Route path={'/*'} element={<SidebarLayout />}>
+            {routingObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1452,8 +1675,8 @@ const AppContainer = () => {
             ))}
           </Route>
 
-          <Route path={"/*"} element={<ChatSidebarLayout />}>
-            {ChatRoutingeObjects.map((item) => (
+          <Route path={'/*'} element={<ChatSidebarLayout />}>
+            {ChatRoutingeObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1466,8 +1689,8 @@ const AppContainer = () => {
               />
             ))}
           </Route>
-          <Route path={"/*"} element={<ComponentSidebarLayout />}>
-            {ComponentsRoutingeObjects.map((item) => (
+          <Route path={'/*'} element={<ComponentSidebarLayout />}>
+            {ComponentsRoutingeObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1480,8 +1703,8 @@ const AppContainer = () => {
               />
             ))}
           </Route>
-          <Route path={"/*"} element={<EmailSidebarLayout />}>
-            {EmailRoutingeObjects.map((item) => (
+          <Route path={'/*'} element={<EmailSidebarLayout />}>
+            {EmailRoutingeObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1494,8 +1717,8 @@ const AppContainer = () => {
               />
             ))}
           </Route>
-          <Route path={"/*"} element={<SettingsSidebarLayout />}>
-            {SettingsRoutingeObjects.map((item) => (
+          <Route path={'/*'} element={<SettingsSidebarLayout />}>
+            {SettingsRoutingeObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1508,8 +1731,8 @@ const AppContainer = () => {
               />
             ))}
           </Route>
-          <Route path={"/*"} element={<ProjectSidebarLayout />}>
-            {ProjectRoutingeObjects.map((item) => (
+          <Route path={'/*'} element={<ProjectSidebarLayout />}>
+            {ProjectRoutingeObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1523,8 +1746,8 @@ const AppContainer = () => {
             ))}
           </Route>
 
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {AdministrationRoutingeObjects.map((item) => (
+          <Route path={'/*'} element={<SidebarLayout />}>
+            {AdministrationRoutingeObjects.map(item => (
               <Route
                 key={item.id}
                 path={item.path}
@@ -1537,13 +1760,13 @@ const AppContainer = () => {
               />
             ))}
           </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            <Route path="*" element={<Navigate to="/" />} />
+          <Route path={'/*'} element={<SidebarLayout />}>
+            <Route path='*' element={<Navigate to='/' />} />
           </Route>
         </Routes>
       </div>
     </ProtectedRoutesProvider>
-  );
-};
+  )
+}
 
-export default AppContainer;
+export default AppContainer

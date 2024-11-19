@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import {
   avatar1,
@@ -21,6 +21,9 @@ import AddLeads from '../../../components/modelpopup/Crm/AddLeads'
 import { useLocation } from 'react-router-dom'
 import { BASE_URL } from '../../../constants/urls'
 import AddQuotation from '../../../components/modelpopup/Crm/AddQuotation'
+import AddOrder from '../../../components/modelpopup/Crm/AddOrder'
+import UserContext from '../../../contexts/UserContext'
+import axios from 'axios'
 
 const LeadsDetails = () => {
   const location = useLocation()
@@ -28,27 +31,36 @@ const LeadsDetails = () => {
     location.state?.leadData ||
     JSON.parse(localStorage.getItem('leadData')) ||
     {}
-
-  const recentlyViewd = [
-    { value: 'Sort By Alphabet', label: 'Sort By Alphabet' },
-    { value: 'Ascending', label: 'Ascending' },
-    { value: 'Descending', label: 'Descending' }
-  ]
+  const { setLead, lead, setlead } = useContext(UserContext)
 
   const [leadData, setleadData] = useState(() => initialLead)
 
   useEffect(() => {
+    setLead(leadData)
+    setleadData(leadData)
     localStorage.setItem('leadData', JSON.stringify(leadData))
   }, [location.state, leadData])
 
-  const [lead, setLead] = useState(initialLead)
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem('leadData'))
+    console.log('i am here FYIIIIII boss', data)
 
-  const updateStatusInBackend = async () => {
+    setleadData(data)
+  }, [lead])
+
+  // const [lead, setLead] = useState(initialLead)
+
+  const updateStatusInBackend = async (data = '') => {
     const formData = new FormData()
-    formData.append('status', 'opportunity')
+    if (leadData.status == 'open') {
+      formData.append('status', 'opportunity')
+    } else if (leadData.status == 'quotation') {
+      formData.append('status', data)
+    }
+
     const authToken = localStorage.getItem('BearerToken')
     try {
-      const response = await fetch(`${BASE_URL}leads/${lead.id}/`, {
+      const response = await fetch(`${BASE_URL}leads/${leadData.id}/`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${authToken}`
@@ -70,17 +82,6 @@ const LeadsDetails = () => {
     }
   }
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? '#667eea' : '#fff',
-      color: state.isFocused ? '#fff' : '#000',
-      '&:hover': {
-        backgroundColor: '#667eea'
-      }
-    })
-  }
-
   const tooltipContent = (
     <Tooltip id='tooltip'>
       There are no email accounts configured. Please configure your email
@@ -96,40 +97,65 @@ const LeadsDetails = () => {
   const handleCancel = () => {
     setShowFirstField(false)
   }
-  const [isFullScreen, setFullScreen] = useState(false)
   const maximizeBtnRef = useRef(null)
 
-  useEffect(() => {
-    const handleClick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-        setFullScreen(true)
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-          setFullScreen(false)
-        }
-      }
-    }
-
-    const cleanup = () => {
-      if (isFullScreen && document.exitFullscreen) {
-        document.exitFullscreen()
-        setFullScreen(false)
-      }
-    }
-
-    const maximizeBtn = maximizeBtnRef.current
-    maximizeBtn.addEventListener('click', handleClick)
-
-    // Cleanup function to remove the event listener and exit fullscreen on component unmount
-    return () => {
-      maximizeBtn.removeEventListener('click', handleClick)
-      cleanup()
-    }
-  }, [isFullScreen])
-
   const [visibleItems, setVisibleItems] = useState(['Open Lead'])
+
+  const [orders, setOrders] = useState([])
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('BearerToken')
+    axios
+      .get(`${BASE_URL}leads/${leadData.id}/orders/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+      .then(response => {
+        setOrders(response.data)
+        console.log('response ', response)
+      })
+      .catch(error => {
+        console.error('Error fetching orders:', error)
+      })
+  }, [lead])
+
+  const [quotationData, setQuotationData] = useState(null)
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('BearerToken')
+    const fetchQuotationData = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}quotations/by-lead/${leadData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            }
+          }
+        )
+        if (response.data.length > 0) {
+          setQuotationData(response.data[0])
+        } else {
+          setQuotationData(response.data)
+        }
+      } catch (error) {
+        console.error('Error fetching quotation data:', error)
+      }
+    }
+
+    fetchQuotationData()
+  }, [lead])
+
+  if (!quotationData) return <p>Loading...</p>
+
+  const {
+    customer_name,
+    payment_list,
+    payment_duration,
+    created_at,
+    approved_by_username
+  } = quotationData
 
   return (
     <>
@@ -177,7 +203,7 @@ const LeadsDetails = () => {
                     </Link>
                     */}
                     <div className='dropdown action-drops'>
-                      {lead.status === 'open' && (
+                      {leadData.status === 'open' && (
                         <Link
                           to='#'
                           className='btn btn-sm btn-primary add-btn'
@@ -187,7 +213,7 @@ const LeadsDetails = () => {
                           Make Opportunity
                         </Link>
                       )}
-                      {lead.status == 'opportunity' && (
+                      {leadData.status == 'opportunity' && (
                         <Link
                           to='#'
                           className='btn btn-sm btn-primary add-btn'
@@ -198,12 +224,77 @@ const LeadsDetails = () => {
                           Add Quotation
                         </Link>
                       )}
-                      {lead.status == 'quotation' && (
-                        <Link to='#' className='btn btn-sm btn-primary add-btn'>
-                          <i className='la' />
-                          Sale Order
-                        </Link>
-                      )}
+                      <>
+                        {leadData.status === 'quotation' && (
+                          <>
+                            <Link
+                              to='#'
+                              className='btn btn-sm btn-primary add-btn'
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+                                backgroundColor: 'green',
+                                borderColor: 'transparent'
+                              }}
+                              onClick={() => updateStatusInBackend('win')}
+                            >
+                              <i className='la' />
+                              Win
+                            </Link>
+                            <Link
+                              to='#'
+                              className='btn btn-sm btn-primary add-btn'
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center',
+                                backgroundColor: 'red',
+                                borderColor: 'transparent'
+                              }}
+                              onClick={() => updateStatusInBackend('lost')}
+                            >
+                              <i className='la' />
+                              Lost
+                            </Link>
+                            <Link
+                              to='#'
+                              className='btn btn-sm btn-primary add-btn'
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textAlign: 'center'
+                              }}
+                              data-bs-toggle='modal'
+                              data-bs-target='#add_orders'
+                            >
+                              <i className='la' />
+                              Add Order
+                            </Link>
+                          </>
+                        )}
+
+                        {leadData.status === 'win' && (
+                          <Link
+                            to='#'
+                            className='btn btn-sm btn-primary add-btn'
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textAlign: 'center'
+                            }}
+                            data-bs-toggle='modal'
+                            data-bs-target='#add_orders'
+                          >
+                            <i className='la' />
+                            Add Order
+                          </Link>
+                        )}
+                      </>
                     </div>
                   </div>
                 </div>
@@ -221,7 +312,7 @@ const LeadsDetails = () => {
                     <div className='col-sm-6'>
                       <ul className='contact-breadcrumb'>
                         <li>
-                          <Link to='/leads'>
+                          <Link to='/leads-list'>
                             <i className='las la-arrow-left' /> Leads
                           </Link>
                         </li>
@@ -235,7 +326,8 @@ const LeadsDetails = () => {
                     <div className='name-user'>
                       <h4>{leadData.name}</h4>
                       <p>
-                        <i className='las la-points' /> {leadData.notes}
+                        <i className='las la-points' />{' '}
+                        {leadData.communication_notes}
                       </p>
                     </div>
                   </div>
@@ -253,10 +345,6 @@ const LeadsDetails = () => {
                         <span>{leadData.created_date}</span>
                       </li>
                       <li>
-                        <span className='other-title'>Lead Owner</span>
-                        <span>{leadData.lead_gen_manager}</span>
-                      </li>
-                      <li>
                         <span className='other-title'>Assigned To</span>
                         <span>{leadData.assigned_to}</span>
                       </li>
@@ -271,10 +359,6 @@ const LeadsDetails = () => {
                         </span>
                       </li>
                       <li>
-                        <span className='other-title'>Client Name</span>
-                        <span>{leadData.gora}</span>
-                      </li>
-                      <li>
                         <span className='other-title'>Acc Executive</span>
                         <span>{leadData.account_executive}</span>
                       </li>
@@ -284,19 +368,17 @@ const LeadsDetails = () => {
                       </li>
                     </ul>
                     <div className='d-flex align-items-center justify-content-between flex-wrap'>
-                      <h5>Owner</h5>
+                      <h5>Lead Owner</h5>
                     </div>
                     <ul className='deals-info'>
                       <li>
-                        <span>
-                          <img src={avatar21} alt='img' />
-                        </span>
                         <div>
-                          <p>Vaughan</p>
+                          <p>{leadData.lead_gen_manager}</p>
                         </div>
                       </li>
                     </ul>
-                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+
+                    {/* <div className='d-flex align-items-center justify-content-between flex-wrap'>
                       <h5>Priority</h5>
                     </div>
                     <ul className='priority-info'>
@@ -330,44 +412,49 @@ const LeadsDetails = () => {
                           </div>
                         </div>
                       </li>
-                    </ul>
+                    </ul> */}
                     <div className='d-flex align-items-center justify-content-between flex-wrap'>
-                      <h5>Projects</h5>
-                    </div>
-                    <ul className='projects-info'>
-                      <li>
-                        <Link to='#' className='badge badge-light'>
-                          Devops Design
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to='#' className='badge badge-light'>
-                          Margrate Design
-                        </Link>
-                      </li>
-                    </ul>
-                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
-                      <h5>Contacts</h5>
-                      <Link
-                        to='#'
-                        className='com-add'
-                        data-bs-toggle='modal'
-                        data-bs-target='#add_contact'
-                      >
-                        <i className='las la-plus-circle me-1' />
-                        Add New
-                      </Link>
+                      <h5>Client Name</h5>
                     </div>
                     <ul className='deals-info'>
                       <li>
-                        <span>
-                          <img src={avatar1} alt='img' />
-                        </span>
                         <div>
-                          <p>Jessica</p>
+                          <p>{leadData.gora}</p>
                         </div>
                       </li>
                     </ul>
+                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+                      <h5>Attached Documents</h5>
+                    </div>
+                    <ul className='other-info'>
+                      {leadData?.documents && leadData?.documents.length > 0 ? (
+                        leadData?.documents.map((document, index) => (
+                          <li key={index}>
+                            <div className='d-flex align-items-center'>
+                              <span className='file-icon'>
+                                <i className='la la-file-alt' />
+                              </span>
+                              <p>{document.name}</p>
+                            </div>
+                            <div className='file-download'>
+                              <Link
+                              // onClick={() =>
+                              //   handleOpenInNewTab(leadData.file)
+                              // }
+                              >
+                                <i className='la la-download' />
+                                Download
+                              </Link>
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <li>No documents available</li>
+                      )}
+                    </ul>
+                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+                      <h5>Other Information</h5>
+                    </div>
                     <ul className='other-info'>
                       <li>
                         <span className='other-title'>Last Modified</span>
@@ -375,14 +462,7 @@ const LeadsDetails = () => {
                       </li>
                       <li>
                         <span className='other-title'>Modified By</span>
-                        <span>
-                          <img
-                            src={avatar19}
-                            className='avatar-xs rounded-circle'
-                            alt='img'
-                          />{' '}
-                          Darlee Robertson
-                        </span>
+                        <span>Darlee Robertson</span>
                       </li>
                     </ul>
                   </div>
@@ -482,7 +562,7 @@ const LeadsDetails = () => {
                         Notes
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to='#' data-bs-toggle='tab' data-bs-target='#calls'>
                         <i className='las la-phone-volume' />
                         Calls
@@ -499,6 +579,18 @@ const LeadsDetails = () => {
                         <i className='las la-envelope' />
                         Email
                       </Link>
+                    </li> */}
+                    <li>
+                      <Link to='#' data-bs-toggle='tab' data-bs-target='#qoute'>
+                        <i className='las la-file' />
+                        Quotations
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to='#' data-bs-toggle='tab' data-bs-target='#order'>
+                        <i className='las la-file' />
+                        Orders
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -509,19 +601,6 @@ const LeadsDetails = () => {
                     <div className='tab-pane active show' id='activities'>
                       <div className='view-header'>
                         <h4>Activities</h4>
-                        <ul>
-                          <li>
-                            <div className='form-sort deals-dash-select'>
-                              <i className='las la-sort-amount-up-alt' />
-                              <Select
-                                className='select w-100'
-                                options={recentlyViewd}
-                                placeholder='Sort By Alphabet'
-                                styles={customStyles}
-                              />
-                            </div>
-                          </li>
-                        </ul>
                       </div>
                       <div className='contact-activity'>
                         <div className='badge-day'>
@@ -720,16 +799,6 @@ const LeadsDetails = () => {
                       <div className='view-header'>
                         <h4>Notes</h4>
                         <ul>
-                          <li>
-                            <div className='form-sort deals-dash-select'>
-                              <Select
-                                className='select w-100'
-                                options={recentlyViewd}
-                                placeholder='Ascending'
-                                styles={customStyles}
-                              />
-                            </div>
-                          </li>
                           <li>
                             <Link
                               to='#'
@@ -1801,6 +1870,128 @@ const LeadsDetails = () => {
                       </div>
                     </div>
                     {/* /Email */}
+                    {/* /Quotation */}
+                    <div className='tab-pane fade' id='qoute'>
+                      <div className='view-header'>
+                        <h4>Quotations</h4>
+                      </div>
+                      <div className='contact-activity'>
+                        <ul>
+                          <li className='activity-wrap'>
+                            <span className='activity-icon bg-pending'>
+                              <i className='las la-file-alt' />
+                            </span>
+                            <div className='activity-info'>
+                              <div className='badge-day'>
+                                <i className='fa-regular fa-calendar-check' />
+                                Created Date:{' '}
+                                {new Date(created_at).toLocaleDateString(
+                                  'en-GB',
+                                  {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                  }
+                                )}
+                              </div>
+                              <h6>
+                                <b>Client Name: </b>
+                                {customer_name}
+                              </h6>
+                              <div className='upcoming-info'>
+                                <div className='row'>
+                                  <div className='col-sm-4'>
+                                    <p>
+                                      <b>Payment List</b>
+                                    </p>
+                                    <div className='dropdown'>
+                                      <p>{payment_list}</p>
+                                    </div>
+                                  </div>
+                                  <div className='col-sm-4'>
+                                    <p>
+                                      <b>PaymentTerm</b>
+                                    </p>
+                                    <div className='dropdown'>
+                                      <p>{payment_duration} Days</p>
+                                    </div>
+                                  </div>
+                                  <div className='col-sm-4'>
+                                    <p>
+                                      <b>Approved By</b>
+                                    </p>
+                                    <div className='dropdown'>
+                                      <p>
+                                        {approved_by_username
+                                          ? approved_by_username
+                                          : 'N/A'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    {/* /Quotation */}
+                    {/* /Order */}
+                    <div className='tab-pane fade' id='order'>
+                      <div className='view-header'>
+                        <h4>Orders</h4>
+                      </div>
+                      <div className='contact-activity'>
+                        <ul>
+                          {orders.map(order => (
+                            <li key={order.id} className='activity-wrap'>
+                              <span className='activity-icon bg-pending'>
+                                <i className='las la-file-alt' />
+                              </span>
+                              <div className='activity-info'>
+                                <div key={order.id} className='badge-day'>
+                                  <i className='fa-regular fa-calendar-check' />
+                                  Created Date:{' '}
+                                  {new Date(order.created_at).toLocaleString()}
+                                </div>
+                                <h6>
+                                  <b>Order Name:</b> {order.name}
+                                </h6>
+                                <div className='upcoming-info'>
+                                  <div className='row'>
+                                    <div className='col-sm-4'>
+                                      <p>
+                                        <b>UnitPrice</b>
+                                      </p>
+                                      <div className='dropdown'>
+                                        <p>{order.unit_price}</p>
+                                      </div>
+                                    </div>
+                                    <div className='col-sm-4'>
+                                      <p>
+                                        <b>Quantity</b>
+                                      </p>
+                                      <div className='dropdown'>
+                                        <p>{order.quantity}</p>
+                                      </div>
+                                    </div>
+                                    <div className='col-sm-4'>
+                                      <p>
+                                        <b>TotalPrice</b>
+                                      </p>
+                                      <div className='dropdown'>
+                                        <p>{order.total_price}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    {/* /Order */}
                   </div>
                 </div>
                 {/* /Tab Content */}
@@ -1818,6 +2009,7 @@ const LeadsDetails = () => {
         <AddFiles />
         <CreateEmail />
         <AddQuotation />
+        <AddOrder />
       </div>
       {/* /Page Content */}
     </>

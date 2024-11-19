@@ -7,7 +7,9 @@ export const AppProvider = ({ children }) => {
   const [userData, setUserData] = useState(JSON.parse(userDataString));
   const [activeStep, setActiveStep] = useState(0);
   const [profileID, setprofileID] = useState(0);
-  const [leadData, setLeadData] = useState();
+  const [leadData, setLead] = useState();
+  const [lead, setlead] = useState();
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -45,6 +47,15 @@ export const AppProvider = ({ children }) => {
       value={{
         userData,
         setUserData,
+<<<<<<< Updated upstream
+=======
+        activeStep,
+        setActiveStep,
+        formData,
+        setFormData,
+        profileID,
+        setprofileID,
+>>>>>>> Stashed changes
         activeStep,
         setActiveStep,
         formData,
@@ -52,7 +63,9 @@ export const AppProvider = ({ children }) => {
         profileID,
         setprofileID,
         leadData,
-        setLeadData,
+        setLead,
+        lead,
+        setlead,
       }}
     >
       {children}
@@ -61,6 +74,7 @@ export const AppProvider = ({ children }) => {
 };
 
 export default UserContext;
+<<<<<<< Updated upstream
 
 // degree: "",
 //     institute_name: "",
@@ -74,3 +88,5 @@ export default UserContext;
 //     company_designation2: "",
 //     company_duration: "",
 //     company_duration2: "",
+=======
+>>>>>>> Stashed changes

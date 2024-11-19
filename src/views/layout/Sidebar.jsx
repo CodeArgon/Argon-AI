@@ -2,337 +2,371 @@
 /* eslint-disable no-unused-vars */
 
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
-import Scrollbars from "react-custom-scrollbars-2";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from 'react'
+import Scrollbars from 'react-custom-scrollbars-2'
+import { useTranslation } from 'react-i18next'
 // import { withRouter } from "react-router-dom";
-import { Link, useLocation } from "react-router-dom";
-import { SidebarData } from "./sidebardata";
-import * as Icon from "react-feather";
+import { Link, useLocation } from 'react-router-dom'
+import { SidebarData } from './sidebardata'
 
 const Sidebar = () => {
-  const location = useLocation();
+  const userDataString = localStorage.getItem('user')
+  const [userData, setUserData] = useState(JSON.parse(userDataString))
+  const location = useLocation()
   // const pathname = location.pathname.split("/")[1];
-  const pathname = location.pathname;
+  const pathname = location.pathname
   // console.log("pageurl", pathname);
 
-  const [sidebarData, setSidebarData] = useState(SidebarData);
-  const [isSidebarExpanded, setSidebarExpanded] = useState(false);
-  const [isMouseOverSidebar, setMouseOverSidebar] = useState(false);
-  const [submenuDrop, setSubmenudrop] = useState(false);
+  const [sidebarData, setSidebarData] = useState(SidebarData)
+  const [isSidebarExpanded, setSidebarExpanded] = useState(false)
+  const [isMouseOverSidebar, setMouseOverSidebar] = useState(false)
+  const [submenuDrop, setSubmenudrop] = useState(false)
 
-  const [isSideMenu, setSideMenu] = useState("");
-  const [level2Menu, setLevel2Menu] = useState("");
-  const [level3Menu, setLevel3Menu] = useState("");
-  const [isSideMenunew, setSideMenuNew] = useState("dashboard");
+  const [isSideMenu, setSideMenu] = useState('')
+  const [level2Menu, setLevel2Menu] = useState('')
+  const [level3Menu, setLevel3Menu] = useState('')
+  const [isSideMenunew, setSideMenuNew] = useState('dashboard')
+
+  const rolePermissions = {
+    Employee: ['Dashboard', 'File Manager'],
+    'Division Lead': [
+      'Dashboard',
+      'File Manager',
+      'Proposal Manager',
+      'DL Leads'
+    ],
+    IT: ['Dashboard', 'Add User'],
+    Admin: [
+      'Dashboard',
+      'File Manager',
+      'Proposal Manager',
+      'Leads',
+      'Add User'
+    ],
+    BD: ['Dashboard', 'Proposal Manager', 'My Leads'],
+    HR: ['Dashboard', 'Leads', 'Sale Order'],
+    'Project Manager': ['Dashboard', 'Proposal Manager', 'File Manager']
+  }
+
+  const filterMenuByRole = (menu, role) => {
+    const allowedMenus = rolePermissions[role] || []
+    return menu.filter(item => allowedMenus.includes(item.menuValue))
+  }
+
+  const userRole = userData?.user?.role // dynamically get this, e.g., from props, state, or context
+
+  const filteredMenuData = sidebarData.map(mainTittle => ({
+    ...mainTittle,
+    menu: filterMenuByRole(mainTittle.menu, userRole)
+  }))
 
   useEffect(() => {
     if (
       isMouseOverSidebar &&
-      document.body.classList.contains("mini-sidebar")
+      document.body.classList.contains('mini-sidebar')
     ) {
-      document.body.classList.add("expand-menu");
-      return;
+      document.body.classList.add('expand-menu')
+      return
     }
-    document.body.classList.remove("expand-menu");
-  }, [isMouseOverSidebar]);
+    document.body.classList.remove('expand-menu')
+  }, [isMouseOverSidebar])
 
   const handleMouseEnter = () => {
-    setMouseOverSidebar(true);
-  };
+    setMouseOverSidebar(true)
+  }
 
   const handleMouseLeave = () => {
-    setMouseOverSidebar(false);
-  };
-  const { t } = useTranslation();
+    setMouseOverSidebar(false)
+  }
+  const { t } = useTranslation()
 
-  const expandSubMenus = (menu) => {
-    sessionStorage.setItem("menuValue", menu.menuValue);
-    const updatedAdminSidebar = sidebarData.map((section) => {
-      const updatedSection = { ...section };
-      updatedSection.menu = section.menu.map((menuItem) =>
+  const expandSubMenus = menu => {
+    sessionStorage.setItem('menuValue', menu.menuValue)
+    const updatedAdminSidebar = sidebarData.map(section => {
+      const updatedSection = { ...section }
+      updatedSection.menu = section.menu.map(menuItem =>
         menu.menuValue != menuItem.menuValue
           ? {
               ...menuItem,
-              showSubRoute: false,
+              showSubRoute: false
             }
           : {
               ...menuItem,
-              showSubRoute: !menu.showSubRoute,
+              showSubRoute: !menu.showSubRoute
             }
-      );
-      return updatedSection;
-    });
-    setSidebarData(updatedAdminSidebar);
-  };
+      )
+      return updatedSection
+    })
+    setSidebarData(updatedAdminSidebar)
+  }
 
-  const activeRouterPath = (routesArray) => {
-    return (routesArray = Location.pathname);
-  };
+  const activeRouterPath = routesArray => {
+    return (routesArray = Location.pathname)
+  }
 
-  const activeRouterMenu = (menu) => {
-    return Location.pathname.includes(menu.toLowerCase());
-  };
+  const activeRouterMenu = menu => {
+    return Location.pathname.includes(menu.toLowerCase())
+  }
 
   const arrowDrop = () => {
-    setSubmenudrop(!submenuDrop);
-  };
+    setSubmenudrop(!submenuDrop)
+  }
 
-  const toggleSidebar = (value) => {
-    setSideMenu(value);
-    setSideMenuNew(value);
-  };
+  const toggleSidebar = value => {
+    setSideMenu(value)
+    setSideMenuNew(value)
+  }
 
-  const toggleLvelTwo = (value) => {
-    setLevel2Menu(value);
-  };
-  const toggleLevelThree = (value) => {
-    setLevel3Menu(value);
-  };
+  const toggleLvelTwo = value => {
+    setLevel2Menu(value)
+  }
+  const toggleLevelThree = value => {
+    setLevel3Menu(value)
+  }
 
   const MenuMore = () => {
-    document.getElementById("more-menu-hidden").classList.toggle("hidden");
-  };
+    document.getElementById('more-menu-hidden').classList.toggle('hidden')
+  }
   return (
     <div
-      className={`sidebar ${isSidebarExpanded ? "" : "hidden"}`}
-      id="sidebar"
+      className={`sidebar ${isSidebarExpanded ? '' : 'hidden'}`}
+      id='sidebar'
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="sidebar-inner slimscroll" style={{ overflow: false }}>
-        <div id="sidebar-menu" className="sidebar-menu">
-          <nav className="greedys sidebar-horizantal" id="horizantal-sidebar">
-            <ul className="list-inline-item list-unstyled links">
-              <li className="menu-title">
-                <span> {t("main")}</span>
+      <div className='sidebar-inner slimscroll' style={{ overflow: false }}>
+        <div id='sidebar-menu' className='sidebar-menu'>
+          <nav className='greedys sidebar-horizantal' id='horizantal-sidebar'>
+            <ul className='list-inline-item list-unstyled links'>
+              <li className='menu-title'>
+                <span> {t('main')}</span>
               </li>
 
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "dashboard" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'dashboard' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "dashboard" ? "" : "dashboard")
+                    toggleSidebar(isSideMenu == 'dashboard' ? '' : 'dashboard')
                   }
                 >
-                  <i className="la la-dashcube" />
-                  <span> {t("dashboard")}</span>
-                  <span className="menu-arrow" />
+                  <i className='la la-dashcube' />
+                  <span> {t('dashboard')}</span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "dashboard" ? (
+                {isSideMenu == 'dashboard' ? (
                   <ul
                     style={{
-                      display: isSideMenu == "dashboard" ? "block" : "none",
+                      display: isSideMenu == 'dashboard' ? 'block' : 'none'
                     }}
                   >
                     <li>
                       <Link
                         className={
-                          pathname.includes("admin-dashboard") ? "active" : ""
+                          pathname.includes('admin-dashboard') ? 'active' : ''
                         }
-                        to="/admin-dashboard"
+                        to='/admin-dashboard'
                       >
-                        {t("AdminDashboard")}
+                        {t('AdminDashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("employee-dashboard")
-                            ? "active"
-                            : ""
+                          pathname.includes('employee-dashboard')
+                            ? 'active'
+                            : ''
                         }
-                        to="/employee-dashboard"
+                        to='/employee-dashboard'
                       >
-                        {t("EmployeeDashboard")}
+                        {t('EmployeeDashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("deals-dashboard") ? "active" : ""
+                          pathname.includes('deals-dashboard') ? 'active' : ''
                         }
-                        to="/deals-dashboard"
+                        to='/deals-dashboard'
                       >
-                        {t("Deals Dashboard")}
+                        {t('Deals Dashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("leads-dashboard") ? "active" : ""
+                          pathname.includes('leads-dashboard') ? 'active' : ''
                         }
-                        to="/leads-dashboard"
+                        to='/leads-dashboard'
                       >
-                        {t("Leads Dashboard")}
+                        {t('Leads Dashboard')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "apps" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'apps' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "apps" ? "" : "apps")
+                    toggleSidebar(isSideMenu == 'apps' ? '' : 'apps')
                   }
                 >
-                  <i className="la la-cube" /> <span> {t("Apps")}</span>
-                  <span className="menu-arrow" />
+                  <i className='la la-cube' /> <span> {t('Apps')}</span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "apps" ? (
+                {isSideMenu == 'apps' ? (
                   <ul>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
-                        to="/call/chat"
+                        to='/call/chat'
                       >
-                        {t("Chat")}
+                        {t('Chat')}
                       </Link>
                     </li>
-                    <li className="submenu">
+                    <li className='submenu'>
                       <Link
-                        to="#"
-                        className={level2Menu == "calls" ? "subdrop" : ""}
+                        to='#'
+                        className={level2Menu == 'calls' ? 'subdrop' : ''}
                         onClick={() =>
-                          toggleLvelTwo(level2Menu == "calls" ? "" : "calls")
+                          toggleLvelTwo(level2Menu == 'calls' ? '' : 'calls')
                         }
                       >
-                        <span> {t("Calls")}</span>{" "}
-                        <span className="menu-arrow" />
+                        <span> {t('Calls')}</span>{' '}
+                        <span className='menu-arrow' />
                       </Link>
-                      {level2Menu == "calls" ? (
+                      {level2Menu == 'calls' ? (
                         <ul>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/voice-call"
+                              to='/call/voice-call'
                             >
-                              {t("VideoCall")}
+                              {t('VideoCall')}
                             </Link>
                           </li>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/video-call"
+                              to='/call/video-call'
                             >
-                              {t("VideoCall")}
+                              {t('VideoCall')}
                             </Link>
                           </li>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/outgoing-call"
+                              to='/call/outgoing-call'
                             >
-                              {t("OutgoingCall")}
+                              {t('OutgoingCall')}
                             </Link>
                           </li>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/incoming-call"
+                              to='/call/incoming-call'
                             >
-                              {t("IncomingCall")}
+                              {t('IncomingCall')}
                             </Link>
                           </li>
                         </ul>
                       ) : (
-                        ""
+                        ''
                       )}
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("events") ? "active" : ""}
-                        to="/events"
+                        className={pathname.includes('events') ? 'active' : ''}
+                        to='/events'
                       >
-                        {t("Calendar")}
+                        {t('Calendar')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
                         className={
-                          pathname.includes("contacts") ? "active" : ""
+                          pathname.includes('contacts') ? 'active' : ''
                         }
-                        to="/contacts"
+                        to='/contacts'
                       >
-                        {t("Contacts")}
+                        {t('Contacts')}
                       </Link>
                     </li>
                     <li>
-                      <Link to="/email/inbox">{t("Email")}</Link>
+                      <Link to='/email/inbox'>{t('Email')}</Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className="menu-title">
-                <span>{t("employees")}</span>
+              <li className='menu-title'>
+                <span>{t('employees')}</span>
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "employee" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'employee' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "employee" ? "" : "employee")
+                    toggleSidebar(isSideMenu == 'employee' ? '' : 'employee')
                   }
                 >
-                  <i className="la la-user" />
-                  <span className="noti-dot"> {t("Employee")}</span>
-                  <span className="menu-arrow" />
+                  <i className='la la-user' />
+                  <span className='noti-dot'> {t('Employee')}</span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "employee" ? (
+                {isSideMenu == 'employee' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("employees")
-                            ? "active"
-                            : pathname.includes("employees-list")
-                            ? "active"
-                            : ""
+                          pathname.includes('employees')
+                            ? 'active'
+                            : pathname.includes('employees-list')
+                            ? 'active'
+                            : ''
                         }
-                        to="/employees"
+                        to='/employees'
                       >
-                        {t("All Employee")}
+                        {t('All Employee')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("holidays") ? "active" : ""
+                          pathname.includes('holidays') ? 'active' : ''
                         }
-                        to="/holidays"
+                        to='/holidays'
                       >
-                        {t("Holidays")}
+                        {t('Holidays')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("adminleaves") ? "active" : ""
+                          pathname.includes('adminleaves') ? 'active' : ''
                         }
-                        to="/adminleaves"
+                        to='/adminleaves'
                       >
-                        {t("Leaves (Admin)")}
-                        <span className="badge rounded-pill bg-primary float-end">
+                        {t('Leaves (Admin)')}
+                        <span className='badge rounded-pill bg-primary float-end'>
                           1
                         </span>
                       </Link>
@@ -340,176 +374,176 @@ const Sidebar = () => {
                     <li>
                       <Link
                         className={
-                          pathname.includes("leaves-employee") ? "active" : ""
+                          pathname.includes('leaves-employee') ? 'active' : ''
                         }
-                        to="/leaves-employee"
+                        to='/leaves-employee'
                       >
-                        {t("Leaves (Employee)")}
+                        {t('Leaves (Employee)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("leave-settings") ? "active" : ""
+                          pathname.includes('leave-settings') ? 'active' : ''
                         }
-                        to="/leave-settings"
+                        to='/leave-settings'
                       >
-                        {t("Leave Setting")}
+                        {t('Leave Setting')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("adminattendance") ? "active" : ""
+                          pathname.includes('adminattendance') ? 'active' : ''
                         }
-                        to="/adminattendance"
+                        to='/adminattendance'
                       >
-                        {t("Attendance (Admin)")}
+                        {t('Attendance (Admin)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("attendance-employee")
-                            ? "active"
-                            : ""
+                          pathname.includes('attendance-employee')
+                            ? 'active'
+                            : ''
                         }
-                        to="/attendance-employee"
+                        to='/attendance-employee'
                       >
-                        {t("Attendance (Employee)")}
+                        {t('Attendance (Employee)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("departments") ? "active" : ""
+                          pathname.includes('departments') ? 'active' : ''
                         }
-                        to="/departments"
+                        to='/departments'
                       >
-                        {t("Department")}
+                        {t('Department')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("designations") ? "active" : ""
+                          pathname.includes('designations') ? 'active' : ''
                         }
-                        to="/designations"
+                        to='/designations'
                       >
-                        {t("Designation")}
+                        {t('Designation')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("timesheet") ? "active" : ""
+                          pathname.includes('timesheet') ? 'active' : ''
                         }
-                        to="/timesheet"
+                        to='/timesheet'
                       >
-                        {t("Timesheet")}
+                        {t('Timesheet')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("shift-scheduling") ||
-                          pathname.includes("shift-list")
-                            ? "active"
-                            : ""
+                          pathname.includes('shift-scheduling') ||
+                          pathname.includes('shift-list')
+                            ? 'active'
+                            : ''
                         }
-                        to="/shift-scheduling"
+                        to='/shift-scheduling'
                       >
-                        {t("Shift & Schedule")}
+                        {t('Shift & Schedule')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("overtime") ? "active" : ""
+                          pathname.includes('overtime') ? 'active' : ''
                         }
-                        to="/overtime"
+                        to='/overtime'
                       >
-                        {t("Overtime")}
+                        {t('Overtime')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className={pathname.includes("clients") ? "active" : ""}>
-                <Link to="/clients">
-                  <i className="la la-users" /> <span>{t("Clients")}</span>
+              <li className={pathname.includes('clients') ? 'active' : ''}>
+                <Link to='/clients'>
+                  <i className='la la-users' /> <span>{t('Clients')}</span>
                 </Link>
               </li>
 
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "projects" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'projects' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "projects" ? "" : "projects")
+                    toggleSidebar(isSideMenu == 'projects' ? '' : 'projects')
                   }
                 >
-                  <i className="la la-rocket" /> <span> {t("Projects")}</span>
-                  <span className="menu-arrow" />
+                  <i className='la la-rocket' /> <span> {t('Projects')}</span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "projects" ? (
+                {isSideMenu == 'projects' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("projects")
-                            ? "active"
-                            : pathname.includes("project-list")
-                            ? "active"
-                            : pathname.includes("project-view")
-                            ? "active"
-                            : ""
+                          pathname.includes('projects')
+                            ? 'active'
+                            : pathname.includes('project-list')
+                            ? 'active'
+                            : pathname.includes('project-view')
+                            ? 'active'
+                            : ''
                         }
-                        to="/projects"
+                        to='/projects'
                       >
-                        {t("Projects")}
+                        {t('Projects')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
-                        to="/task/tasks"
+                        to='/task/tasks'
                       >
-                        {t("Task")}
+                        {t('Task')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("task-board") ? "active" : ""
+                          pathname.includes('task-board') ? 'active' : ''
                         }
-                        to="/task-board"
+                        to='/task-board'
                       >
-                        {t("Task Board")}
+                        {t('Task Board')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
 
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "Crm" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'Crm' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "Crm" ? "" : "Crm")
+                    toggleSidebar(isSideMenu == 'Crm' ? '' : 'Crm')
                   }
                 >
-                  <i className="la la-ticket" /> <span> {t("Crm")}</span>
-                  <span className="menu-arrow" />
+                  <i className='la la-ticket' /> <span> {t('Crm')}</span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "Crm" ? (
+                {isSideMenu == 'Crm' ? (
                   <ul>
                     <li>
                       <Link
@@ -522,1208 +556,1208 @@ const Sidebar = () => {
                         //     ? "active"
                         //     : ""
                         // }
-                        to="/contact-list"
+                        to='/contact-list'
                       >
-                        {t("Contacts")}
+                        {t('Contacts')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
-                        to="/companies"
+                        to='/companies'
                       >
-                        {t("Companies")}
+                        {t('Companies')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("deals") ? "active" : ""}
-                        to="/deals"
+                        className={pathname.includes('deals') ? 'active' : ''}
+                        to='/deals'
                       >
-                        {t("Deals")}
+                        {t('Deals')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("leads") ? "active" : ""}
-                        to="/leads"
+                        className={pathname.includes('leads') ? 'active' : ''}
+                        to='/leads'
                       >
-                        {t("Leads")}
+                        {t('Leads')}
                       </Link>
                     </li>
 
                     <li>
                       <Link
                         className={
-                          pathname.includes("pipeline") ? "active" : ""
+                          pathname.includes('pipeline') ? 'active' : ''
                         }
-                        to="/pipeline"
+                        to='/pipeline'
                       >
-                        {t("Pipeline")}
+                        {t('Pipeline')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("analytics") ? "active" : ""
+                          pathname.includes('analytics') ? 'active' : ''
                         }
-                        to="/analytics"
+                        to='/analytics'
                       >
-                        {t("Analytics")}
+                        {t('Analytics')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
 
               <li
                 className={
-                  pathname.includes("tickets")
-                    ? "active"
-                    : pathname.includes("ticket-view")
-                    ? "active"
-                    : ""
+                  pathname.includes('tickets')
+                    ? 'active'
+                    : pathname.includes('ticket-view')
+                    ? 'active'
+                    : ''
                 }
               >
-                <Link to="/tickets">
-                  <i className="la la-ticket" /> <span>{t("Tickets")}</span>
+                <Link to='/tickets'>
+                  <i className='la la-ticket' /> <span>{t('Tickets')}</span>
                 </Link>
               </li>
-              <li className="menu-title">
-                <span>{t("hr")}</span>
+              <li className='menu-title'>
+                <span>{t('hr')}</span>
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "sales" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'sales' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "sales" ? "" : "sales")
+                    toggleSidebar(isSideMenu == 'sales' ? '' : 'sales')
                   }
                 >
-                  <i className="la la-files-o" /> <span> {t("Sales")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-files-o' /> <span> {t('Sales')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "sales" ? (
+                {isSideMenu == 'sales' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("estimates") ? "active" : ""
+                          pathname.includes('estimates') ? 'active' : ''
                         }
-                        to="/estimates"
+                        to='/estimates'
                       >
-                        {t("Estimates")}
+                        {t('Estimates')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("invoices") ? "active" : ""
+                          pathname.includes('invoices') ? 'active' : ''
                         }
-                        to="/invoices"
+                        to='/invoices'
                       >
-                        {t("Invoices")}
+                        {t('Invoices')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payments") ? "active" : ""
+                          pathname.includes('payments') ? 'active' : ''
                         }
-                        to="/payments"
+                        to='/payments'
                       >
-                        {t("Payments")}
+                        {t('Payments')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("expenses") ? "active" : ""
+                          pathname.includes('expenses') ? 'active' : ''
                         }
-                        to="/expenses"
+                        to='/expenses'
                       >
-                        {t("Expenses")}
+                        {t('Expenses')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("provident-fund") ? "active" : ""
+                          pathname.includes('provident-fund') ? 'active' : ''
                         }
-                        to="/provident-fund"
+                        to='/provident-fund'
                       >
-                        {t("Provident Fund")}
+                        {t('Provident Fund')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("taxes") ? "active" : ""}
-                        to="/taxes"
+                        className={pathname.includes('taxes') ? 'active' : ''}
+                        to='/taxes'
                       >
-                        {t("Taxes")}
+                        {t('Taxes')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
             </ul>
             <button
-              className="viewmoremenu"
-              id="more-menu"
+              className='viewmoremenu'
+              id='more-menu'
               onClick={() => MenuMore()}
             >
               More Menu
             </button>
-            <ul className="hidden-links hidden" id="more-menu-hidden">
-              <li className="submenu">
+            <ul className='hidden-links hidden' id='more-menu-hidden'>
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "accounting" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'accounting' ? 'subdrop' : ''}
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "accounting" ? "" : "accounting"
+                      isSideMenu == 'accounting' ? '' : 'accounting'
                     )
                   }
                 >
-                  <i className="la la-files-o" />{" "}
-                  <span> {t("Accounting")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-files-o' />{' '}
+                  <span> {t('Accounting')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "accounting" ? (
+                {isSideMenu == 'accounting' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("categories") ||
-                          pathname.includes("sub-category")
-                            ? "active"
-                            : ""
+                          pathname.includes('categories') ||
+                          pathname.includes('sub-category')
+                            ? 'active'
+                            : ''
                         }
-                        to="/categories"
+                        to='/categories'
                       >
-                        {t("Categories")}
+                        {t('Categories')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("budgets") ? "active" : ""}
-                        to="/budgets"
+                        className={pathname.includes('budgets') ? 'active' : ''}
+                        to='/budgets'
                       >
-                        {t("Budgets")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("budget-expenses") ? "active" : ""
-                        }
-                        to="/budget-expenses"
-                      >
-                        {t("Budgets Expenses")}
+                        {t('Budgets')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("budget-revenues") ? "active" : ""
+                          pathname.includes('budget-expenses') ? 'active' : ''
                         }
-                        to="/budget-revenues"
+                        to='/budget-expenses'
                       >
-                        {t("Budgets Revenues")}
+                        {t('Budgets Expenses')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('budget-revenues') ? 'active' : ''
+                        }
+                        to='/budget-revenues'
+                      >
+                        {t('Budgets Revenues')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "payroll" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'payroll' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "payroll" ? "" : "payroll")
+                    toggleSidebar(isSideMenu == 'payroll' ? '' : 'payroll')
                   }
                 >
-                  <i className="la la-money" />
-                  <span> {t("Payroll")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-money' />
+                  <span> {t('Payroll')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "payroll" ? (
+                {isSideMenu == 'payroll' ? (
                   <ul>
                     <li>
                       <Link
-                        className={pathname.includes("salary") ? "active" : ""}
-                        to="/salary"
+                        className={pathname.includes('salary') ? 'active' : ''}
+                        to='/salary'
                       >
-                        {t("Employee Salary")}
+                        {t('Employee Salary')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("salary-view") ? "active" : ""
+                          pathname.includes('salary-view') ? 'active' : ''
                         }
-                        to="/salary-view"
+                        to='/salary-view'
                       >
-                        {t("Payslip")}
+                        {t('Payslip')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payroll-items") ? "active" : ""
+                          pathname.includes('payroll-items') ? 'active' : ''
                         }
-                        to="/payroll-items"
+                        to='/payroll-items'
                       >
-                        {t("Payroll Items")}
+                        {t('Payroll Items')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className={pathname.includes("policies") ? "active" : ""}>
-                <Link to="/policies">
-                  <i className="la la-file-pdf-o" />{" "}
-                  <span>{t("Policies")}</span>
+              <li className={pathname.includes('policies') ? 'active' : ''}>
+                <Link to='/policies'>
+                  <i className='la la-file-pdf-o' />{' '}
+                  <span>{t('Policies')}</span>
                 </Link>
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "reports" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'reports' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "reports" ? "" : "reports")
+                    toggleSidebar(isSideMenu == 'reports' ? '' : 'reports')
                   }
                 >
-                  <i className="la la-pie-chart" />{" "}
-                  <span> {t("Reports")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-pie-chart' />{' '}
+                  <span> {t('Reports')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "reports" ? (
+                {isSideMenu == 'reports' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("expense-reports") ? "active" : ""
+                          pathname.includes('expense-reports') ? 'active' : ''
                         }
-                        to="/expense-reports"
+                        to='/expense-reports'
                       >
-                        {t("Expense Report")}
+                        {t('Expense Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("invoice-reports") ? "active" : ""
+                          pathname.includes('invoice-reports') ? 'active' : ''
                         }
-                        to="/invoice-reports"
+                        to='/invoice-reports'
                       >
-                        {t("Invoice Report")}
+                        {t('Invoice Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payments-reports") ? "active" : ""
+                          pathname.includes('payments-reports') ? 'active' : ''
                         }
-                        to="/payments-reports"
+                        to='/payments-reports'
                       >
-                        {t("Payment Report")}
+                        {t('Payment Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payments-reports") ? "active" : ""
+                          pathname.includes('payments-reports') ? 'active' : ''
                         }
-                        to="/payments-reports"
+                        to='/payments-reports'
                       >
-                        {t("Project Report")}
+                        {t('Project Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("task-reports") ? "active" : ""
+                          pathname.includes('task-reports') ? 'active' : ''
                         }
-                        to="/task-reports"
+                        to='/task-reports'
                       >
-                        {t("Task Report")}
+                        {t('Task Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("user-reports") ? "active" : ""
+                          pathname.includes('user-reports') ? 'active' : ''
                         }
-                        to="/user-reports"
+                        to='/user-reports'
                       >
-                        {t("User Report")}
+                        {t('User Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("employee-reports") ? "active" : ""
+                          pathname.includes('employee-reports') ? 'active' : ''
                         }
-                        to="/employee-reports"
+                        to='/employee-reports'
                       >
-                        {t("Employee Report")}
+                        {t('Employee Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payslip-reports") ? "active" : ""
+                          pathname.includes('payslip-reports') ? 'active' : ''
                         }
-                        to="/payslip-reports"
+                        to='/payslip-reports'
                       >
-                        {t("Payslip Report")}
+                        {t('Payslip Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("attendance-reports")
-                            ? "active"
-                            : ""
+                          pathname.includes('attendance-reports')
+                            ? 'active'
+                            : ''
                         }
-                        to="/attendance-reports"
+                        to='/attendance-reports'
                       >
-                        {t("Attendence Report")}
+                        {t('Attendence Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("leave-reports") ? "active" : ""
+                          pathname.includes('leave-reports') ? 'active' : ''
                         }
-                        to="/leave-reports"
+                        to='/leave-reports'
                       >
-                        {t("Leave Report")}
+                        {t('Leave Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("daily-reports") ? "active" : ""
+                          pathname.includes('daily-reports') ? 'active' : ''
                         }
-                        to="/daily-reports"
+                        to='/daily-reports'
                       >
-                        {t("Daily Report")}
+                        {t('Daily Report')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className="menu-title">
-                <span> {t("Performance")}</span>
+              <li className='menu-title'>
+                <span> {t('Performance')}</span>
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "performance" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'performance' ? 'subdrop' : ''}
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "performance" ? "" : "performance"
+                      isSideMenu == 'performance' ? '' : 'performance'
                     )
                   }
                 >
-                  <i className="la la-graduation-cap" />
-                  <span> {t("Performance")}</span>{" "}
-                  <span className="menu-arrow" />
+                  <i className='la la-graduation-cap' />
+                  <span> {t('Performance')}</span>{' '}
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "performance" ? (
+                {isSideMenu == 'performance' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("performance-indicator")
-                            ? "active"
-                            : ""
+                          pathname.includes('performance-indicator')
+                            ? 'active'
+                            : ''
                         }
-                        to="/performance-indicator"
+                        to='/performance-indicator'
                       >
-                        {t("Performance Indicator")}
+                        {t('Performance Indicator')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("performance") ? "active" : ""
+                          pathname.includes('performance') ? 'active' : ''
                         }
-                        to="/performance"
+                        to='/performance'
                       >
-                        {t("Performance Review")}
+                        {t('Performance Review')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("performance-appraisal")
-                            ? "active"
-                            : ""
+                          pathname.includes('performance-appraisal')
+                            ? 'active'
+                            : ''
                         }
-                        to="/performance-appraisal"
+                        to='/performance-appraisal'
                       >
-                        {t("Performance Appraisal")}
+                        {t('Performance Appraisal')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "goals" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'goals' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "goals" ? "" : "goals")
+                    toggleSidebar(isSideMenu == 'goals' ? '' : 'goals')
                   }
                 >
-                  <i className="la la-crosshairs" /> <span> {t("Goals")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-crosshairs' /> <span> {t('Goals')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "goals" ? (
+                {isSideMenu == 'goals' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("goal-tracking") ? "active" : ""
+                          pathname.includes('goal-tracking') ? 'active' : ''
                         }
-                        to="/goal-tracking"
+                        to='/goal-tracking'
                       >
-                        {t("Goal List")}
+                        {t('Goal List')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("goal-type") ? "active" : ""
+                          pathname.includes('goal-type') ? 'active' : ''
                         }
-                        to="/goal-type"
+                        to='/goal-type'
                       >
-                        {t("Goal Type")}
+                        {t('Goal Type')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "training" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'training' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "training" ? "" : "training")
+                    toggleSidebar(isSideMenu == 'training' ? '' : 'training')
                   }
                 >
-                  <i className="la la-edit" /> <span> {t("Training")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-edit' /> <span> {t('Training')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "training" ? (
+                {isSideMenu == 'training' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("training") ||
-                          pathname.includes("training-list")
-                            ? "active"
-                            : ""
+                          pathname.includes('training') ||
+                          pathname.includes('training-list')
+                            ? 'active'
+                            : ''
                         }
-                        to="/training"
+                        to='/training'
                       >
-                        {t("Training")}
+                        {t('Training')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("trainers") ? "active" : ""
+                          pathname.includes('trainers') ? 'active' : ''
                         }
-                        to="/trainers"
+                        to='/trainers'
                       >
-                        {t("Trainers")}
+                        {t('Trainers')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("training-type") ? "active" : ""
+                          pathname.includes('training-type') ? 'active' : ''
                         }
-                        to="/training-type"
+                        to='/training-type'
                       >
-                        {t("Training Type")}
+                        {t('Training Type')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
-              <li className={pathname.includes("promotion") ? "active" : ""}>
-                <Link to="/promotion">
-                  <i className="la la-bullhorn" /> <span>{t("Promotion")}</span>
+              <li className={pathname.includes('promotion') ? 'active' : ''}>
+                <Link to='/promotion'>
+                  <i className='la la-bullhorn' /> <span>{t('Promotion')}</span>
                 </Link>
               </li>
-              <li className={pathname.includes("resignation") ? "active" : ""}>
-                <Link to="/resignation">
-                  <i className="la la-external-link-square" />
-                  <span>{t("Resignation")}</span>
+              <li className={pathname.includes('resignation') ? 'active' : ''}>
+                <Link to='/resignation'>
+                  <i className='la la-external-link-square' />
+                  <span>{t('Resignation')}</span>
                 </Link>
               </li>
-              <li className={pathname.includes("termination") ? "active" : ""}>
-                <Link to="/termination">
-                  <i className="la la-times-circle" />
-                  <span>{t("Termination")}</span>
+              <li className={pathname.includes('termination') ? 'active' : ''}>
+                <Link to='/termination'>
+                  <i className='la la-times-circle' />
+                  <span>{t('Termination')}</span>
                 </Link>
               </li>
-              <li className="menu-title">
-                <span>{t("administration")}</span>
+              <li className='menu-title'>
+                <span>{t('administration')}</span>
               </li>
-              <li className={pathname.includes("assets") ? "active" : ""}>
-                <Link to="/assets">
-                  <i className="la la-object-ungroup" />{" "}
-                  <span>{t("Assets")}</span>
+              <li className={pathname.includes('assets') ? 'active' : ''}>
+                <Link to='/assets'>
+                  <i className='la la-object-ungroup' />{' '}
+                  <span>{t('Assets')}</span>
                 </Link>
               </li>
-              <li className="submenu">
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "jobs" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'jobs' ? 'subdrop' : ''}
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "jobs" ? "" : "jobs")
+                    toggleSidebar(isSideMenu == 'jobs' ? '' : 'jobs')
                   }
                 >
-                  <i className="la la-briefcase" /> <span> {t("Jobs")} </span>
-                  <span className="menu-arrow" />
+                  <i className='la la-briefcase' /> <span> {t('Jobs')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "jobs" ? (
+                {isSideMenu == 'jobs' ? (
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("user-dashboard") ||
-                          pathname.includes("user-all-jobs") ||
-                          pathname.includes("saved-jobs") ||
-                          pathname.includes("applied-jobs") ||
-                          pathname.includes("interviewing") ||
-                          pathname.includes("offered-jobs") ||
-                          pathname.includes("visited-jobs") ||
-                          pathname.includes("archived-jobs") ||
-                          pathname.includes("job-aptitude") ||
-                          pathname.includes("questions")
-                            ? "active"
-                            : ""
+                          pathname.includes('user-dashboard') ||
+                          pathname.includes('user-all-jobs') ||
+                          pathname.includes('saved-jobs') ||
+                          pathname.includes('applied-jobs') ||
+                          pathname.includes('interviewing') ||
+                          pathname.includes('offered-jobs') ||
+                          pathname.includes('visited-jobs') ||
+                          pathname.includes('archived-jobs') ||
+                          pathname.includes('job-aptitude') ||
+                          pathname.includes('questions')
+                            ? 'active'
+                            : ''
                         }
-                        to="/user-dashboard"
+                        to='/user-dashboard'
                       >
-                        {t("User Dashboard")}
+                        {t('User Dashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("jobs-dashboard") ? "active" : ""
+                          pathname.includes('jobs-dashboard') ? 'active' : ''
                         }
-                        to="/jobs-dashboard"
+                        to='/jobs-dashboard'
                       >
-                        {t("Jobs Dashboard")}
+                        {t('Jobs Dashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname === "/jobs" ? "active" : ""}
-                        to="/jobs"
+                        className={pathname === '/jobs' ? 'active' : ''}
+                        to='/jobs'
                       >
-                        {t("Manage Jobs")}
+                        {t('Manage Jobs')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("manage-resumes") ? "active" : ""
+                          pathname.includes('manage-resumes') ? 'active' : ''
                         }
-                        to="/manage-resumes"
+                        to='/manage-resumes'
                       >
-                        {t("Manage Resume")}
+                        {t('Manage Resume')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("shortlist-candidates")
-                            ? "active"
-                            : ""
+                          pathname.includes('shortlist-candidates')
+                            ? 'active'
+                            : ''
                         }
-                        to="/shortlist-candidates"
+                        to='/shortlist-candidates'
                       >
-                        {t("Shortlisted Candidate")}
+                        {t('Shortlisted Candidate')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname === "/interview-questions" ? "active" : ""
+                          pathname === '/interview-questions' ? 'active' : ''
                         }
-                        to="/interview-questions"
+                        to='/interview-questions'
                       >
-                        {t("Interview Question")}
+                        {t('Interview Question')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("offer_approvals") ? "active" : ""
+                          pathname.includes('offer_approvals') ? 'active' : ''
                         }
-                        to="/offer_approvals"
+                        to='/offer_approvals'
                       >
-                        {t("Offer Approvals")}
+                        {t('Offer Approvals')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("experiance-level") ? "active" : ""
+                          pathname.includes('experiance-level') ? 'active' : ''
                         }
-                        to="/experiance-level"
+                        to='/experiance-level'
                       >
-                        {t("Experience Level")}
+                        {t('Experience Level')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname === "/candidates" ? "active" : ""}
-                        to="/candidates"
+                        className={pathname === '/candidates' ? 'active' : ''}
+                        to='/candidates'
                       >
-                        {t("Candidate List")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("schedule-timing") ? "active" : ""
-                        }
-                        to="/schedule-timing"
-                      >
-                        {t("Schedule Timing")}
+                        {t('Candidate List')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("apptitude-result") ? "active" : ""
+                          pathname.includes('schedule-timing') ? 'active' : ''
                         }
-                        to="/apptitude-result"
+                        to='/schedule-timing'
                       >
-                        {t("Aptitude Results")}
+                        {t('Schedule Timing')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('apptitude-result') ? 'active' : ''
+                        }
+                        to='/apptitude-result'
+                      >
+                        {t('Aptitude Results')}
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
               <li
-                className={pathname.includes("knowledgebase") ? "active" : ""}
+                className={pathname.includes('knowledgebase') ? 'active' : ''}
               >
-                <Link to="/knowledgebase">
-                  <i className="la la-question" />{" "}
-                  <span>{t("Knowledgebase")}</span>
+                <Link to='/knowledgebase'>
+                  <i className='la la-question' />{' '}
+                  <span>{t('Knowledgebase')}</span>
                 </Link>
               </li>
-              <li className={pathname.includes("activities") ? "active" : ""}>
-                <Link to="/activities">
-                  <i className="la la-bell" /> <span>{t("Activities")}</span>
+              <li className={pathname.includes('activities') ? 'active' : ''}>
+                <Link to='/activities'>
+                  <i className='la la-bell' /> <span>{t('Activities')}</span>
                 </Link>
               </li>
-              <li className={pathname.includes("users") ? "active" : ""}>
-                <Link to="/users">
-                  <i className="la la-user-plus" /> <span>{t("User")}</span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/settings/company-settings">
-                  <i className="la la-cog" /> <span>{t("Settings")}</span>
-                </Link>
-              </li>
-              <li className="menu-title">
-                <span>{t("pages")}</span>
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "profile" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(isSideMenu == "profile" ? "" : "profile")
-                  }
-                >
-                  <i className="la la-user" /> <span> {t("Profile")} </span>
-                  <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "profile" ? (
-                  <ul>
-                    <li>
-                      <Link
-                        className={pathname.includes("profile") ? "active" : ""}
-                        to="/profile"
-                      >
-                        {t("Employee Profile")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("client-profile") ? "active" : ""
-                        }
-                        to="/client-profile"
-                      >
-                        {t("Client Profile")}
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "authentication" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(
-                      isSideMenu == "authentication" ? "" : "authentication"
-                    )
-                  }
-                >
-                  <i className="la la-key" />{" "}
-                  <span> {t("Authentication")} </span>
-                  <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "authentication" ? (
-                  <ul>
-                    <li>
-                      <Link to="/"> {t("Login")}</Link>
-                    </li>
-                    <li>
-                      <Link to="/register">{t("Register")} </Link>
-                    </li>
-                    <li>
-                      <Link to="/forgot-password">
-                        {" "}
-                        {t("Forgot Password")}{" "}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/otp">{t("OTP")}</Link>
-                    </li>
-                    <li>
-                      <Link to="/lock-screen"> {t("Lock Screen")}</Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "error pages" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(
-                      isSideMenu == "error pages" ? "" : "error pages"
-                    )
-                  }
-                >
-                  <i className="la la-exclamation-triangle" />
-                  <span> Error Pages </span> <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "error pages" ? (
-                  <ul>
-                    <li>
-                      <Link to="/error-404">{t("404 Error")} </Link>
-                    </li>
-                    <li>
-                      <Link to="/error-500">{t("500 Error")} </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "subscriptions" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(
-                      isSideMenu == "subscriptions" ? "" : "subscriptions"
-                    )
-                  }
-                >
-                  <i className="la la-hand-o-up" />
-                  <span> {t("Subscriptions")} </span>{" "}
-                  <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "subscriptions" ? (
-                  <ul>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("subscriptions") ? "active" : ""
-                        }
-                        to="/subscriptions"
-                      >
-                        {t("Subscriptions (Admin)")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("subscriptions-company")
-                            ? "active"
-                            : ""
-                        }
-                        to="/subscriptions-company"
-                      >
-                        {t("Subscriptions (Company")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("subscribed-companies")
-                            ? "active"
-                            : ""
-                        }
-                        to="/subscribed-companies"
-                      >
-                        {t("Subscribed Companies")}
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "pages" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(isSideMenu == "pages" ? "" : "pages")
-                  }
-                >
-                  <i className="la la-columns" /> <span>{t("Pages")} </span>
-                  <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "pages" ? (
-                  <ul>
-                    <li>
-                      <Link
-                        className={pathname.includes("search") ? "active" : ""}
-                        to="/search"
-                      >
-                        {t("Search")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={pathname.includes("faq") ? "active" : ""}
-                        to="/faq"
-                      >
-                        {t("FAQ")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={pathname.includes("terms") ? "active" : ""}
-                        to="/terms"
-                      >
-                        {t("Terms")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("privacy-policy") ? "active" : ""
-                        }
-                        to="/privacy-policy"
-                      >
-                        {t("Privacy Policy")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("blank-page") ? "active" : ""
-                        }
-                        to="/blank-page"
-                      >
-                        {t("Blank Page")}
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="menu-title">
-                <span>{t("uiInterface")}</span>
-              </li>
-              <li>
-                <Link to="/ui/components">
-                  <i className="la la-puzzle-piece" />{" "}
-                  <span> {t("Components")}</span>
-                </Link>
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "forms" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(isSideMenu == "forms" ? "" : "forms")
-                  }
-                >
-                  <i className="la la-object-group" />{" "}
-                  <span> {t("Forms")} </span>
-                  <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "forms" ? (
-                  <ul>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-basic-inputs") ? "active" : ""
-                        }
-                        to="/form-basic-inputs"
-                      >
-                        {t("Basic Inputs")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-input-groups") ? "active" : ""
-                        }
-                        to="/form-input-groups"
-                      >
-                        {t("Input Group")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-horizontal") ? "active" : ""
-                        }
-                        to="/form-horizontal"
-                      >
-                        {t("Horizontal Form")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-vertical") ? "active" : ""
-                        }
-                        to="/form-vertical"
-                      >
-                        {t("Vertical Form")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-mask") ? "active" : ""
-                        }
-                        to="/form-mask"
-                      >
-                        {t("Form Mask")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-validation") ? "active" : ""
-                        }
-                        to="/form-validation"
-                      >
-                        {t("Form Validation")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("form-select2") ? "active" : ""
-                        }
-                        to="/form-select2"
-                      >
-                        {t("Form Select2")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("file-upload") ? "active" : ""
-                        }
-                        to="/file-upload"
-                      >
-                        {t("Form Upload")}
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="submenu">
-                <Link
-                  to="#"
-                  className={isSideMenu == "tables" ? "subdrop" : ""}
-                  onClick={() =>
-                    toggleSidebar(isSideMenu == "tables" ? "" : "tables")
-                  }
-                >
-                  <i className="la la-table" /> <span> {t("Tables")} </span>
-                  <span className="menu-arrow" />
-                </Link>
-                {isSideMenu == "tables" ? (
-                  <ul>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("tables-basic") ? "active" : ""
-                        }
-                        to="/tables-basic"
-                      >
-                        {t("Basic Tables")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("data-tables") ? "active" : ""
-                        }
-                        to="/data-tables"
-                      >
-                        {t("Data Table")}
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  ""
-                )}
-              </li>
-              <li className="menu-title">
-                <span>{t("extras")}</span>
-              </li>
-              <li>
-                <Link to="#">
-                  <i className="la la-file-text" />{" "}
-                  <span> {t("Documentation")}</span>
+              <li className={pathname.includes('users') ? 'active' : ''}>
+                <Link to='/users'>
+                  <i className='la la-user-plus' /> <span>{t('User')}</span>
                 </Link>
               </li>
               <li>
-                <Link to="#">
-                  <i className="la la-info" /> <span>{t("Change Log")}</span>
-                  <span className="badge badge-primary ms-auto">v3.4</span>
+                <Link to='/settings/company-settings'>
+                  <i className='la la-cog' /> <span>{t('Settings')}</span>
                 </Link>
               </li>
-              <li className="submenu">
+              <li className='menu-title'>
+                <span>{t('pages')}</span>
+              </li>
+              <li className='submenu'>
                 <Link
-                  to="#"
-                  className={isSideMenu == "multi Level" ? "subdrop" : ""}
+                  to='#'
+                  className={isSideMenu == 'profile' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(isSideMenu == 'profile' ? '' : 'profile')
+                  }
+                >
+                  <i className='la la-user' /> <span> {t('Profile')} </span>
+                  <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'profile' ? (
+                  <ul>
+                    <li>
+                      <Link
+                        className={pathname.includes('profile') ? 'active' : ''}
+                        to='/profile'
+                      >
+                        {t('Employee Profile')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('client-profile') ? 'active' : ''
+                        }
+                        to='/client-profile'
+                      >
+                        {t('Client Profile')}
+                      </Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'authentication' ? 'subdrop' : ''}
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "multi Level" ? "" : "multi Level"
+                      isSideMenu == 'authentication' ? '' : 'authentication'
                     )
                   }
                 >
-                  <i className="la la-share-alt" />{" "}
-                  <span>{t("Multi Level")}</span>
-                  <span className="menu-arrow" />
+                  <i className='la la-key' />{' '}
+                  <span> {t('Authentication')} </span>
+                  <span className='menu-arrow' />
                 </Link>
-                {isSideMenu == "multi Level" ? (
+                {isSideMenu == 'authentication' ? (
                   <ul>
-                    <li className="submenu">
+                    <li>
+                      <Link to='/'> {t('Login')}</Link>
+                    </li>
+                    <li>
+                      <Link to='/register'>{t('Register')} </Link>
+                    </li>
+                    <li>
+                      <Link to='/forgot-password'>
+                        {' '}
+                        {t('Forgot Password')}{' '}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to='/otp'>{t('OTP')}</Link>
+                    </li>
+                    <li>
+                      <Link to='/lock-screen'> {t('Lock Screen')}</Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'error pages' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(
+                      isSideMenu == 'error pages' ? '' : 'error pages'
+                    )
+                  }
+                >
+                  <i className='la la-exclamation-triangle' />
+                  <span> Error Pages </span> <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'error pages' ? (
+                  <ul>
+                    <li>
+                      <Link to='/error-404'>{t('404 Error')} </Link>
+                    </li>
+                    <li>
+                      <Link to='/error-500'>{t('500 Error')} </Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'subscriptions' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(
+                      isSideMenu == 'subscriptions' ? '' : 'subscriptions'
+                    )
+                  }
+                >
+                  <i className='la la-hand-o-up' />
+                  <span> {t('Subscriptions')} </span>{' '}
+                  <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'subscriptions' ? (
+                  <ul>
+                    <li>
                       <Link
-                        to="#"
-                        className={level2Menu == "level 1" ? "subdrop" : ""}
+                        className={
+                          pathname.includes('subscriptions') ? 'active' : ''
+                        }
+                        to='/subscriptions'
+                      >
+                        {t('Subscriptions (Admin)')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('subscriptions-company')
+                            ? 'active'
+                            : ''
+                        }
+                        to='/subscriptions-company'
+                      >
+                        {t('Subscriptions (Company')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('subscribed-companies')
+                            ? 'active'
+                            : ''
+                        }
+                        to='/subscribed-companies'
+                      >
+                        {t('Subscribed Companies')}
+                      </Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'pages' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(isSideMenu == 'pages' ? '' : 'pages')
+                  }
+                >
+                  <i className='la la-columns' /> <span>{t('Pages')} </span>
+                  <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'pages' ? (
+                  <ul>
+                    <li>
+                      <Link
+                        className={pathname.includes('search') ? 'active' : ''}
+                        to='/search'
+                      >
+                        {t('Search')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={pathname.includes('faq') ? 'active' : ''}
+                        to='/faq'
+                      >
+                        {t('FAQ')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={pathname.includes('terms') ? 'active' : ''}
+                        to='/terms'
+                      >
+                        {t('Terms')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('privacy-policy') ? 'active' : ''
+                        }
+                        to='/privacy-policy'
+                      >
+                        {t('Privacy Policy')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('blank-page') ? 'active' : ''
+                        }
+                        to='/blank-page'
+                      >
+                        {t('Blank Page')}
+                      </Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='menu-title'>
+                <span>{t('uiInterface')}</span>
+              </li>
+              <li>
+                <Link to='/ui/components'>
+                  <i className='la la-puzzle-piece' />{' '}
+                  <span> {t('Components')}</span>
+                </Link>
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'forms' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(isSideMenu == 'forms' ? '' : 'forms')
+                  }
+                >
+                  <i className='la la-object-group' />{' '}
+                  <span> {t('Forms')} </span>
+                  <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'forms' ? (
+                  <ul>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-basic-inputs') ? 'active' : ''
+                        }
+                        to='/form-basic-inputs'
+                      >
+                        {t('Basic Inputs')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-input-groups') ? 'active' : ''
+                        }
+                        to='/form-input-groups'
+                      >
+                        {t('Input Group')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-horizontal') ? 'active' : ''
+                        }
+                        to='/form-horizontal'
+                      >
+                        {t('Horizontal Form')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-vertical') ? 'active' : ''
+                        }
+                        to='/form-vertical'
+                      >
+                        {t('Vertical Form')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-mask') ? 'active' : ''
+                        }
+                        to='/form-mask'
+                      >
+                        {t('Form Mask')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-validation') ? 'active' : ''
+                        }
+                        to='/form-validation'
+                      >
+                        {t('Form Validation')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('form-select2') ? 'active' : ''
+                        }
+                        to='/form-select2'
+                      >
+                        {t('Form Select2')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('file-upload') ? 'active' : ''
+                        }
+                        to='/file-upload'
+                      >
+                        {t('Form Upload')}
+                      </Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'tables' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(isSideMenu == 'tables' ? '' : 'tables')
+                  }
+                >
+                  <i className='la la-table' /> <span> {t('Tables')} </span>
+                  <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'tables' ? (
+                  <ul>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('tables-basic') ? 'active' : ''
+                        }
+                        to='/tables-basic'
+                      >
+                        {t('Basic Tables')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('data-tables') ? 'active' : ''
+                        }
+                        to='/data-tables'
+                      >
+                        {t('Data Table')}
+                      </Link>
+                    </li>
+                  </ul>
+                ) : (
+                  ''
+                )}
+              </li>
+              <li className='menu-title'>
+                <span>{t('extras')}</span>
+              </li>
+              <li>
+                <Link to='#'>
+                  <i className='la la-file-text' />{' '}
+                  <span> {t('Documentation')}</span>
+                </Link>
+              </li>
+              <li>
+                <Link to='#'>
+                  <i className='la la-info' /> <span>{t('Change Log')}</span>
+                  <span className='badge badge-primary ms-auto'>v3.4</span>
+                </Link>
+              </li>
+              <li className='submenu'>
+                <Link
+                  to='#'
+                  className={isSideMenu == 'multi Level' ? 'subdrop' : ''}
+                  onClick={() =>
+                    toggleSidebar(
+                      isSideMenu == 'multi Level' ? '' : 'multi Level'
+                    )
+                  }
+                >
+                  <i className='la la-share-alt' />{' '}
+                  <span>{t('Multi Level')}</span>
+                  <span className='menu-arrow' />
+                </Link>
+                {isSideMenu == 'multi Level' ? (
+                  <ul>
+                    <li className='submenu'>
+                      <Link
+                        to='#'
+                        className={level2Menu == 'level 1' ? 'subdrop' : ''}
                         onClick={() =>
                           toggleLvelTwo(
-                            level2Menu == "level 1" ? "" : "level 1"
+                            level2Menu == 'level 1' ? '' : 'level 1'
                           )
                         }
                       >
-                        <span>{t("Level 1")}</span>{" "}
-                        <span className="menu-arrow" />
+                        <span>{t('Level 1')}</span>{' '}
+                        <span className='menu-arrow' />
                       </Link>
-                      {level2Menu == "level 1" ? (
+                      {level2Menu == 'level 1' ? (
                         <ul>
                           <li>
-                            <Link to="#">
-                              <span>{t("Level 2")}</span>
+                            <Link to='#'>
+                              <span>{t('Level 2')}</span>
                             </Link>
                           </li>
-                          <li className="submenu">
+                          <li className='submenu'>
                             <Link
-                              to="#"
+                              to='#'
                               className={
-                                level3Menu == "level 2" ? "subdrop" : ""
+                                level3Menu == 'level 2' ? 'subdrop' : ''
                               }
                               onClick={() =>
                                 toggleLevelThree(
-                                  level3Menu == "level 2" ? "" : "level 2"
+                                  level3Menu == 'level 2' ? '' : 'level 2'
                                 )
                               }
                             >
-                              <span>{t("Level 2")}</span>
-                              <span className="menu-arrow" />
+                              <span>{t('Level 2')}</span>
+                              <span className='menu-arrow' />
                             </Link>
-                            {level3Menu == "level 2" ? (
+                            {level3Menu == 'level 2' ? (
                               <ul>
                                 <li>
-                                  <Link to="#">Level 3</Link>
+                                  <Link to='#'>Level 3</Link>
                                 </li>
                                 <li>
-                                  <Link to="#">Level 3</Link>
+                                  <Link to='#'>Level 3</Link>
                                 </li>
                               </ul>
                             ) : (
-                              ""
+                              ''
                             )}
                           </li>
                           <li>
-                            <Link to="#">
-                              <span>{t("Level 2")}</span>
+                            <Link to='#'>
+                              <span>{t('Level 2')}</span>
                             </Link>
                           </li>
                         </ul>
                       ) : (
-                        ""
+                        ''
                       )}
                     </li>
                     <li>
-                      <Link to="#">
-                        <span>{t("Level 1")}</span>
+                      <Link to='#'>
+                        <span>{t('Level 1')}</span>
                       </Link>
                     </li>
                   </ul>
                 ) : (
-                  ""
+                  ''
                 )}
               </li>
             </ul>
@@ -1734,18 +1768,18 @@ const Sidebar = () => {
             autoHideDuration={200}
             autoHeight
             autoHeightMin={0}
-            autoHeightMax="100vh"
+            autoHeightMax='100vh'
             thumbMinSize={30}
             universal={false}
             hideTracksWhenNotNeeded={true}
           >
-            <ul className="sidebar-vertical" id="veritical-sidebar">
-              {sidebarData.map((mainTittle, index) => {
+            <ul className='sidebar-vertical' id='veritical-sidebar'>
+              {filteredMenuData.map((mainTittle, index) => {
                 return (
                   <>
-                    <li className="menu-title" key={index + 1}>
+                    <li className='menu-title' key={index + 1}>
                       <span>{t(mainTittle.tittle)}</span>
-                      {mainTittle?.tittle === "CRM" ? <small></small> : ""}
+                      {mainTittle?.tittle === 'CRM' ? <small></small> : ''}
                     </li>
                     {mainTittle.menu.map((menu, menuIndex) => {
                       return (
@@ -1753,36 +1787,35 @@ const Sidebar = () => {
                           {menu.hasSubRoute === false ? (
                             <li
                               key={menuIndex + 1}
-                              className={pathname == menu.route ? "active" : ""}
+                              className={pathname == menu.route ? 'active' : ''}
                             >
                               <Link to={menu.route}>
-                                {/* {menu.icon} */}
                                 <i className={menu?.icon} />
                                 <span>{t(menu.menuValue)}</span>
                               </Link>
                             </li>
                           ) : (
-                            <li className="submenu">
+                            <li className='submenu'>
                               <Link
-                                to="#"
+                                to='#'
                                 onClick={() => expandSubMenus(menu)}
-                                className={menu.showSubRoute ? "subdrop" : ""}
+                                className={menu.showSubRoute ? 'subdrop' : ''}
                               >
                                 <i className={menu?.icon} />
                                 <span
                                   className={
-                                    menu?.menuValue == "Employees"
-                                      ? "noti-dot"
-                                      : ""
+                                    menu?.menuValue == 'Employees'
+                                      ? 'noti-dot'
+                                      : ''
                                   }
                                 >
                                   {t(menu.menuValue)}
                                 </span>
-                                <span className="menu-arrow"></span>
+                                <span className='menu-arrow'></span>
                               </Link>
                               <ul
                                 style={{
-                                  display: menu.showSubRoute ? "block" : "none",
+                                  display: menu.showSubRoute ? 'block' : 'none'
                                 }}
                               >
                                 {menu.subMenus.map((subMenus, subMenu) => {
@@ -1794,19 +1827,19 @@ const Sidebar = () => {
                                           <Link
                                             to={subMenus.route}
                                             className={
-                                              submenuDrop ? "subdrop" : ""
+                                              submenuDrop ? 'subdrop' : ''
                                             }
                                             onClick={arrowDrop}
                                           >
                                             {t(subMenus.menuValue)}
-                                            <span className="menu-arrow"></span>
+                                            <span className='menu-arrow'></span>
                                           </Link>
 
                                           <ul
                                             style={{
                                               display: submenuDrop
-                                                ? "block"
-                                                : "none",
+                                                ? 'block'
+                                                : 'none'
                                             }}
                                           >
                                             {subMenus?.subMenusValues?.map(
@@ -1816,12 +1849,12 @@ const Sidebar = () => {
                                                     <span>
                                                       <Link to={value.route}>
                                                         <span>
-                                                          {t(value.menuValue)}{" "}
+                                                          {t(value.menuValue)}{' '}
                                                         </span>
                                                       </Link>
                                                     </span>
                                                   </li>
-                                                );
+                                                )
                                               }
                                             )}
                                           </ul>
@@ -1832,8 +1865,8 @@ const Sidebar = () => {
                                             to={subMenus.route}
                                             className={
                                               pathname == subMenus?.route
-                                                ? "active"
-                                                : ""
+                                                ? 'active'
+                                                : ''
                                             }
                                           >
                                             {t(subMenus.menuValue)}
@@ -1848,60 +1881,60 @@ const Sidebar = () => {
                                                       to={value.route}
                                                       className={
                                                         pathname == value?.route
-                                                          ? "active"
-                                                          : ""
+                                                          ? 'active'
+                                                          : ''
                                                       }
                                                     >
                                                       {t(value.menuValue)}
                                                     </Link>
                                                   </li>
-                                                );
+                                                )
                                               }
                                             )}
                                           </ul>
                                         </li>
                                       )}
                                     </>
-                                  );
+                                  )
                                 })}
                               </ul>
                             </li>
                           )}
                         </>
-                      );
+                      )
                     })}
                   </>
-                );
+                )
               })}
             </ul>
           </Scrollbars>
         </div>
       </div>
 
-      <div className="two-col-bar" id="two-col-bar">
-        <div className="sidebar sidebar-twocol">
-          <div className="sidebar-left slimscroll">
+      <div className='two-col-bar' id='two-col-bar'>
+        <div className='sidebar sidebar-twocol'>
+          <div className='sidebar-left slimscroll'>
             <div
-              className="nav flex-column nav-pills"
-              id="v-pills-tab"
-              role="tablist"
-              aria-orientation="vertical"
+              className='nav flex-column nav-pills'
+              id='v-pills-tab'
+              role='tablist'
+              aria-orientation='vertical'
             >
               <Link
-                className="nav-link"
-                id="v-pills-dashboard-tab"
-                title="Dashboard"
-                data-bs-toggle="pill"
-                to="#v-pills-dashboard"
-                role="tab"
-                aria-controls="v-pills-dashboard"
-                aria-selected="true"
+                className='nav-link'
+                id='v-pills-dashboard-tab'
+                title='Dashboard'
+                data-bs-toggle='pill'
+                to='#v-pills-dashboard'
+                role='tab'
+                aria-controls='v-pills-dashboard'
+                aria-selected='true'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     setSideMenuNew(
-                      isSideMenunew == "dashboard" ? "dashboard" : "dashboard"
+                      isSideMenunew == 'dashboard' ? 'dashboard' : 'dashboard'
                     )
                   }
                 >
@@ -1909,39 +1942,39 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-apps-tab"
-                title="Apps"
-                data-bs-toggle="pill"
-                to="#v-pills-apps"
-                role="tab"
-                aria-controls="v-pills-apps"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-apps-tab'
+                title='Apps'
+                data-bs-toggle='pill'
+                to='#v-pills-apps'
+                role='tab'
+                aria-controls='v-pills-apps'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "apps" ? "apps" : "apps")
+                    toggleSidebar(isSideMenu == 'apps' ? 'apps' : 'apps')
                   }
                 >
                   dashboard
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-employees-tab"
-                title="Employees"
-                data-bs-toggle="pill"
-                to="#v-pills-employees"
-                role="tab"
-                aria-controls="v-pills-employees"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-employees-tab'
+                title='Employees'
+                data-bs-toggle='pill'
+                to='#v-pills-employees'
+                role='tab'
+                aria-controls='v-pills-employees'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "employee" ? "employee" : "employee"
+                      isSideMenu == 'employee' ? 'employee' : 'employee'
                     )
                   }
                 >
@@ -1949,20 +1982,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-clients-tab"
-                title="Clients"
-                data-bs-toggle="pill"
-                to="#v-pills-clients"
-                role="tab"
-                aria-controls="v-pills-clients"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-clients-tab'
+                title='Clients'
+                data-bs-toggle='pill'
+                to='#v-pills-clients'
+                role='tab'
+                aria-controls='v-pills-clients'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "clients" ? "clients" : "clients"
+                      isSideMenu == 'clients' ? 'clients' : 'clients'
                     )
                   }
                 >
@@ -1970,20 +2003,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-projects-tab"
-                title="Projects"
-                data-bs-toggle="pill"
-                to="#v-pills-projects"
-                role="tab"
-                aria-controls="v-pills-projects"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-projects-tab'
+                title='Projects'
+                data-bs-toggle='pill'
+                to='#v-pills-projects'
+                role='tab'
+                aria-controls='v-pills-projects'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "projects" ? "projects" : "projects"
+                      isSideMenu == 'projects' ? 'projects' : 'projects'
                     )
                   }
                 >
@@ -1991,39 +2024,39 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-leads-tab"
-                title="Leads"
-                data-bs-toggle="pill"
-                to="#v-pills-leads"
-                role="tab"
-                aria-controls="v-pills-leads"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-leads-tab'
+                title='Leads'
+                data-bs-toggle='pill'
+                to='#v-pills-leads'
+                role='tab'
+                aria-controls='v-pills-leads'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "leads" ? "leads" : "leads")
+                    toggleSidebar(isSideMenu == 'leads' ? 'leads' : 'leads')
                   }
                 >
                   leaderboard
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-tickets-tab"
-                title="Tickets"
-                data-bs-toggle="pill"
-                to="#v-pills-tickets"
-                role="tab"
-                aria-controls="v-pills-tickets"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-tickets-tab'
+                title='Tickets'
+                data-bs-toggle='pill'
+                to='#v-pills-tickets'
+                role='tab'
+                aria-controls='v-pills-tickets'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "tickets" ? "tickets" : "tickets"
+                      isSideMenu == 'tickets' ? 'tickets' : 'tickets'
                     )
                   }
                 >
@@ -2031,39 +2064,39 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-sales-tab"
-                title="Sales"
-                data-bs-toggle="pill"
-                to="#v-pills-sales"
-                role="tab"
-                aria-controls="v-pills-sales"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-sales-tab'
+                title='Sales'
+                data-bs-toggle='pill'
+                to='#v-pills-sales'
+                role='tab'
+                aria-controls='v-pills-sales'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "sales" ? "sales" : "sales")
+                    toggleSidebar(isSideMenu == 'sales' ? 'sales' : 'sales')
                   }
                 >
                   shopping_bag
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-accounting-tab"
-                title="Accounting"
-                data-bs-toggle="pill"
-                to="#v-pills-accounting"
-                role="tab"
-                aria-controls="v-pills-accounting"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-accounting-tab'
+                title='Accounting'
+                data-bs-toggle='pill'
+                to='#v-pills-accounting'
+                role='tab'
+                aria-controls='v-pills-accounting'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "accounting" ? "accounting" : "accounting"
+                      isSideMenu == 'accounting' ? 'accounting' : 'accounting'
                     )
                   }
                 >
@@ -2071,20 +2104,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-payroll-tab"
-                title="Payroll"
-                data-bs-toggle="pill"
-                to="#v-pills-payroll"
-                role="tab"
-                aria-controls="v-pills-payroll"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-payroll-tab'
+                title='Payroll'
+                data-bs-toggle='pill'
+                to='#v-pills-payroll'
+                role='tab'
+                aria-controls='v-pills-payroll'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "payroll" ? "payroll" : "payroll"
+                      isSideMenu == 'payroll' ? 'payroll' : 'payroll'
                     )
                   }
                 >
@@ -2097,20 +2130,20 @@ const Sidebar = () => {
               </span>
             </Link> */}
               <Link
-                className="nav-link"
-                id="v-pills-policies-tab"
-                title="Policies"
-                data-bs-toggle="pill"
-                to="#v-pills-policies"
-                role="tab"
-                aria-controls="v-pills-policies"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-policies-tab'
+                title='Policies'
+                data-bs-toggle='pill'
+                to='#v-pills-policies'
+                role='tab'
+                aria-controls='v-pills-policies'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "policies" ? "policies" : "policies"
+                      isSideMenu == 'policies' ? 'policies' : 'policies'
                     )
                   }
                 >
@@ -2118,20 +2151,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-reports-tab"
-                title="Reports"
-                data-bs-toggle="pill"
-                to="#v-pills-reports"
-                role="tab"
-                aria-controls="v-pills-reports"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-reports-tab'
+                title='Reports'
+                data-bs-toggle='pill'
+                to='#v-pills-reports'
+                role='tab'
+                aria-controls='v-pills-reports'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "reports" ? "reports" : "reports"
+                      isSideMenu == 'reports' ? 'reports' : 'reports'
                     )
                   }
                 >
@@ -2139,22 +2172,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-performance-tab"
-                title="Performance"
-                data-bs-toggle="pill"
-                to="#v-pills-performance"
-                role="tab"
-                aria-controls="v-pills-performance"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-performance-tab'
+                title='Performance'
+                data-bs-toggle='pill'
+                to='#v-pills-performance'
+                role='tab'
+                aria-controls='v-pills-performance'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "performance"
-                        ? "performance"
-                        : "performance"
+                      isSideMenu == 'performance'
+                        ? 'performance'
+                        : 'performance'
                     )
                   }
                 >
@@ -2162,39 +2195,39 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-goals-tab"
-                title="Goals"
-                data-bs-toggle="pill"
-                to="#v-pills-goals"
-                role="tab"
-                aria-controls="v-pills-goals"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-goals-tab'
+                title='Goals'
+                data-bs-toggle='pill'
+                to='#v-pills-goals'
+                role='tab'
+                aria-controls='v-pills-goals'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "goals" ? "goals" : "goals")
+                    toggleSidebar(isSideMenu == 'goals' ? 'goals' : 'goals')
                   }
                 >
                   track_changes
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-training-tab"
-                title="Training"
-                data-bs-toggle="pill"
-                to="#v-pills-training"
-                role="tab"
-                aria-controls="v-pills-training"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-training-tab'
+                title='Training'
+                data-bs-toggle='pill'
+                to='#v-pills-training'
+                role='tab'
+                aria-controls='v-pills-training'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "training" ? "training" : "training"
+                      isSideMenu == 'training' ? 'training' : 'training'
                     )
                   }
                 >
@@ -2202,20 +2235,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-promotion-tab"
-                title="Promotions"
-                data-bs-toggle="pill"
-                to="#v-pills-promotion"
-                role="tab"
-                aria-controls="v-pills-promotion"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-promotion-tab'
+                title='Promotions'
+                data-bs-toggle='pill'
+                to='#v-pills-promotion'
+                role='tab'
+                aria-controls='v-pills-promotion'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "promotion" ? "promotion" : "promotion"
+                      isSideMenu == 'promotion' ? 'promotion' : 'promotion'
                     )
                   }
                 >
@@ -2223,22 +2256,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-resignation-tab"
-                title="Resignation"
-                data-bs-toggle="pill"
-                to="#v-pills-resignation"
-                role="tab"
-                aria-controls="v-pills-resignation"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-resignation-tab'
+                title='Resignation'
+                data-bs-toggle='pill'
+                to='#v-pills-resignation'
+                role='tab'
+                aria-controls='v-pills-resignation'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "resignation"
-                        ? "resignation"
-                        : "resignation"
+                      isSideMenu == 'resignation'
+                        ? 'resignation'
+                        : 'resignation'
                     )
                   }
                 >
@@ -2246,22 +2279,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-termination-tab"
-                title="Termination"
-                data-bs-toggle="pill"
-                to="#v-pills-termination"
-                role="tab"
-                aria-controls="v-pills-termination"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-termination-tab'
+                title='Termination'
+                data-bs-toggle='pill'
+                to='#v-pills-termination'
+                role='tab'
+                aria-controls='v-pills-termination'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "termination"
-                        ? "termination"
-                        : "termination"
+                      isSideMenu == 'termination'
+                        ? 'termination'
+                        : 'termination'
                     )
                   }
                 >
@@ -2269,60 +2302,60 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-assets-tab"
-                title="Assets"
-                data-bs-toggle="pill"
-                to="#v-pills-assets"
-                role="tab"
-                aria-controls="v-pills-assets"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-assets-tab'
+                title='Assets'
+                data-bs-toggle='pill'
+                to='#v-pills-assets'
+                role='tab'
+                aria-controls='v-pills-assets'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "assets" ? "assets" : "assets")
+                    toggleSidebar(isSideMenu == 'assets' ? 'assets' : 'assets')
                   }
                 >
                   web_asset
                 </span>
               </Link>
               <Link
-                className="nav-link active"
-                id="v-pills-jobs-tab"
-                title="Jobs"
-                data-bs-toggle="pill"
-                to="#v-pills-jobs"
-                role="tab"
-                aria-controls="v-pills-jobs"
-                aria-selected="false"
+                className='nav-link active'
+                id='v-pills-jobs-tab'
+                title='Jobs'
+                data-bs-toggle='pill'
+                to='#v-pills-jobs'
+                role='tab'
+                aria-controls='v-pills-jobs'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "jobs" ? "jobs" : "jobs")
+                    toggleSidebar(isSideMenu == 'jobs' ? 'jobs' : 'jobs')
                   }
                 >
                   work_outline
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-knowledgebase-tab"
-                title="Knowledgebase"
-                data-bs-toggle="pill"
-                to="#v-pills-knowledgebase"
-                role="tab"
-                aria-controls="v-pills-knowledgebase"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-knowledgebase-tab'
+                title='Knowledgebase'
+                data-bs-toggle='pill'
+                to='#v-pills-knowledgebase'
+                role='tab'
+                aria-controls='v-pills-knowledgebase'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "knowledgebase"
-                        ? "knowledgebase"
-                        : "knowledgebase"
+                      isSideMenu == 'knowledgebase'
+                        ? 'knowledgebase'
+                        : 'knowledgebase'
                     )
                   }
                 >
@@ -2330,20 +2363,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-activities-tab"
-                title="Activities"
-                data-bs-toggle="pill"
-                to="#v-pills-activities"
-                role="tab"
-                aria-controls="v-pills-activities"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-activities-tab'
+                title='Activities'
+                data-bs-toggle='pill'
+                to='#v-pills-activities'
+                role='tab'
+                aria-controls='v-pills-activities'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "activities" ? "activities" : "activities"
+                      isSideMenu == 'activities' ? 'activities' : 'activities'
                     )
                   }
                 >
@@ -2351,39 +2384,39 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-users-tab"
-                title="Users"
-                data-bs-toggle="pill"
-                to="#v-pills-users"
-                role="tab"
-                aria-controls="v-pills-users"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-users-tab'
+                title='Users'
+                data-bs-toggle='pill'
+                to='#v-pills-users'
+                role='tab'
+                aria-controls='v-pills-users'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "users" ? "users" : "users")
+                    toggleSidebar(isSideMenu == 'users' ? 'users' : 'users')
                   }
                 >
                   group_add
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-settings-tab"
-                title="Settings"
-                data-bs-toggle="pill"
-                to="#v-pills-settings"
-                role="tab"
-                aria-controls="v-pills-settings"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-settings-tab'
+                title='Settings'
+                data-bs-toggle='pill'
+                to='#v-pills-settings'
+                role='tab'
+                aria-controls='v-pills-settings'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "settings" ? "settings" : "settings"
+                      isSideMenu == 'settings' ? 'settings' : 'settings'
                     )
                   }
                 >
@@ -2391,20 +2424,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-profile-tab"
-                title="Profile"
-                data-bs-toggle="pill"
-                to="#v-pills-profile"
-                role="tab"
-                aria-controls="v-pills-profile"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-profile-tab'
+                title='Profile'
+                data-bs-toggle='pill'
+                to='#v-pills-profile'
+                role='tab'
+                aria-controls='v-pills-profile'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "profile" ? "profile" : "profile"
+                      isSideMenu == 'profile' ? 'profile' : 'profile'
                     )
                   }
                 >
@@ -2412,22 +2445,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-authentication-tab"
-                title="Authentication"
-                data-bs-toggle="pill"
-                to="#v-pills-authentication"
-                role="tab"
-                aria-controls="v-pills-authentication"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-authentication-tab'
+                title='Authentication'
+                data-bs-toggle='pill'
+                to='#v-pills-authentication'
+                role='tab'
+                aria-controls='v-pills-authentication'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "authentication"
-                        ? "authentication"
-                        : "authentication"
+                      isSideMenu == 'authentication'
+                        ? 'authentication'
+                        : 'authentication'
                     )
                   }
                 >
@@ -2435,22 +2468,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-errorpages-tab"
-                title="Error Pages"
-                data-bs-toggle="pill"
-                to="#v-pills-errorpages"
-                role="tab"
-                aria-controls="v-pills-errorpages"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-errorpages-tab'
+                title='Error Pages'
+                data-bs-toggle='pill'
+                to='#v-pills-errorpages'
+                role='tab'
+                aria-controls='v-pills-errorpages'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "error pages"
-                        ? "error pages"
-                        : "error pages"
+                      isSideMenu == 'error pages'
+                        ? 'error pages'
+                        : 'error pages'
                     )
                   }
                 >
@@ -2458,22 +2491,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-subscriptions-tab"
-                title="Subscriptions"
-                data-bs-toggle="pill"
-                to="#v-pills-subscriptions"
-                role="tab"
-                aria-controls="v-pills-subscriptions"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-subscriptions-tab'
+                title='Subscriptions'
+                data-bs-toggle='pill'
+                to='#v-pills-subscriptions'
+                role='tab'
+                aria-controls='v-pills-subscriptions'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "subscriptions"
-                        ? "subscriptions"
-                        : "subscriptions"
+                      isSideMenu == 'subscriptions'
+                        ? 'subscriptions'
+                        : 'subscriptions'
                     )
                   }
                 >
@@ -2481,79 +2514,79 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-pages-tab"
-                title="Pages"
-                data-bs-toggle="pill"
-                to="#v-pills-pages"
-                role="tab"
-                aria-controls="v-pills-pages"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-pages-tab'
+                title='Pages'
+                data-bs-toggle='pill'
+                to='#v-pills-pages'
+                role='tab'
+                aria-controls='v-pills-pages'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "pages" ? "pages" : "pages")
+                    toggleSidebar(isSideMenu == 'pages' ? 'pages' : 'pages')
                   }
                 >
                   layers
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-forms-tab"
-                title="Forms"
-                data-bs-toggle="pill"
-                to="#v-pills-forms"
-                role="tab"
-                aria-controls="v-pills-forms"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-forms-tab'
+                title='Forms'
+                data-bs-toggle='pill'
+                to='#v-pills-forms'
+                role='tab'
+                aria-controls='v-pills-forms'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "forms" ? "forms" : "forms")
+                    toggleSidebar(isSideMenu == 'forms' ? 'forms' : 'forms')
                   }
                 >
                   view_day
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-tables-tab"
-                title="Tables"
-                data-bs-toggle="pill"
-                to="#v-pills-tables"
-                role="tab"
-                aria-controls="v-pills-tables"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-tables-tab'
+                title='Tables'
+                data-bs-toggle='pill'
+                to='#v-pills-tables'
+                role='tab'
+                aria-controls='v-pills-tables'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
-                    toggleSidebar(isSideMenu == "tables" ? "tables" : "tables")
+                    toggleSidebar(isSideMenu == 'tables' ? 'tables' : 'tables')
                   }
                 >
                   table_rows
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-documentation-tab"
-                title="Documentation"
-                data-bs-toggle="pill"
-                to="#v-pills-documentation"
-                role="tab"
-                aria-controls="v-pills-documentation"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-documentation-tab'
+                title='Documentation'
+                data-bs-toggle='pill'
+                to='#v-pills-documentation'
+                role='tab'
+                aria-controls='v-pills-documentation'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "documentation"
-                        ? "documentation"
-                        : "documentation"
+                      isSideMenu == 'documentation'
+                        ? 'documentation'
+                        : 'documentation'
                     )
                   }
                 >
@@ -2561,20 +2594,20 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-changelog-tab"
-                title="Changelog"
-                data-bs-toggle="pill"
-                to="#v-pills-changelog"
-                role="tab"
-                aria-controls="v-pills-changelog"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-changelog-tab'
+                title='Changelog'
+                data-bs-toggle='pill'
+                to='#v-pills-changelog'
+                role='tab'
+                aria-controls='v-pills-changelog'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "Changelog" ? "Changelog" : "Changelog"
+                      isSideMenu == 'Changelog' ? 'Changelog' : 'Changelog'
                     )
                   }
                 >
@@ -2582,22 +2615,22 @@ const Sidebar = () => {
                 </span>
               </Link>
               <Link
-                className="nav-link"
-                id="v-pills-multilevel-tab"
-                title="Multilevel"
-                data-bs-toggle="pill"
-                to="#v-pills-multilevel"
-                role="tab"
-                aria-controls="v-pills-multilevel"
-                aria-selected="false"
+                className='nav-link'
+                id='v-pills-multilevel-tab'
+                title='Multilevel'
+                data-bs-toggle='pill'
+                to='#v-pills-multilevel'
+                role='tab'
+                aria-controls='v-pills-multilevel'
+                aria-selected='false'
               >
                 <span
-                  className="material-icons-outlined"
+                  className='material-icons-outlined'
                   onClick={() =>
                     toggleSidebar(
-                      isSideMenu == "multi Level"
-                        ? "multi Level"
-                        : "multi Level"
+                      isSideMenu == 'multi Level'
+                        ? 'multi Level'
+                        : 'multi Level'
                     )
                   }
                 >
@@ -2606,213 +2639,213 @@ const Sidebar = () => {
               </Link>
             </div>
           </div>
-          <div className="sidebar-right">
-            <div className="tab-content" id="v-pills-tabContent">
-              {isSideMenunew == "dashboard" ? (
+          <div className='sidebar-right'>
+            <div className='tab-content' id='v-pills-tabContent'>
+              {isSideMenunew == 'dashboard' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-dashboard"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-dashboard-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-dashboard'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-dashboard-tab'
                 >
                   <p>Dashboard</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("admin-dashboard") ? "active" : ""
+                          pathname.includes('admin-dashboard') ? 'active' : ''
                         }
-                        to="/admin-dashboard"
+                        to='/admin-dashboard'
                       >
-                        {t("AdminDashboard")}
+                        {t('AdminDashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("employee-dashboard")
-                            ? "active"
-                            : ""
+                          pathname.includes('employee-dashboard')
+                            ? 'active'
+                            : ''
                         }
-                        to="/employee-dashboard"
+                        to='/employee-dashboard'
                       >
-                        {t("EmployeeDashboard")}
+                        {t('EmployeeDashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("deals-dashboard") ? "active" : ""
+                          pathname.includes('deals-dashboard') ? 'active' : ''
                         }
-                        to="/deals-dashboard"
+                        to='/deals-dashboard'
                       >
-                        {t("Deals Dashboard")}
+                        {t('Deals Dashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("leads-dashboard") ? "active" : ""
+                          pathname.includes('leads-dashboard') ? 'active' : ''
                         }
-                        to="/leads-dashboard"
+                        to='/leads-dashboard'
                       >
-                        {t("Leads Dashboard")}
+                        {t('Leads Dashboard')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "apps" ? (
+              {isSideMenu == 'apps' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-apps"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-apps-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-apps'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-apps-tab'
                 >
                   <p>App</p>
                   <ul>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
-                        to="/call/chat"
+                        to='/call/chat'
                       >
-                        {t("Chat")}
+                        {t('Chat')}
                       </Link>
                     </li>
-                    <li className="submenu">
+                    <li className='submenu'>
                       <Link
-                        to="#"
-                        className={level2Menu == "calls" ? "subdrop" : ""}
+                        to='#'
+                        className={level2Menu == 'calls' ? 'subdrop' : ''}
                         onClick={() =>
-                          toggleLvelTwo(level2Menu == "calls" ? "" : "calls")
+                          toggleLvelTwo(level2Menu == 'calls' ? '' : 'calls')
                         }
                       >
-                        <span> {t("Calls")}</span>
+                        <span> {t('Calls')}</span>
                       </Link>
-                      {level2Menu == "calls" ? (
+                      {level2Menu == 'calls' ? (
                         <ul>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/voice-call"
+                              to='/call/voice-call'
                             >
-                              {t("VideoCall")}
+                              {t('VideoCall')}
                             </Link>
                           </li>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/video-call"
+                              to='/call/video-call'
                             >
-                              {t("VideoCall")}
+                              {t('VideoCall')}
                             </Link>
                           </li>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/outgoing-call"
+                              to='/call/outgoing-call'
                             >
-                              {t("OutgoingCall")}
+                              {t('OutgoingCall')}
                             </Link>
                           </li>
                           <li>
                             <Link
                               onClick={() =>
-                                localStorage.setItem("minheight", "true")
+                                localStorage.setItem('minheight', 'true')
                               }
-                              to="/call/incoming-call"
+                              to='/call/incoming-call'
                             >
-                              {t("IncomingCall")}
+                              {t('IncomingCall')}
                             </Link>
                           </li>
                         </ul>
                       ) : (
-                        ""
+                        ''
                       )}
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("calendar") ? "active" : ""
+                          pathname.includes('calendar') ? 'active' : ''
                         }
-                        to="/events"
+                        to='/events'
                       >
-                        {t("Calendar")}
+                        {t('Calendar')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
                         className={
-                          pathname.includes("contacts") ? "active" : ""
+                          pathname.includes('contacts') ? 'active' : ''
                         }
-                        to="/contacts"
+                        to='/contacts'
                       >
-                        {t("Contacts")}
+                        {t('Contacts')}
                       </Link>
                     </li>
                     <li>
-                      <Link to="/email/inbox">{t("Email")}</Link>
+                      <Link to='/email/inbox'>{t('Email')}</Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "employee" ? (
+              {isSideMenu == 'employee' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-employees"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-employees-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-employees'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-employees-tab'
                 >
-                  <p>{t("employees")}</p>
+                  <p>{t('employees')}</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("employees")
-                            ? "active"
-                            : pathname.includes("employees-list")
-                            ? "active"
-                            : ""
+                          pathname.includes('employees')
+                            ? 'active'
+                            : pathname.includes('employees-list')
+                            ? 'active'
+                            : ''
                         }
-                        to="/employees"
+                        to='/employees'
                       >
-                        {t("All Employee")}
+                        {t('All Employee')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("holidays") ? "active" : ""
+                          pathname.includes('holidays') ? 'active' : ''
                         }
-                        to="/holidays"
+                        to='/holidays'
                       >
-                        {t("Holidays")}
+                        {t('Holidays')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("adminleaves") ? "active" : ""
+                          pathname.includes('adminleaves') ? 'active' : ''
                         }
-                        to="/adminleaves"
+                        to='/adminleaves'
                       >
-                        {t("Leaves (Admin)")}
-                        <span className="badge rounded-pill bg-primary float-end">
+                        {t('Leaves (Admin)')}
+                        <span className='badge rounded-pill bg-primary float-end'>
                           1
                         </span>
                       </Link>
@@ -2820,1376 +2853,1376 @@ const Sidebar = () => {
                     <li>
                       <Link
                         className={
-                          pathname.includes("leaves-employee") ? "active" : ""
+                          pathname.includes('leaves-employee') ? 'active' : ''
                         }
-                        to="/leaves-employee"
+                        to='/leaves-employee'
                       >
-                        {t("Leaves (Employee)")}
+                        {t('Leaves (Employee)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("leave-settings") ? "active" : ""
+                          pathname.includes('leave-settings') ? 'active' : ''
                         }
-                        to="/leave-settings"
+                        to='/leave-settings'
                       >
-                        {t("Leave Setting")}
+                        {t('Leave Setting')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("adminattendance") ? "active" : ""
+                          pathname.includes('adminattendance') ? 'active' : ''
                         }
-                        to="/adminattendance"
+                        to='/adminattendance'
                       >
-                        {t("Attendance (Admin)")}
+                        {t('Attendance (Admin)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("attendance-employee")
-                            ? "active"
-                            : ""
+                          pathname.includes('attendance-employee')
+                            ? 'active'
+                            : ''
                         }
-                        to="/attendance-employee"
+                        to='/attendance-employee'
                       >
-                        {t("Attendance (Employee)")}
+                        {t('Attendance (Employee)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("departments") ? "active" : ""
+                          pathname.includes('departments') ? 'active' : ''
                         }
-                        to="/departments"
+                        to='/departments'
                       >
-                        {t("Department")}
+                        {t('Department')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("designations") ? "active" : ""
+                          pathname.includes('designations') ? 'active' : ''
                         }
-                        to="/designations"
+                        to='/designations'
                       >
-                        {t("Designation")}
+                        {t('Designation')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("timesheet") ? "active" : ""
+                          pathname.includes('timesheet') ? 'active' : ''
                         }
-                        to="/timesheet"
+                        to='/timesheet'
                       >
-                        {t("Timesheet")}
+                        {t('Timesheet')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("shift-scheduling") ||
-                          pathname.includes("shift-list")
-                            ? "active"
-                            : ""
+                          pathname.includes('shift-scheduling') ||
+                          pathname.includes('shift-list')
+                            ? 'active'
+                            : ''
                         }
-                        to="/shift-scheduling"
+                        to='/shift-scheduling'
                       >
-                        {t("Shift & Schedule")}
+                        {t('Shift & Schedule')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("overtime") ? "active" : ""
+                          pathname.includes('overtime') ? 'active' : ''
                         }
-                        to="/overtime"
+                        to='/overtime'
                       >
-                        {t("Overtime")}
+                        {t('Overtime')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "clients" ? (
+              {isSideMenu == 'clients' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-clients"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-clients-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-clients'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-clients-tab'
                 >
                   <p>Clients</p>
                   <ul>
                     <li
-                      className={pathname.includes("clients") ? "active" : ""}
+                      className={pathname.includes('clients') ? 'active' : ''}
                     >
-                      <Link to="/clients">
-                        <i className="la la-users" />{" "}
-                        <span>{t("Clients")}</span>
+                      <Link to='/clients'>
+                        <i className='la la-users' />{' '}
+                        <span>{t('Clients')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "projects" ? (
+              {isSideMenu == 'projects' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-projects"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-projects-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-projects'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-projects-tab'
                 >
                   <p>Projects</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("projects")
-                            ? "active"
-                            : pathname.includes("project-list")
-                            ? "active"
-                            : pathname.includes("projects-view")
-                            ? "active"
-                            : ""
+                          pathname.includes('projects')
+                            ? 'active'
+                            : pathname.includes('project-list')
+                            ? 'active'
+                            : pathname.includes('projects-view')
+                            ? 'active'
+                            : ''
                         }
-                        to="/projects"
+                        to='/projects'
                       >
-                        {t("Projects")}
+                        {t('Projects')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         onClick={() =>
-                          localStorage.setItem("minheight", "true")
+                          localStorage.setItem('minheight', 'true')
                         }
-                        to="/task/tasks"
+                        to='/task/tasks'
                       >
-                        {t("Task")}
+                        {t('Task')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("task-board") ? "active" : ""
+                          pathname.includes('task-board') ? 'active' : ''
                         }
-                        to="/task-board"
+                        to='/task-board'
                       >
-                        {t("Task Board")}
+                        {t('Task Board')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "leads" ? (
+              {isSideMenu == 'leads' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-leads"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-leads-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-leads'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-leads-tab'
                 >
                   <p>CRM</p>
                   <ul>
                     <li
                       className={
-                        pathname.includes("contact-list") ? "active" : ""
+                        pathname.includes('contact-list') ? 'active' : ''
                       }
                     >
-                      <Link to="/contact-list">
-                        <span>{t("Contacts")}</span>
+                      <Link to='/contact-list'>
+                        <span>{t('Contacts')}</span>
                       </Link>
                     </li>
                     <li
-                      className={pathname.includes("companies") ? "active" : ""}
+                      className={pathname.includes('companies') ? 'active' : ''}
                     >
-                      <Link to="/companies">
-                        <span>{t("Companies")}</span>
+                      <Link to='/companies'>
+                        <span>{t('Companies')}</span>
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("deals") ? "active" : ""}
-                        to="/deals"
+                        className={pathname.includes('deals') ? 'active' : ''}
+                        to='/deals'
                       >
-                        {t("Deals")}
+                        {t('Deals')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("leads") ? "active" : ""}
-                        to="/leads"
+                        className={pathname.includes('leads') ? 'active' : ''}
+                        to='/leads'
                       >
-                        {t("Leads")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("pipeline") ? "active" : ""
-                        }
-                        to="/pipeline"
-                      >
-                        {t("Pipeline")}
+                        {t('Leads')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("analytics") ? "active" : ""
+                          pathname.includes('pipeline') ? 'active' : ''
                         }
-                        to="/analytics"
+                        to='/pipeline'
                       >
-                        {t("Analytics")}
+                        {t('Pipeline')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('analytics') ? 'active' : ''
+                        }
+                        to='/analytics'
+                      >
+                        {t('Analytics')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "tickets" ? (
+              {isSideMenu == 'tickets' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-tickets"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-tickets-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-tickets'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-tickets-tab'
                 >
                   <p>Tickets</p>
                   <ul>
                     <li
                       className={
-                        pathname.includes("tickets")
-                          ? "active"
-                          : pathname.includes("ticket-view")
-                          ? "active"
-                          : ""
+                        pathname.includes('tickets')
+                          ? 'active'
+                          : pathname.includes('ticket-view')
+                          ? 'active'
+                          : ''
                       }
                     >
-                      <Link to="/tickets">
-                        <i className="la la-ticket" />{" "}
-                        <span>{t("Tickets")}</span>
+                      <Link to='/tickets'>
+                        <i className='la la-ticket' />{' '}
+                        <span>{t('Tickets')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "sales" ? (
+              {isSideMenu == 'sales' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-sales"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-sales-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-sales'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-sales-tab'
                 >
                   <p>Sales</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("estimates") ? "active" : ""
+                          pathname.includes('estimates') ? 'active' : ''
                         }
-                        to="/estimates"
+                        to='/estimates'
                       >
-                        {t("Estimates")}
+                        {t('Estimates')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("invoices") ? "active" : ""
+                          pathname.includes('invoices') ? 'active' : ''
                         }
-                        to="/invoices"
+                        to='/invoices'
                       >
-                        {t("Invoices")}
+                        {t('Invoices')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payments") ? "active" : ""
+                          pathname.includes('payments') ? 'active' : ''
                         }
-                        to="/payments"
+                        to='/payments'
                       >
-                        {t("Payments")}
+                        {t('Payments')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("expenses") ? "active" : ""
+                          pathname.includes('expenses') ? 'active' : ''
                         }
-                        to="/expenses"
+                        to='/expenses'
                       >
-                        {t("Expenses")}
+                        {t('Expenses')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("provident-fund") ? "active" : ""
+                          pathname.includes('provident-fund') ? 'active' : ''
                         }
-                        to="/provident-fund"
+                        to='/provident-fund'
                       >
-                        {t("Provident Fund")}
+                        {t('Provident Fund')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("taxes") ? "active" : ""}
-                        to="/taxes"
+                        className={pathname.includes('taxes') ? 'active' : ''}
+                        to='/taxes'
                       >
-                        {t("Taxes")}
+                        {t('Taxes')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "accounting" ? (
+              {isSideMenu == 'accounting' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-accounting"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-accounting-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-accounting'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-accounting-tab'
                 >
                   <p>Accounting</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("categories") ||
-                          pathname.includes("sub-category")
-                            ? "active"
-                            : ""
+                          pathname.includes('categories') ||
+                          pathname.includes('sub-category')
+                            ? 'active'
+                            : ''
                         }
-                        to="/categories"
+                        to='/categories'
                       >
-                        {t("Categories")}
+                        {t('Categories')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("budgets") ? "active" : ""}
-                        to="/budgets"
+                        className={pathname.includes('budgets') ? 'active' : ''}
+                        to='/budgets'
                       >
-                        {t("Budgets")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("budget-expenses") ? "active" : ""
-                        }
-                        to="/budget-expenses"
-                      >
-                        {t("Budgets Expenses")}
+                        {t('Budgets')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("budget-revenues") ? "active" : ""
+                          pathname.includes('budget-expenses') ? 'active' : ''
                         }
-                        to="/budget-revenues"
+                        to='/budget-expenses'
                       >
-                        {t("Budgets Revenues")}
+                        {t('Budgets Expenses')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('budget-revenues') ? 'active' : ''
+                        }
+                        to='/budget-revenues'
+                      >
+                        {t('Budgets Revenues')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "payroll" ? (
+              {isSideMenu == 'payroll' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-payroll"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-payroll-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-payroll'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-payroll-tab'
                 >
                   <p>Payroll</p>
                   <ul>
                     <li>
                       <Link
-                        className={pathname.includes("salary") ? "active" : ""}
-                        to="/salary"
+                        className={pathname.includes('salary') ? 'active' : ''}
+                        to='/salary'
                       >
-                        {t("Employee Salary")}
+                        {t('Employee Salary')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("salary-view") ? "active" : ""
+                          pathname.includes('salary-view') ? 'active' : ''
                         }
-                        to="/salary-view"
+                        to='/salary-view'
                       >
-                        {t("Payslip")}
+                        {t('Payslip')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payroll-items") ? "active" : ""
+                          pathname.includes('payroll-items') ? 'active' : ''
                         }
-                        to="/payroll-items"
+                        to='/payroll-items'
                       >
-                        {t("Payroll Items")}
+                        {t('Payroll Items')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "policies" ? (
+              {isSideMenu == 'policies' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-policies"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-policies-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-policies'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-policies-tab'
                 >
                   <p>Policies</p>
                   <ul>
                     <li
-                      className={pathname.includes("policies") ? "active" : ""}
+                      className={pathname.includes('policies') ? 'active' : ''}
                     >
-                      <Link to="/policies">
-                        <i className="la la-file-pdf-o" />{" "}
-                        <span>{t("Policies")}</span>
+                      <Link to='/policies'>
+                        <i className='la la-file-pdf-o' />{' '}
+                        <span>{t('Policies')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "reports" ? (
+              {isSideMenu == 'reports' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-reports"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-reports-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-reports'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-reports-tab'
                 >
                   <p>Reports</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("expense-reports") ? "active" : ""
+                          pathname.includes('expense-reports') ? 'active' : ''
                         }
-                        to="/expense-reports"
+                        to='/expense-reports'
                       >
-                        {t("Expense Report")}
+                        {t('Expense Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("invoice-reports") ? "active" : ""
+                          pathname.includes('invoice-reports') ? 'active' : ''
                         }
-                        to="/invoice-reports"
+                        to='/invoice-reports'
                       >
-                        {t("Invoice Report")}
+                        {t('Invoice Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payments-reports") ? "active" : ""
+                          pathname.includes('payments-reports') ? 'active' : ''
                         }
-                        to="/payments-reports"
+                        to='/payments-reports'
                       >
-                        {t("Payment Report")}
+                        {t('Payment Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("project-reports") ? "active" : ""
+                          pathname.includes('project-reports') ? 'active' : ''
                         }
-                        to="/payments-reports"
+                        to='/payments-reports'
                       >
-                        {t("Project Report")}
+                        {t('Project Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("task-reports") ? "active" : ""
+                          pathname.includes('task-reports') ? 'active' : ''
                         }
-                        to="/task-reports"
+                        to='/task-reports'
                       >
-                        {t("Task Report")}
+                        {t('Task Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("user-reports") ? "active" : ""
+                          pathname.includes('user-reports') ? 'active' : ''
                         }
-                        to="/user-reports"
+                        to='/user-reports'
                       >
-                        {t("User Report")}
+                        {t('User Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("employee-reports") ? "active" : ""
+                          pathname.includes('employee-reports') ? 'active' : ''
                         }
-                        to="/employee-reports"
+                        to='/employee-reports'
                       >
-                        {t("Employee Report")}
+                        {t('Employee Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("payslip-reports") ? "active" : ""
+                          pathname.includes('payslip-reports') ? 'active' : ''
                         }
-                        to="/payslip-reports"
+                        to='/payslip-reports'
                       >
-                        {t("Payslip Report")}
+                        {t('Payslip Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("attendance-reports")
-                            ? "active"
-                            : ""
+                          pathname.includes('attendance-reports')
+                            ? 'active'
+                            : ''
                         }
-                        to="/attendance-reports"
+                        to='/attendance-reports'
                       >
-                        {t("Attendence Report")}
+                        {t('Attendence Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("leave-reports") ? "active" : ""
+                          pathname.includes('leave-reports') ? 'active' : ''
                         }
-                        to="/leave-reports"
+                        to='/leave-reports'
                       >
-                        {t("Leave Report")}
+                        {t('Leave Report')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("daily-reports") ? "active" : ""
+                          pathname.includes('daily-reports') ? 'active' : ''
                         }
-                        to="/daily-reports"
+                        to='/daily-reports'
                       >
-                        {t("Daily Report")}
+                        {t('Daily Report')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "performance" ? (
+              {isSideMenu == 'performance' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-performance"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-performance-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-performance'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-performance-tab'
                 >
                   <p>Performance</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("performance-indicator")
-                            ? "active"
-                            : ""
+                          pathname.includes('performance-indicator')
+                            ? 'active'
+                            : ''
                         }
-                        to="/performance-indicator"
+                        to='/performance-indicator'
                       >
-                        {t("Performance Indicator")}
+                        {t('Performance Indicator')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("performance") ? "active" : ""
+                          pathname.includes('performance') ? 'active' : ''
                         }
-                        to="/performance"
+                        to='/performance'
                       >
-                        {t("Performance Review")}
+                        {t('Performance Review')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("performance-appraisal")
-                            ? "active"
-                            : ""
+                          pathname.includes('performance-appraisal')
+                            ? 'active'
+                            : ''
                         }
-                        to="/performance-appraisal"
+                        to='/performance-appraisal'
                       >
-                        {t("Performance Appraisal")}
+                        {t('Performance Appraisal')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "goals" ? (
+              {isSideMenu == 'goals' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-goals"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-goals-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-goals'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-goals-tab'
                 >
                   <p>Goals</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("goal-tracking") ? "active" : ""
+                          pathname.includes('goal-tracking') ? 'active' : ''
                         }
-                        to="/goal-tracking"
+                        to='/goal-tracking'
                       >
-                        {t("Goal List")}
+                        {t('Goal List')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("goal-type") ? "active" : ""
+                          pathname.includes('goal-type') ? 'active' : ''
                         }
-                        to="/goal-type"
+                        to='/goal-type'
                       >
-                        {t("Goal Type")}
+                        {t('Goal Type')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "training" ? (
+              {isSideMenu == 'training' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-training"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-training-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-training'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-training-tab'
                 >
                   <p>Training</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("training-list") ||
-                          pathname.includes("training")
-                            ? "active"
-                            : ""
+                          pathname.includes('training-list') ||
+                          pathname.includes('training')
+                            ? 'active'
+                            : ''
                         }
-                        to="/training"
+                        to='/training'
                       >
-                        {t("Training")}
+                        {t('Training')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("trainers") ? "active" : ""
+                          pathname.includes('trainers') ? 'active' : ''
                         }
-                        to="/trainers"
+                        to='/trainers'
                       >
-                        {t("Trainers")}
+                        {t('Trainers')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("training-type") ? "active" : ""
+                          pathname.includes('training-type') ? 'active' : ''
                         }
-                        to="/training-type"
+                        to='/training-type'
                       >
-                        {t("Training Type")}
+                        {t('Training Type')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "promotion" ? (
+              {isSideMenu == 'promotion' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-promotion"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-promotion-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-promotion'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-promotion-tab'
                 >
                   <p>Promotion</p>
                   <ul>
                     <li
-                      className={pathname.includes("promotion") ? "active" : ""}
+                      className={pathname.includes('promotion') ? 'active' : ''}
                     >
-                      <Link to="/promotion">
-                        <i className="la la-bullhorn" />{" "}
-                        <span>{t("Promotion")}</span>
+                      <Link to='/promotion'>
+                        <i className='la la-bullhorn' />{' '}
+                        <span>{t('Promotion')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "resignation" ? (
+              {isSideMenu == 'resignation' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-resignation"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-resignation-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-resignation'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-resignation-tab'
                 >
                   <p>Resignation</p>
                   <ul>
                     <li
                       className={
-                        pathname.includes("resignation") ? "active" : ""
+                        pathname.includes('resignation') ? 'active' : ''
                       }
                     >
-                      <Link to="/resignation">
-                        <i className="la la-external-link-square" />
-                        <span>{t("Resignation")}</span>
+                      <Link to='/resignation'>
+                        <i className='la la-external-link-square' />
+                        <span>{t('Resignation')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "termination" ? (
+              {isSideMenu == 'termination' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-termination"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-termination-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-termination'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-termination-tab'
                 >
                   <p>Termination</p>
                   <ul>
                     <li
                       className={
-                        pathname.includes("termination") ? "active" : ""
+                        pathname.includes('termination') ? 'active' : ''
                       }
                     >
-                      <Link to="/termination">
-                        <i className="la la-times-circle" />
-                        <span>{t("Termination")}</span>
+                      <Link to='/termination'>
+                        <i className='la la-times-circle' />
+                        <span>{t('Termination')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "assets" ? (
+              {isSideMenu == 'assets' ? (
                 <div
-                  className="tab-pane fade active show"
-                  id="v-pills-assets"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-assets-tab"
+                  className='tab-pane fade active show'
+                  id='v-pills-assets'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-assets-tab'
                 >
                   <p>Assets</p>
                   <ul>
-                    <li className={pathname.includes("assets") ? "active" : ""}>
-                      <Link to="/assets">
-                        <i className="la la-object-ungroup" />
-                        <span>{t("Assets")}</span>
+                    <li className={pathname.includes('assets') ? 'active' : ''}>
+                      <Link to='/assets'>
+                        <i className='la la-object-ungroup' />
+                        <span>{t('Assets')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "jobs" ? (
+              {isSideMenu == 'jobs' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-jobs"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-jobs-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-jobs'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-jobs-tab'
                 >
                   <p>Jobs</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("user-dashboard") ||
-                          pathname.includes("user-all-jobs") ||
-                          pathname.includes("saved-jobs") ||
-                          pathname.includes("applied-jobs") ||
-                          pathname.includes("interviewing") ||
-                          pathname.includes("offered-jobs") ||
-                          pathname.includes("visited-jobs") ||
-                          pathname.includes("archived-jobs") ||
-                          pathname.includes("job-aptitude") ||
-                          pathname.includes("questions")
-                            ? "active"
-                            : ""
+                          pathname.includes('user-dashboard') ||
+                          pathname.includes('user-all-jobs') ||
+                          pathname.includes('saved-jobs') ||
+                          pathname.includes('applied-jobs') ||
+                          pathname.includes('interviewing') ||
+                          pathname.includes('offered-jobs') ||
+                          pathname.includes('visited-jobs') ||
+                          pathname.includes('archived-jobs') ||
+                          pathname.includes('job-aptitude') ||
+                          pathname.includes('questions')
+                            ? 'active'
+                            : ''
                         }
-                        to="/user-dashboard"
+                        to='/user-dashboard'
                       >
-                        {t("User Dashboard")}
+                        {t('User Dashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("jobs-dashboard") ? "active" : ""
+                          pathname.includes('jobs-dashboard') ? 'active' : ''
                         }
-                        to="/jobs-dashboard"
+                        to='/jobs-dashboard'
                       >
-                        {t("Jobs Dashboard")}
+                        {t('Jobs Dashboard')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname === "/jobs" ? "active" : ""}
-                        to="/jobs"
+                        className={pathname === '/jobs' ? 'active' : ''}
+                        to='/jobs'
                       >
-                        {t("Manage Jobs")}
+                        {t('Manage Jobs')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("manage-resumes") ? "active" : ""
+                          pathname.includes('manage-resumes') ? 'active' : ''
                         }
-                        to="/manage-resumes"
+                        to='/manage-resumes'
                       >
-                        {t("Manage Resume")}
+                        {t('Manage Resume')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("shortlist-candidates")
-                            ? "active"
-                            : ""
+                          pathname.includes('shortlist-candidates')
+                            ? 'active'
+                            : ''
                         }
-                        to="/shortlist-candidates"
+                        to='/shortlist-candidates'
                       >
-                        {t("Shortlisted Candidate")}
+                        {t('Shortlisted Candidate')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname === "/interview-questions" ? "active" : ""
+                          pathname === '/interview-questions' ? 'active' : ''
                         }
-                        to="/interview-questions"
+                        to='/interview-questions'
                       >
-                        {t("Interview Question")}
+                        {t('Interview Question')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("offer_approvals") ? "active" : ""
+                          pathname.includes('offer_approvals') ? 'active' : ''
                         }
-                        to="/offer_approvals"
+                        to='/offer_approvals'
                       >
-                        {t("Offer Approvals")}
+                        {t('Offer Approvals')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("experiance-level") ? "active" : ""
+                          pathname.includes('experiance-level') ? 'active' : ''
                         }
-                        to="/experiance-level"
+                        to='/experiance-level'
                       >
-                        {t("Experience Level")}
+                        {t('Experience Level')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname === "/candidates" ? "active" : ""}
-                        to="/candidates"
+                        className={pathname === '/candidates' ? 'active' : ''}
+                        to='/candidates'
                       >
-                        {t("Candidate List")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("schedule-timing") ? "active" : ""
-                        }
-                        to="/schedule-timing"
-                      >
-                        {t("Schedule Timing")}
+                        {t('Candidate List')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("apptitude-result") ? "active" : ""
+                          pathname.includes('schedule-timing') ? 'active' : ''
                         }
-                        to="/apptitude-result"
+                        to='/schedule-timing'
                       >
-                        {t("Aptitude Results")}
+                        {t('Schedule Timing')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('apptitude-result') ? 'active' : ''
+                        }
+                        to='/apptitude-result'
+                      >
+                        {t('Aptitude Results')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "knowledgebase" ? (
+              {isSideMenu == 'knowledgebase' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-knowledgebase"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-knowledgebase-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-knowledgebase'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-knowledgebase-tab'
                 >
                   <p>Knowledgebase</p>
                   <ul>
                     <li
                       className={
-                        pathname.includes("knowledgebase") ? "active" : ""
+                        pathname.includes('knowledgebase') ? 'active' : ''
                       }
                     >
-                      <Link to="/knowledgebase">
-                        <i className="la la-question" />
-                        <span>{t("Knowledgebase")}</span>
+                      <Link to='/knowledgebase'>
+                        <i className='la la-question' />
+                        <span>{t('Knowledgebase')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "activities" ? (
+              {isSideMenu == 'activities' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-activities"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-activities-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-activities'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-activities-tab'
                 >
                   <p>Activities</p>
                   <ul>
                     <li
                       className={
-                        pathname.includes("activities") ? "active" : ""
+                        pathname.includes('activities') ? 'active' : ''
                       }
                     >
-                      <Link to="/activities">
-                        <i className="la la-bell" />{" "}
-                        <span>{t("Activities")}</span>
+                      <Link to='/activities'>
+                        <i className='la la-bell' />{' '}
+                        <span>{t('Activities')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "administrator/users" ? (
+              {isSideMenu == 'administrator/users' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-users"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-activities-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-users'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-activities-tab'
                 >
                   <p>Users</p>
                   <ul>
-                    <li className={pathname.includes("users") ? "active" : ""}>
-                      <Link to="/users">
-                        <i className="la la-user-plus" />{" "}
-                        <span>{t("User")}</span>
+                    <li className={pathname.includes('users') ? 'active' : ''}>
+                      <Link to='/users'>
+                        <i className='la la-user-plus' />{' '}
+                        <span>{t('User')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "settings" ? (
+              {isSideMenu == 'settings' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-settings"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-settings-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-settings'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-settings-tab'
                 >
                   <p>Settings</p>
                   <ul>
                     <li>
-                      <Link to="/settings/company-settings">
-                        <i className="la la-cog" /> <span>{t("Settings")}</span>
+                      <Link to='/settings/company-settings'>
+                        <i className='la la-cog' /> <span>{t('Settings')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "profile" ? (
+              {isSideMenu == 'profile' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-profile"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-profile-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-profile'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-profile-tab'
                 >
                   <p>Profile</p>
                   <ul>
                     <li>
                       <Link
-                        className={pathname.includes("profile") ? "active" : ""}
-                        to="/profile"
+                        className={pathname.includes('profile') ? 'active' : ''}
+                        to='/profile'
                       >
-                        {t("Employee Profile")}
+                        {t('Employee Profile')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("client-profile") ? "active" : ""
+                          pathname.includes('client-profile') ? 'active' : ''
                         }
-                        to="/client-profile"
+                        to='/client-profile'
                       >
-                        {t("Client Profile")}
+                        {t('Client Profile')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "authentication" ? (
+              {isSideMenu == 'authentication' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-authentication"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-authentication-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-authentication'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-authentication-tab'
                 >
                   <p>Authentication</p>
                   <ul>
                     <li>
-                      <Link to="/"> {t("Login")}</Link>
+                      <Link to='/'> {t('Login')}</Link>
                     </li>
                     <li>
-                      <Link to="/register">{t("Register")} </Link>
+                      <Link to='/register'>{t('Register')} </Link>
                     </li>
                     <li>
-                      <Link to="/forgot-password">
-                        {" "}
-                        {t("Forgot Password")}{" "}
+                      <Link to='/forgot-password'>
+                        {' '}
+                        {t('Forgot Password')}{' '}
                       </Link>
                     </li>
                     <li>
-                      <Link to="/otp">{t("OTP")}</Link>
+                      <Link to='/otp'>{t('OTP')}</Link>
                     </li>
                     <li>
-                      <Link to="/lock-screen"> {t("Lock Screen")}</Link>
+                      <Link to='/lock-screen'> {t('Lock Screen')}</Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "error pages" ? (
+              {isSideMenu == 'error pages' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-errorpages"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-errorpages-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-errorpages'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-errorpages-tab'
                 >
-                  <p>{t("Error Page")}</p>
+                  <p>{t('Error Page')}</p>
                   <ul>
                     <li>
-                      <Link to="/error-404">{t("404 Error")} </Link>
+                      <Link to='/error-404'>{t('404 Error')} </Link>
                     </li>
                     <li>
-                      <Link to="/error-500">{t("500 Error")} </Link>
+                      <Link to='/error-500'>{t('500 Error')} </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "subscriptions" ? (
+              {isSideMenu == 'subscriptions' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-subscriptions"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-subscriptions-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-subscriptions'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-subscriptions-tab'
                 >
-                  <p>{t("Subscriptions")}</p>
+                  <p>{t('Subscriptions')}</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("subscriptions") ? "active" : ""
+                          pathname.includes('subscriptions') ? 'active' : ''
                         }
-                        to="/subscriptions"
+                        to='/subscriptions'
                       >
-                        {t("Subscriptions (Admin)")}
+                        {t('Subscriptions (Admin)')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("subscriptions-company")
-                            ? "active"
-                            : ""
+                          pathname.includes('subscriptions-company')
+                            ? 'active'
+                            : ''
                         }
-                        to="/subscriptions-company"
+                        to='/subscriptions-company'
                       >
-                        {t("Subscriptions (Company")}
+                        {t('Subscriptions (Company')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("subscribed-companies")
-                            ? "active"
-                            : ""
+                          pathname.includes('subscribed-companies')
+                            ? 'active'
+                            : ''
                         }
-                        to="/subscribed-companies"
+                        to='/subscribed-companies'
                       >
-                        {t("Subscribed Companies")}
+                        {t('Subscribed Companies')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "pages" ? (
+              {isSideMenu == 'pages' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-pages"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-pages-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-pages'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-pages-tab'
                 >
                   <p>Pages</p>
                   <ul>
                     <li>
                       <Link
-                        className={pathname.includes("search") ? "active" : ""}
-                        to="/search"
+                        className={pathname.includes('search') ? 'active' : ''}
+                        to='/search'
                       >
-                        {t("Search")}
+                        {t('Search')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("faq") ? "active" : ""}
-                        to="/faq"
+                        className={pathname.includes('faq') ? 'active' : ''}
+                        to='/faq'
                       >
-                        {t("FAQ")}
+                        {t('FAQ')}
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={pathname.includes("terms") ? "active" : ""}
-                        to="/terms"
+                        className={pathname.includes('terms') ? 'active' : ''}
+                        to='/terms'
                       >
-                        {t("Terms")}
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className={
-                          pathname.includes("privacy-policy") ? "active" : ""
-                        }
-                        to="/privacy-policy"
-                      >
-                        {t("Privacy Policy")}
+                        {t('Terms')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("blank-page") ? "active" : ""
+                          pathname.includes('privacy-policy') ? 'active' : ''
                         }
-                        to="/blank-page"
+                        to='/privacy-policy'
                       >
-                        {t("Blank Page")}
+                        {t('Privacy Policy')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={
+                          pathname.includes('blank-page') ? 'active' : ''
+                        }
+                        to='/blank-page'
+                      >
+                        {t('Blank Page')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "forms" ? (
+              {isSideMenu == 'forms' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-forms"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-forms-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-forms'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-forms-tab'
                 >
                   <p>Forms</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-basic-inputs") ? "active" : ""
+                          pathname.includes('form-basic-inputs') ? 'active' : ''
                         }
-                        to="/form-basic-inputs"
+                        to='/form-basic-inputs'
                       >
-                        {t("Basic Inputs")}
+                        {t('Basic Inputs')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-input-groups") ? "active" : ""
+                          pathname.includes('form-input-groups') ? 'active' : ''
                         }
-                        to="/form-input-groups"
+                        to='/form-input-groups'
                       >
-                        {t("Input Group")}
+                        {t('Input Group')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-horizontal") ? "active" : ""
+                          pathname.includes('form-horizontal') ? 'active' : ''
                         }
-                        to="/form-horizontal"
+                        to='/form-horizontal'
                       >
-                        {t("Horizontal Form")}
+                        {t('Horizontal Form')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-vertical") ? "active" : ""
+                          pathname.includes('form-vertical') ? 'active' : ''
                         }
-                        to="/form-vertical"
+                        to='/form-vertical'
                       >
-                        {t("Vertical Form")}
+                        {t('Vertical Form')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-mask") ? "active" : ""
+                          pathname.includes('form-mask') ? 'active' : ''
                         }
-                        to="/form-mask"
+                        to='/form-mask'
                       >
-                        {t("Form Mask")}
+                        {t('Form Mask')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-validation") ? "active" : ""
+                          pathname.includes('form-validation') ? 'active' : ''
                         }
-                        to="/form-validation"
+                        to='/form-validation'
                       >
-                        {t("Form Validation")}
+                        {t('Form Validation')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("form-select2") ? "active" : ""
+                          pathname.includes('form-select2') ? 'active' : ''
                         }
-                        to="/form-select2"
+                        to='/form-select2'
                       >
-                        {t("Form Select2")}
+                        {t('Form Select2')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("file-upload") ? "active" : ""
+                          pathname.includes('file-upload') ? 'active' : ''
                         }
-                        to="/file-upload"
+                        to='/file-upload'
                       >
-                        {t("Form Upload")}
+                        {t('Form Upload')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "tables" ? (
+              {isSideMenu == 'tables' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-tables"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-tables-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-tables'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-tables-tab'
                 >
                   <p>Tables</p>
                   <ul>
                     <li>
                       <Link
                         className={
-                          pathname.includes("tables-basic") ? "active" : ""
+                          pathname.includes('tables-basic') ? 'active' : ''
                         }
-                        to="/tables-basic"
+                        to='/tables-basic'
                       >
-                        {t("Basic Tables")}
+                        {t('Basic Tables')}
                       </Link>
                     </li>
                     <li>
                       <Link
                         className={
-                          pathname.includes("data-tables") ? "active" : ""
+                          pathname.includes('data-tables') ? 'active' : ''
                         }
-                        to="/data-tables"
+                        to='/data-tables'
                       >
-                        {t("Data Table")}
+                        {t('Data Table')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "documentation" ? (
+              {isSideMenu == 'documentation' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-documentation"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-documentation-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-documentation'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-documentation-tab'
                 >
                   <p>Documentation</p>
                   <ul>
                     <li>
-                      <Link to="#">
-                        <i className="la la-file-text" />
-                        <span> {t("Documentation")}</span>
+                      <Link to='#'>
+                        <i className='la la-file-text' />
+                        <span> {t('Documentation')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "Changelog" ? (
+              {isSideMenu == 'Changelog' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-changelog"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-changelog-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-changelog'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-changelog-tab'
                 >
                   <p>Change Log</p>
                   <ul>
                     <li>
-                      <Link to="#">
-                        <span>{t("Change Log")}</span>
-                        <span className="badge badge-primary ms-auto">
+                      <Link to='#'>
+                        <span>{t('Change Log')}</span>
+                        <span className='badge badge-primary ms-auto'>
                           v3.4
                         </span>
                       </Link>
@@ -4197,90 +4230,94 @@ const Sidebar = () => {
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
-              {isSideMenu == "multi Level" ? (
+              {isSideMenu == 'multi Level' ? (
                 <div
-                  className="tab-pane fade show active"
-                  id="v-pills-multilevel"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-multilevel-tab"
+                  className='tab-pane fade show active'
+                  id='v-pills-multilevel'
+                  role='tabpanel'
+                  aria-labelledby='v-pills-multilevel-tab'
                 >
-                  <p>{t("Multi Level")}</p>
+                  <p>{t('Multi Level')}</p>
                   <ul>
-                    <li className="submenu">
+                    <li className='submenu'>
                       <Link
-                        to="#"
-                        className={level2Menu == "level 1" ? "subdrop" : ""}
+                        to='#'
+                        className={level2Menu == 'level 1' ? 'subdrop' : ''}
                         onClick={() =>
                           toggleLvelTwo(
-                            level2Menu == "level 1" ? "" : "level 1"
+                            level2Menu == 'level 1' ? '' : 'level 1'
                           )
                         }
                       >
-                        <span>{t("Level 1")}</span>
+                        <span>{t('Level 1')}</span>
                       </Link>
-                      {level2Menu == "level 1" ? (
+                      {level2Menu == 'level 1' ? (
                         <ul>
                           <li>
-                            <Link to="#">
-                              <span>{t("Level 2")}</span>
+                            <Link to='#'>
+                              <span>{t('Level 2')}</span>
                             </Link>
                           </li>
-                          <li className="submenu">
+                          <li className='submenu'>
                             <Link
-                              to="#"
+                              to='#'
                               className={
-                                level3Menu == "level 2" ? "subdrop" : ""
+                                level3Menu == 'level 2' ? 'subdrop' : ''
                               }
                               onClick={() =>
                                 toggleLevelThree(
-                                  level3Menu == "level 2" ? "" : "level 2"
+                                  level3Menu == 'level 2' ? '' : 'level 2'
                                 )
                               }
                             >
-                              <span>{t("Level 2")}</span>
-                              <span className="menu-arrow" />
+                              <span>{t('Level 2')}</span>
+                              <span className='menu-arrow' />
                             </Link>
-                            {level3Menu == "level 2" ? (
+                            {level3Menu == 'level 2' ? (
                               <ul>
                                 <li>
-                                  <Link to="#">Level 3</Link>
+                                  <Link to='#'>Level 3</Link>
                                 </li>
                                 <li>
-                                  <Link to="#">Level 3</Link>
+                                  <Link to='#'>Level 3</Link>
                                 </li>
                               </ul>
                             ) : (
-                              ""
+                              ''
                             )}
                           </li>
                           <li>
-                            <Link to="#">
-                              <span>{t("Level 2")}</span>
+                            <Link to='#'>
+                              <span>{t('Level 2')}</span>
                             </Link>
                           </li>
                         </ul>
                       ) : (
-                        ""
+                        ''
                       )}
                     </li>
                     <li>
-                      <Link to="#">
-                        <span>{t("Level 1")}</span>
+                      <Link to='#'>
+                        <span>{t('Level 1')}</span>
                       </Link>
                     </li>
                   </ul>
                 </div>
               ) : (
-                ""
+                ''
               )}
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
+<<<<<<< Updated upstream
 export default Sidebar;
+=======
+export default Sidebar
+>>>>>>> Stashed changes

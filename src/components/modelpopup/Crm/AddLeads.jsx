@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 import { BASE_URL } from '../../../constants/urls'
 
@@ -153,7 +154,6 @@ const AddLeads = ({ setLeadData }) => {
       leadName &&
       leadGenManager &&
       source &&
-      connects &&
       medium &&
       assignedTo &&
       accountExecutive &&
@@ -176,7 +176,7 @@ const AddLeads = ({ setLeadData }) => {
     if (e) e.preventDefault()
 
     if (!validateForm()) {
-      alert('Please fill in all required fields.')
+      Swal.fire('Please fill in all required fields.')
       return
     }
     const formData = new FormData()
@@ -205,8 +205,11 @@ const AddLeads = ({ setLeadData }) => {
         }
       })
       console.log('Lead saved successfully:', response.data)
-      //setLeadData(leadData)
-      //window.location.reload()
+      Swal.fire('Lead saved successfully').then(result => {
+        if (result.isConfirmed) {
+          window.location.reload()
+        }
+      })
     } catch (error) {
       console.error('Error saving lead:', error)
     }
@@ -276,6 +279,23 @@ const AddLeads = ({ setLeadData }) => {
                   <div className='col-md-6'>
                     <div className='input-block mb-3'>
                       <label className='col-form-label'>
+                        Medium (Profile List){' '}
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={mediums}
+                        placeholder='Select'
+                        styles={customStyles}
+                        value={medium}
+                        onChange={setMedium}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* <div className='col-md-6'>
+                    <div className='input-block mb-3'>
+                      <label className='col-form-label'>
                         Source <span className='text-danger'>*</span>
                       </label>
                       <Select
@@ -308,45 +328,70 @@ const AddLeads = ({ setLeadData }) => {
                         required
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className='col-md-6'>
                     <div className='input-block mb-3'>
                       <label className='col-form-label'>
-                        Bid Cost <span className='text-danger'>*</span>
-                      </label>
-                      <input
-                        className='form-control'
-                        type='number'
-                        value={bidCost}
-                        onChange={e => {
-                          const value = e.target.value
-                          if (value === '' || parseInt(value) > 0) {
-                            setBidCost(value)
-                          }
-                        }}
-                        min='1'
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className='col-md-6'>
-                    <div className='input-block mb-3'>
-                      <label className='col-form-label'>
-                        Medium (Profile List){' '}
-                        <span className='text-danger'>*</span>
+                        Source <span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={mediums}
+                        options={sources}
                         placeholder='Select'
                         styles={customStyles}
-                        value={medium}
-                        onChange={setMedium}
+                        value={source}
+                        onChange={selectedOption => setSource(selectedOption)}
                         required
                       />
                     </div>
                   </div>
+
+                  {/* Conditionally render Connects field */}
+
+                  {source?.label == 'Upwork' && (
+                    <div className='row'>
+                      <div className='col-md-6'>
+                        <div className='input-block mb-3'>
+                          <label className='col-form-label'>
+                            Connects <span className='text-danger'>*</span>
+                          </label>
+                          <input
+                            className='form-control'
+                            type='number'
+                            value={connects}
+                            onChange={e => {
+                              const value = e.target.value
+                              if (value === '' || parseInt(value) > 0) {
+                                setConnects(value)
+                              }
+                            }}
+                            min='1'
+                            required={source?.label === 'Upwork'}
+                          />
+                        </div>
+                      </div>
+                      <div className='col-md-6'>
+                        <div className='input-block mb-3'>
+                          <label className='col-form-label'>
+                            Bid Cost <span className='text-danger'>*</span>
+                          </label>
+                          <input
+                            className='form-control'
+                            type='number'
+                            value={bidCost}
+                            onChange={e => {
+                              const value = e.target.value
+                              if (value === '' || parseInt(value) > 0) {
+                                setBidCost(value)
+                              }
+                            }}
+                            min='1'
+                            required={bidCost?.label === 'Upwork'}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className='col-md-6'>
                     <div className='input-block mb-3'>

@@ -1,34 +1,37 @@
+// const filteredMenu = sidebarData.menu.filter((item) =>
+//   item.allowedRoles.includes(userRole)
+// );
 export const SidebarData = [
   {
-    tittle: "MAIN",
+    tittle: 'MAIN',
     showAsTab: false,
     separateRoute: false,
     menu: [
-      {
-        menuValue: "Dashboard",
-        hasSubRoute: true,
-        showSubRoute: false,
-        route: "#",
-        icon: "la la-dashcube",
-        subMenus: [
-          {
-            menuValue: "Admin Dashboard",
-            route: "/admin-dashboard",
-          },
-          {
-            menuValue: "Employee Dashboard",
-            route: "/employee-dashboard",
-          },
-          {
-            menuValue: "Deals Dashboard",
-            route: "/deals-dashboard",
-          },
-          {
-            menuValue: "Leads Dashboard",
-            route: "/leads-dashboard",
-          },
-        ],
-      },
+      // {
+      //   menuValue: "Dashboard",
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   route: "#",
+      //   icon: "la la-dashcube",
+      //   subMenus: [
+      //     {
+      //       menuValue: "Admin Dashboard",
+      //       route: "/admin-dashboard",
+      //     },
+      //     {
+      //       menuValue: "Employee Dashboard",
+      //       route: "/employee-dashboard",
+      //     },
+      //     {
+      //       menuValue: "Deals Dashboard",
+      //       route: "/deals-dashboard",
+      //     },
+      //     {
+      //       menuValue: "Leads Dashboard",
+      //       route: "/leads-dashboard",
+      //     },
+      //   ],
+      // },
       // {
       //   menuValue: "Dashboard",
       //   hasSubRoute: false,
@@ -38,30 +41,38 @@ export const SidebarData = [
       // },
 
       {
-        menuValue: "Proposal Manager",
-        hasSubRoute: true,
+        menuValue: 'Dashboard',
+        hasSubRoute: false,
         showSubRoute: false,
-        route: "#",
-        icon: "la la-file-text",
-        subMenus: [
-          {
-            menuValue: "Proposal List",
-            route: "/proposal-list",
-          },
-          {
-            menuValue: "Proposal Creation",
-            route: "/proposal-creation",
-          },
-        ],
+        route: '/employee-dashboard',
+        icon: 'la la-dashcube'
       },
 
       {
-        menuValue: "File Manager",
+        menuValue: 'Proposal Manager',
+        hasSubRoute: true,
+        showSubRoute: false,
+        route: '#',
+        icon: 'la la-file-text',
+        subMenus: [
+          {
+            menuValue: 'Proposal List',
+            route: '/proposal-list'
+          },
+          {
+            menuValue: 'Proposal Creation',
+            route: '/proposal-creation'
+          }
+        ]
+      },
+
+      {
+        menuValue: 'File Manager',
         hasSubRoute: false,
         showSubRoute: false,
-        route: "/file-manager",
-        icon: "la la-rocket",
-      },
+        route: '/file-manager',
+        icon: 'la la-rocket'
+      }
 
       // {
       //   menuValue: "Proposal Creation",
@@ -126,7 +137,7 @@ export const SidebarData = [
       //     },
       //   ],
       // },
-    ],
+    ]
   },
   // {
   //   tittle: "EMPLOYEES",
@@ -237,35 +248,58 @@ export const SidebarData = [
   //   ],
   // },
   {
-    tittle: "CRM",
+    tittle: 'CRM',
     showAsTab: false,
     separateRoute: false,
     menu: [
+      // {
+      //   menuValue: "Contacts",
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: "/contact-list",
+      //   icon: "la la-user-shield",
+      // },
+      // {
+      //   menuValue: "Companies",
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: "/companies",
+      //   icon: "la la-building",
+      // },
+      // {
+      //   menuValue: 'Deals',
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: '/deals',
+      //   icon: 'la la-cubes'
+      // },
       {
-        menuValue: "Contacts",
+        menuValue: 'Leads',
         hasSubRoute: false,
         showSubRoute: false,
-        route: "/contact-list",
-        icon: "la la-user-shield",
+        route: '/leads-list',
+        icon: 'la la-chart-area'
+        // allowedRoles: ['DL'],
       },
       {
-        menuValue: "Companies",
+        menuValue: 'My Leads',
         hasSubRoute: false,
         showSubRoute: false,
-        route: "/companies",
-        icon: "la la-building",
+        route: '/bd-leads-list',
+        icon: 'la la-chart-area'
       },
       {
-        menuValue: "Deals",
+        menuValue: 'DL Leads',
         hasSubRoute: false,
         showSubRoute: false,
-        route: "/deals",
-        icon: "la la-cubes",
+        route: '/dl-leads-list',
+        icon: 'la la-chart-area'
       },
       {
-        menuValue: "Leads",
+        menuValue: 'Pipeline',
         hasSubRoute: false,
         showSubRoute: false,
+<<<<<<< Updated upstream
         route: "/leads-list",
         icon: "la la-chart-area",
       },
@@ -292,6 +326,27 @@ export const SidebarData = [
       },
     ],
   },
+=======
+        route: '/pipeline',
+        icon: 'la la-exchange-alt'
+      }
+      // {
+      //   menuValue: 'Analytics',
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: '/analytics',
+      //   icon: 'la la-dice'
+      // },
+      // {
+      //   menuValue: 'Activities',
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: '/activities',
+      //   icon: 'la la-directions'
+      // }
+    ]
+  }
+>>>>>>> Stashed changes
   // {
   //   tittle: "HR",
   //   showAsTab: false,
@@ -886,4 +941,4 @@ export const SidebarData = [
   //     },
   //   ],
   // },
-];
+]
