@@ -321,14 +321,74 @@ const LeadsDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div className='contact-wrap'>
-                  <div className='contact-profile'>
-                    <div className='name-user'>
+                <div className="contact-wrap">
+                  <div className="contact-profile">
+                    <div className="name-user">
                       <h4>{leadData.name}</h4>
                       <p>
-                        <i className='las la-points' />{' '}
-                        {leadData.communication_notes}
+                        {/* <i className="las la-points" /> {leadData.notes} */}
                       </p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="row">
+                      {Lead.approval_status === "open" && (
+                        <Link
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          // onClick={}
+                        >
+                          <i className="la" /> Open
+                        </Link>
+                      )}
+                      {Lead.approval_status === "disapproved" && (
+                        <Link
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#add_quotations"
+                          style={{ backgroundColor: "red", borderWidth: 0 }}
+                        >
+                          <i className="la" /> Disapproved
+                        </Link>
+                      )}
+                      {Lead.approval_status === "approved" && (
+                        <Link
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          style={{ backgroundColor: "#55CE63", borderWidth: 0 }}
+                        >
+                          <i className="la" /> Approved
+                        </Link>
+                      )}
+                      {Lead.approval_status === "pending" && (
+                        <ul
+                          className="pending-actions"
+                          style={{ display: "flex", flexDirection: "row" }}
+                        >
+                          <li>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{
+                                backgroundColor: "#55CE63",
+                                borderWidth: 0,
+                              }}
+                            >
+                              <i className="la" /> Approve
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{ backgroundColor: "red", borderWidth: 0 }}
+                            >
+                              <i className="la" /> Disapprove
+                            </Link>
+                          </li>
+                        </ul>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -544,27 +604,27 @@ const LeadsDetails = () => {
                       )}
                     </ul>
                   </div>
-                  <ul className='contact-nav nav'>
+                  <ul className="contact-nav nav">
                     <li>
                       <Link
-                        to='#'
-                        data-bs-toggle='tab'
-                        data-bs-target='#activities'
-                        className='active'
+                        to="#"
+                        data-bs-toggle="tab"
+                        data-bs-target="#activities"
+                        className="active"
                       >
-                        <i className='las la-user-clock' />
+                        <i className="las la-user-clock" />
                         Activities
                       </Link>
                     </li>
                     <li>
-                      <Link to='#' data-bs-toggle='tab' data-bs-target='#notes'>
-                        <i className='las la-file' />
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#notes">
+                        <i className="las la-file" />
                         Notes
                       </Link>
                     </li>
-                    {/* <li>
-                      <Link to='#' data-bs-toggle='tab' data-bs-target='#calls'>
-                        <i className='las la-phone-volume' />
+                    {/*<li>
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#calls">
+                        <i className="las la-phone-volume" />
                         Calls
                       </Link>
                     </li>
@@ -595,502 +655,224 @@ const LeadsDetails = () => {
                   </ul>
                 </div>
                 {/* Tab Content */}
-                <div className='contact-tab-view'>
-                  <div className='tab-content pt-0'>
+                <div className="contact-tab-view">
+                  <div className="tab-content pt-0">
                     {/* Activities */}
-                    <div className='tab-pane active show' id='activities'>
-                      <div className='view-header'>
+                    <div className="tab-pane active show" id="activities">
+                      <div className="view-header">
                         <h4>Activities</h4>
-                      </div>
-                      <div className='contact-activity'>
-                        <div className='badge-day'>
-                          <i className='fa-regular fa-calendar-check' />
-                          15 Feb 2024
-                        </div>
-                        <ul>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-info'>
-                              <i className='las la-comment-alt' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>You sent 1 Message to the contact.</h6>
-                              <p>10:25 pm</p>
-                            </div>
-                          </li>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-success'>
-                              <i className='las la-phone' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>
-                                Denwar responded to your appointment schedule
-                                question by call at 09:30pm.
-                              </h6>
-                              <p>09:25 pm</p>
-                            </div>
-                          </li>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-warning'>
-                              <i className='las la-file-alt' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>Notes added by Antony</h6>
-                              <p>
-                                Please accept my apologies for the inconvenience
-                                caused. It would be much appreciated if it's
-                                possible to reschedule to 6:00 PM, or any other
-                                day that week.
-                              </p>
-                              <p>10.00 pm</p>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className='badge-day'>
-                          <i className='fa-regular fa-calendar-check' />
-                          15 Feb 2024
-                        </div>
-                        <ul>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-pending'>
-                              <i className='las la-user-tie' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>
-                                Meeting With{' '}
-                                <span className='avatar-xs'>
-                                  <img src={avatar19} alt='img' />
-                                </span>{' '}
-                                Abraham
-                              </h6>
-                              <p>Schedueled on 05:00 pm</p>
-                            </div>
-                          </li>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-success'>
-                              <i className='las la-phone' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>
-                                Drain responded to your appointment schedule
-                                question.
-                              </h6>
-                              <p>09:25 pm</p>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className='badge-day'>
-                          <i className='fa-regular fa-calendar-check' />
-                          Upcoming Activity
-                        </div>
-                        <ul>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-pending'>
-                              <i className='las la-user-tie' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>Product Meeting</h6>
-                              <p>
-                                A product team meeting is a gathering of the
-                                cross-functional product team — ideally
-                                including team members from product,
-                                engineering, marketing, and customer support.
-                              </p>
-                              <p>25 Jul 2023, 05:00 pm</p>
-                              <div className='upcoming-info'>
-                                <div className='row'>
-                                  <div className='col-sm-4'>
-                                    <p>Reminder</p>
-                                    <div className='dropdown'>
-                                      <Link
-                                        to='#'
-                                        className='dropdown-toggle'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                      >
-                                        <i className='las la-clock me-1' />
-                                        Reminder
-                                        <i className='las la-angle-down ms-1' />
-                                      </Link>
-                                      <div className='dropdown-menu dropdown-menu-right'>
-                                        <Link className='dropdown-item' to='#'>
-                                          Remainder
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          1 hr
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          10 hr
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className='col-sm-4'>
-                                    <p>Task Priority</p>
-                                    <div className='dropdown'>
-                                      <Link
-                                        to='#'
-                                        className='dropdown-toggle'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                      >
-                                        <i className='fa-solid fa-circle me-1 text-danger circle' />
-                                        High
-                                        <i className='las la-angle-down ms-1' />
-                                      </Link>
-                                      <div className='dropdown-menu dropdown-menu-right'>
-                                        <Link className='dropdown-item' to='#'>
-                                          <i className='fa-solid fa-circle me-1 text-danger circle' />
-                                          High
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          <i className='fa-solid fa-circle me-1 text-success circle' />
-                                          Low
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className='col-sm-4'>
-                                    <p>Assigned to</p>
-                                    <div className='dropdown'>
-                                      <Link
-                                        to='#'
-                                        className='dropdown-toggle'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                      >
-                                        <img
-                                          src={avatar19}
-                                          alt='img'
-                                          className='me-1 avatar-xs'
-                                        />
-                                        John
-                                        <i className='las la-angle-down ms-1' />
-                                      </Link>
-                                      <div className='dropdown-menu dropdown-menu-right'>
-                                        <Link className='dropdown-item' to='#'>
-                                          <img
-                                            src={avatar19}
-                                            alt='img'
-                                            className='me-1 avatar-xs'
-                                          />
-                                          John
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          <img
-                                            src={avatar19}
-                                            alt='img'
-                                            className='me-1 avatar-xs'
-                                          />
-                                          Peter
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    {/* /Activities */}
-                    {/* Notes */}
-                    <div className='tab-pane fade' id='notes'>
-                      <div className='view-header'>
-                        <h4>Notes</h4>
                         <ul>
                           <li>
+                            <div className="form-sort deals-dash-select">
+                              <i className="las la-sort-amount-up-alt" />
+                              <Select
+                                className="select w-100"
+                                options={recentlyViewd}
+                                placeholder="Sort By Alphabet"
+                                styles={customStyles}
+                              />
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="contact-activity">
+                        {leadData.activities &&
+                        leadData.activities.length > 0 ? (
+                          leadData.activities.map((activity) => (
+                            <div key={activity.id} className="badge-day">
+                              <i className="fa-regular fa-calendar-check" />
+                              {new Date(activity.created_at).toLocaleDateString(
+                                "en-GB",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )}
+                              <ul>
+                                <li className="activity-wrap">
+                                  <span className="activity-icon bg-info">
+                                    <i className="las la-comment-alt" />
+                                  </span>
+                                  <div className="activity-info">
+                                    <h6>{activity.text}</h6>
+                                    <p>
+                                      {new Date(
+                                        activity.created_at
+                                      ).toLocaleTimeString("en-US", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </p>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No activities found.</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* /Activities */}
+                    {/* Notes */}
+                    <div className="tab-pane fade" id="notes">
+                      <div className="view-header">
+                        <h4>Notes</h4>
+                        <ul>
+                          <li>{/* Optional Sort Dropdown */}</li>
+                          <li>
                             <Link
-                              to='#'
-                              data-bs-toggle='modal'
-                              data-bs-target='#add_notes'
-                              className='com-add'
+                              to="#"
+                              data-bs-toggle="modal"
+                              data-bs-target="#add_notes"
+                              className="com-add"
                             >
-                              <i className='las la-plus-circle me-1' />
+                              <i className="las la-plus-circle me-1" />
                               Add New
                             </Link>
                           </li>
                         </ul>
                       </div>
-                      <div className='notes-activity'>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar19} alt='img' />
-                              <div>
-                                <h6>Darlee Robertson</h6>
-                                <p>15 Sep 2023, 12:10 pm</p>
-                              </div>
-                            </div>
-                            <div className='calls-action'>
-                              <div className='dropdown action-drop'>
-                                <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
-                                >
-                                  <MoreVertical size={15} />
-                                </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-edit me-1' />
-                                    Edit
-                                  </Link>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-trash me-1' />
-                                    Delete
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <h5>Notes added by Antony</h5>
-                          <p>
-                            A project review evaluates the success of an
-                            initiative and identifies areas for improvement. It
-                            can also evaluate a current project to determine
-                            whether it's on the right track. Or, it can
-                            determine the success of a completed project.{' '}
-                          </p>
-                          <ul>
-                            <li>
-                              <div className='note-download'>
-                                <div className='note-info'>
-                                  <span className='note-icon bg-success'>
-                                    <i className='las la-file-excel' />
-                                  </span>
+
+                      <div className="notes-activity">
+                        {leadData.notes && leadData.notes.length > 0 ? (
+                          leadData.notes.map((note) => (
+                            <div className="calls-box" key={note.id}>
+                              <div className="caller-info">
+                                <div className="calls-user">
+                                  {/* User Avatar */}
+                                  <img src={avatar21} alt="img" />
                                   <div>
-                                    <h6>Project Specs.xls</h6>
-                                    <p>365 KB</p>
+                                    <h6>{note.created_by || "Unknown User"}</h6>
+                                    <p>
+                                      {new Date(
+                                        note.created_at
+                                      ).toLocaleDateString("en-US", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                      })}
+                                      ,{" "}
+                                      {new Date(
+                                        note.created_at
+                                      ).toLocaleTimeString("en-US", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </p>
                                   </div>
                                 </div>
-                                <Link to='#'>
-                                  <i className='las la-download' />
-                                </Link>
-                              </div>
-                            </li>
-                            <li>
-                              <div className='note-download'>
-                                <div className='note-info'>
-                                  <span className='note-icon'>
-                                    <img src={media35} alt='img' />
-                                  </span>
-                                  <div>
-                                    <h6>090224.jpg</h6>
-                                    <p>365 KB</p>
+                                <div className="calls-action">
+                                  <div className="dropdown action-drop">
+                                    <Link
+                                      to="#"
+                                      className="dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
+                                    >
+                                      <MoreVertical size={15} />
+                                    </Link>
+                                    <div className="dropdown-menu dropdown-menu-right">
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-edit me-1" />
+                                        Edit
+                                      </Link>
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-trash me-1" />
+                                        Delete
+                                      </Link>
+                                    </div>
                                   </div>
                                 </div>
-                                <Link to='#'>
-                                  <i className='las la-download' />
-                                </Link>
                               </div>
-                            </li>
-                          </ul>
-                          <div className='notes-editor'>
-                            <div
-                              className='note-edit-wrap'
-                              style={{
-                                display: showFirstField ? 'block' : 'none'
-                              }}
-                            >
-                              <div className='summernote'>
-                                Write a new comment, send your team notification
-                                by typing @ followed by their name
-                              </div>
-                              <div className='text-end note-btns'>
-                                <Link
-                                  to='#'
-                                  onClick={handleCancel}
-                                  className='btn btn-lighter add-cancel'
+                              <h5>{note.title || "Untitled Note"}</h5>
+                              <p>
+                                {note.note ||
+                                  "No additional details available."}
+                              </p>
+
+                              {/* Document Downloads */}
+                              {leadData.documents &&
+                                leadData.documents.length > 0 && (
+                                  <ul>
+                                    {leadData.documents.map((doc, index) => (
+                                      <li key={index}>
+                                        {/* <div className="note-download">
+                                          <div className="note-info">
+                                            <span className="note-icon bg-success">
+                                              <i className="las la-file-excel" />
+                                            </span>
+                                            <div>
+                                              <h6>
+                                                {doc.name || "Unknown Document"}
+                                              </h6>
+                                              <p>
+                                                {doc.size || "Unknown Size"}
+                                              </p>
+                                            </div>
+                                          </div>
+                                          <Link to="#">
+                                            <i className="las la-download" />
+                                          </Link>
+                                        </div> */}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+
+                              {/* Notes Editor */}
+                              <div className="notes-editor">
+                                <div
+                                  className="note-edit-wrap"
+                                  style={{
+                                    display: showFirstFieldNotes
+                                      ? "block"
+                                      : "none",
+                                  }}
                                 >
-                                  Cancel
-                                </Link>
-                                <Link to='#' className='btn btn-primary'>
-                                  Save
-                                </Link>
-                              </div>
-                            </div>
-                            <div className='text-end'>
-                              <Link
-                                to='#'
-                                className='add-comment'
-                                onClick={handleSaveAndNext}
-                              >
-                                <i className='las la-plus-circle me-1' />
-                                Add Comment
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar20} alt='img' />
-                              <div>
-                                <h6>Sharon Roy</h6>
-                                <p>18 Sep 2023, 09:52 am</p>
-                              </div>
-                            </div>
-                            <div className='calls-action'>
-                              <div className='dropdown action-drop'>
-                                <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
-                                >
-                                  <MoreVertical size={15} />
-                                </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-edit me-1' />
-                                    Edit
-                                  </Link>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-trash me-1' />
-                                    Delete
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <h5>Notes added by Antony</h5>
-                          <p>
-                            A project plan typically contains a list of the
-                            essential elements of a project, such as
-                            stakeholders, scope, timelines, estimated cost and
-                            communication methods. The project manager typically
-                            lists the information based on the assignment.
-                          </p>
-                          <ul>
-                            <li>
-                              <div className='note-download'>
-                                <div className='note-info'>
-                                  <span className='note-icon bg-success'>
-                                    <i className='las la-file-excel' />
-                                  </span>
-                                  <div>
-                                    <h6>Andrewpass.txt</h6>
-                                    <p>365 KB</p>
+                                  <div className="summernote">
+                                    Write a new comment, send your team
+                                    notification by typing @ followed by their
+                                    name
+                                  </div>
+                                  <div className="text-end note-btns">
+                                    <Link
+                                      to="#"
+                                      onClick={handleCancelNotes}
+                                      className="btn btn-lighter add-cancel"
+                                    >
+                                      Cancel
+                                    </Link>
+                                    <Link to="#" className="btn btn-primary">
+                                      Save
+                                    </Link>
                                   </div>
                                 </div>
-                                <Link to='#'>
-                                  <i className='las la-file-alt' />
-                                </Link>
-                              </div>
-                            </li>
-                          </ul>
-                          <div className='reply-box'>
-                            <p>
-                              The best way to get a project done faster is to
-                              start sooner. A goal without a timeline is just a
-                              dream.The goal you set must be challenging. At the
-                              same time, it should be realistic and attainable,
-                              not impossible to reach.
-                            </p>
-                            <p>
-                              Commented by{' '}
-                              <span className='text-primary'>Aeron</span> on 15
-                              Sep 2023, 11:15 pm
-                            </p>
-                          </div>
-                          <div className='notes-editor'>
-                            <div className='note-edit-wrap'>
-                              <div className='summernote'>
-                                Write a new comment, send your team notification
-                                by typing @ followed by their name
-                              </div>
-                              <div className='text-end note-btns'>
-                                <Link
-                                  to='#'
-                                  className='btn btn-lighter add-cancel'
-                                >
-                                  Cancel
-                                </Link>
-                                <Link to='#' className='btn btn-primary'>
-                                  Save
-                                </Link>
-                              </div>
-                            </div>
-                            <div className='text-end'>
-                              <Link to='#' className='add-comment'>
-                                <i className='las la-plus-circle me-1' />
-                                Add Comment
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar21} alt='img' />
-                              <div>
-                                <h6>Vaughan</h6>
-                                <p>20 Sep 2023, 10:26 pm</p>
-                              </div>
-                            </div>
-                            <div className='calls-action'>
-                              <div className='dropdown action-drop'>
-                                <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
-                                >
-                                  <MoreVertical size={15} />
-                                </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-edit me-1' />
-                                    Edit
+                                {/* <div className="text-end">
+                                  <Link
+                                    to="#"
+                                    className="add-comment"
+                                    onClick={handleSaveAndNextNotes}
+                                  >
+                                    <i className="las la-plus-circle me-1" />
+                                    Add Comment
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-trash me-1' />
-                                    Delete
-                                  </Link>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
-                          </div>
-                          <p>
-                            Projects play a crucial role in the success of
-                            organizations, and their importance cannot be
-                            overstated. Whether it's launching a new product,
-                            improving an existing
-                          </p>
-                          <div className='notes-editor'>
-                            <div className='note-edit-wrap'>
-                              <div className='summernote'>
-                                Write a new comment, send your team notification
-                                by typing @ followed by their name
-                              </div>
-                              <div className='text-end note-btns'>
-                                <Link
-                                  to='#'
-                                  className='btn btn-lighter add-cancel'
-                                >
-                                  Cancel
-                                </Link>
-                                <Link to='#' className='btn btn-primary'>
-                                  Save
-                                </Link>
-                              </div>
-                            </div>
-                            <div className='text-end'>
-                              <Link to='#' className='add-comment'>
-                                <i className='las la-plus-circle me-1' />
-                                Add Comment
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
+                          ))
+                        ) : (
+                          <p>No notes available.</p>
+                        )}
                       </div>
                     </div>
+
                     {/* /Notes */}
                     {/* Calls */}
-                    <div className='tab-pane fade' id='calls'>
-                      <div className='view-header'>
+                    <div className="tab-pane fade" id="calls">
+                      <div className="view-header">
                         <h4>Calls</h4>
                         <ul>
                           <li>

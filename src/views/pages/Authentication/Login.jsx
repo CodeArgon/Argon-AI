@@ -93,46 +93,46 @@ const Login = () => {
                         render={({ field }) => (
                           <input
                             className={`form-control ${
-                              errors?.email ? 'error-input' : ''
+                              errors?.email ? "error-input" : ""
                             }`}
-                            type='text'
-                            defaultValue={localStorage.getItem('email')}
+                            type="text"
+                            defaultValue={localStorage.getItem("email")}
                             onChange={field.onChange}
                             value={field.value}
-                            autoComplete='true'
+                            autoComplete="true"
                           />
                         )}
                       />
 
-                      <span className='text-danger'>
-                        {' '}
-                        {errors.email?.message}{' '}
+                      <span className="text-danger">
+                        {" "}
+                        {errors.email?.message}{" "}
                       </span>
                     </div>
-                    <div className='input-block mb-4'>
-                      <div className='row'>
-                        <div className='col'>
-                          <label className='col-form-label'>
-                            Password<span style={{ color: 'red' }}> *</span>
+                    <div className="input-block mb-4">
+                      <div className="row">
+                        <div className="col">
+                          <label className="col-form-label">
+                            Password<span style={{ color: "red" }}> *</span>
                           </label>
                         </div>
-                        <div className='col-auto'>
-                          <Link className='text-muted' to='/forgot-password'>
+                        <div className="col-auto">
+                          <Link className="text-muted" to="/forgot-password">
                             Forgot password?
                           </Link>
                         </div>
                       </div>
-                      <div style={{ position: 'relative' }}>
+                      <div style={{ position: "relative" }}>
                         <Controller
-                          name='password'
+                          name="password"
                           control={control}
                           render={({ field }) => (
                             <input
                               className={`form-control ${
-                                errors?.password ? 'error-input' : ''
+                                errors?.password ? "error-input" : ""
                               }`}
-                              type={eye ? 'password' : 'text'}
-                              defaultValue={localStorage.getItem('password')}
+                              type={eye ? "password" : "text"}
+                              defaultValue={localStorage.getItem("password")}
                               value={field.value}
                               onChange={field.onChange}
                               // autoComplete="true"
@@ -141,34 +141,34 @@ const Login = () => {
                         />
                         <span
                           style={{
-                            position: 'absolute',
-                            right: '5%',
-                            top: '30%'
+                            position: "absolute",
+                            right: "5%",
+                            top: "30%",
                           }}
                           onClick={onEyeClick}
                           className={`fa-solid ${
-                            eye ? 'fa-eye-slash' : 'fa-eye'
+                            eye ? "fa-eye-slash" : "fa-eye"
                           } `}
                         />
                       </div>
-                      <span className='text-danger'>
-                        {' '}
-                        {errors.password?.message}{' '}
+                      <span className="text-danger">
+                        {" "}
+                        {errors.password?.message}{" "}
                       </span>
                     </div>
-                    <div className='input-block text-center'>
+                    <div className="input-block text-center">
                       <button
-                        className='btn btn-primary account-btn'
-                        type='submit'
+                        className="btn btn-primary account-btn"
+                        type="submit"
                       >
                         Login
                       </button>
                     </div>
                   </form>
-                  <div className='account-footer'>
+                  <div className="account-footer">
                     <p>
-                      Don't have an account yet?{' '}
-                      <Link to='/register'>Register</Link>
+                      Don't have an account yet?{" "}
+                      <Link to="/profile-stepper">Register</Link>
                     </p>
                   </div>
                 </div>
@@ -179,7 +179,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

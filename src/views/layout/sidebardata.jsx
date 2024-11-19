@@ -248,63 +248,56 @@ export const SidebarData = [
   //   ],
   // },
   {
-    tittle: 'CRM',
+
+    tittle: "CRM",
     showAsTab: false,
     separateRoute: false,
     menu: [
-      // {
-      //   menuValue: "Contacts",
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   route: "/contact-list",
-      //   icon: "la la-user-shield",
-      // },
-      // {
-      //   menuValue: "Companies",
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   route: "/companies",
-      //   icon: "la la-building",
-      // },
-      // {
-      //   menuValue: 'Deals',
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   route: '/deals',
-      //   icon: 'la la-cubes'
-      // },
       {
-        menuValue: 'Leads',
+        menuValue: "Contacts",
         hasSubRoute: false,
         showSubRoute: false,
-        route: '/leads-list',
-        icon: 'la la-chart-area'
-        // allowedRoles: ['DL'],
+        route: "/contact-list",
+        icon: "la la-user-shield",
       },
       {
-        menuValue: 'My Leads',
+        menuValue: "Companies",
         hasSubRoute: false,
         showSubRoute: false,
-        route: '/bd-leads-list',
-        icon: 'la la-chart-area'
+        route: "/companies",
+        icon: "la la-building",
       },
       {
-        menuValue: 'DL Leads',
+        menuValue: "Deals",
         hasSubRoute: false,
         showSubRoute: false,
-        route: '/dl-leads-list',
-        icon: 'la la-chart-area'
+        route: "/deals",
+        icon: "la la-cubes",
       },
       {
-        menuValue: 'Pipeline',
+        menuValue: "Leads",
         hasSubRoute: false,
         showSubRoute: false,
-<<<<<<< Updated upstream
+
         route: "/leads-list",
         icon: "la la-chart-area",
       },
       {
-        menuValue: "Pipeline",
+        menuValue: "My Leads",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/bd-leads-list",
+        icon: "la la-chart-area",
+      },
+      {
+        menuValue: "DL Leads",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/dl-leads-list",
+        icon: "la la-chart-area",
+      },
+      {
+        menuValue: "Sale Order",
         hasSubRoute: false,
         showSubRoute: false,
         route: "/pipeline",
@@ -324,29 +317,17 @@ export const SidebarData = [
         route: "/activities",
         icon: "la la-directions",
       },
+
+      {
+              menuValue: "Users",
+              hasSubRoute: false,
+              showSubRoute: false,
+              route: "/users",
+              icon: "la la-user-plus",
+            },
     ],
   },
-=======
-        route: '/pipeline',
-        icon: 'la la-exchange-alt'
-      }
-      // {
-      //   menuValue: 'Analytics',
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   route: '/analytics',
-      //   icon: 'la la-dice'
-      // },
-      // {
-      //   menuValue: 'Activities',
-      //   hasSubRoute: false,
-      //   showSubRoute: false,
-      //   route: '/activities',
-      //   icon: 'la la-directions'
-      // }
-    ]
-  }
->>>>>>> Stashed changes
+
   // {
   //   tittle: "HR",
   //   showAsTab: false,

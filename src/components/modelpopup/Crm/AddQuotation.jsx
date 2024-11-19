@@ -4,6 +4,7 @@ import { BASE_URL } from '../../../constants/urls'
 import UserContext from '../../../contexts/UserContext'
 import Swal from 'sweetalert2'
 
+import {registerLeadActivities} from "../../../helpers/users";
 const AddQuotation = () => {
   const [paymentTerm, setPaymentTerm] = useState(null)
   const [paymentList, setPaymentList] = useState(null)
@@ -103,15 +104,15 @@ const AddQuotation = () => {
           Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json'
         },
-
         body: JSON.stringify(data)
       })
 
       if (response.ok) {
         const formData = new FormData()
         formData.append('status', 'quotation')
+        const authToken = localStorage.getItem('BearerToken')
         try {
-          const response = await fetch(`${BASE_URL}leads/${leadData.id}/`, {
+          const response = await fetch(`${BASE_URL}leads/${lead.id}/`, {
             method: 'PATCH',
             headers: {
               Authorization: `Bearer ${authToken}`
@@ -126,15 +127,20 @@ const AddQuotation = () => {
           const updatedLead = await response.json()
           localStorage.setItem('leadData', JSON.stringify(updatedLead))
           setLead(updatedLead)
-          setlead(updatedLead)
-          console.log('testtttttttttttttttt0', updatedLead)
+          setLeadData(updatedLead)
           setVisibleItems(prevItems => [...prevItems, 'Opportunity'])
+          const str = `Lead ${lead.name} is marked as opportunity by ${userData?.user?.username}`;
+      console.log("String ",str,"Lead ID ",lead.id);
+      const result = await registerLeadActivities(lead.id,userData?.user?.username,str);
+      if (result === true) {
+        console.log("result ",result)
+       }
         } catch (error) {
           console.error('Failed to update status:', error)
         }
-        Swal.fire('Quotation submitted successfully!')
+        alert('Quotation submitted successfully!')
       } else {
-        Swal.fire('Failed to submit quotation.')
+        alert('Failed to submit quotation.')
       }
     } catch (error) {
       console.error('Error submitting quotation:', error)

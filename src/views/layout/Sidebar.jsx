@@ -4316,8 +4316,6 @@ const Sidebar = () => {
   )
 }
 
-<<<<<<< Updated upstream
+
+
 export default Sidebar;
-=======
-export default Sidebar
->>>>>>> Stashed changes

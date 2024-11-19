@@ -47,15 +47,12 @@ export const AppProvider = ({ children }) => {
       value={{
         userData,
         setUserData,
-<<<<<<< Updated upstream
-=======
         activeStep,
         setActiveStep,
         formData,
         setFormData,
         profileID,
         setprofileID,
->>>>>>> Stashed changes
         activeStep,
         setActiveStep,
         formData,
@@ -63,9 +60,9 @@ export const AppProvider = ({ children }) => {
         profileID,
         setprofileID,
         leadData,
-        setLead,
         lead,
-        setlead,
+        setlead
+
       }}
     >
       {children}
@@ -74,19 +71,4 @@ export const AppProvider = ({ children }) => {
 };
 
 export default UserContext;
-<<<<<<< Updated upstream
 
-// degree: "",
-//     institute_name: "",
-//     degree_duration: "",
-//     degree2: "",
-//     institute_name2: "",
-//     degree_duration2: "",
-//     company_name: "",
-//     company_designation: "",
-//     company_name2: "",
-//     company_designation2: "",
-//     company_duration: "",
-//     company_duration2: "",
-=======
->>>>>>> Stashed changes
