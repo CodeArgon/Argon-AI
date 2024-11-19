@@ -110,8 +110,31 @@ const PipeLine = () => {
  
   const columns = [
     {
+      title: "Lead Id",
+      dataIndex: "id",
+      render: (text, record) => (
+        <Link
+          to="/leads-details"
+          className="company-img"
+          state={{ leadData: record }}
+        >
+          {text}
+        </Link>
+      ),
+      sorter: (a, b) => a.LeadName.length - b.LeadName.length,
+    },
+    {
       title: "Lead Name",
       dataIndex: "name",
+      render: (text, record) => (
+        <Link
+          to="/leads-details"
+          className="company-img"
+          state={{ leadData: record }}
+        >
+          {text}
+        </Link>
+      ),
       sorter: (a, b) => a.name.length - b.name.length,
     },
     {
@@ -173,7 +196,7 @@ const PipeLine = () => {
     },
     {
       title: "Action",
-      render: () => (
+      render: (record) => (
         <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
@@ -200,8 +223,12 @@ const PipeLine = () => {
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link> */}
-            <Link class="dropdown-item" to="/leads-details">
-              <i class="fa-regular fa-eye"></i> Preview
+            <Link
+              className="dropdown-item"
+              to="/leads-details"
+              state={{ leadData: record }}
+            >
+              <i className="fa-regular fa-eye"></i> Preview
             </Link>
           </div>
         </div>

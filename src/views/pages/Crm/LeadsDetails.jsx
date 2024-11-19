@@ -1,183 +1,213 @@
-import React, { useEffect, useRef, useState,useContext } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import {
   avatar1,
   avatar19,
   avatar20,
   avatar21,
   avatar22,
-  media35
-} from '../../../Routes/ImagePath'
-import Select from 'react-select'
-import AddNotes from '../../../components/modelpopup/Crm/AddNotes'
-import { MoreVertical } from 'react-feather'
-import { Tooltip } from 'react-bootstrap'
-import { OverlayTrigger } from 'react-bootstrap/esm'
-import Calls from '../../../components/modelpopup/Crm/Calls'
-import AddFiles from '../../../components/modelpopup/Crm/AddFiles'
-import CreateEmail from '../../../components/modelpopup/Crm/CreateEmail'
-import AddContact from '../../../components/modelpopup/Crm/AddContact'
-import AddLeads from '../../../components/modelpopup/Crm/AddLeads'
-import { useLocation } from 'react-router-dom'
-import { BASE_URL } from '../../../constants/urls'
-import AddQuotation from '../../../components/modelpopup/Crm/AddQuotation'
+  media35,
+} from "../../../Routes/ImagePath";
+import Select from "react-select";
+import AddNotes from "../../../components/modelpopup/Crm/AddNotes";
+import { MoreVertical } from "react-feather";
+import { Tooltip } from "react-bootstrap";
+import { OverlayTrigger } from "react-bootstrap/esm";
+import Calls from "../../../components/modelpopup/Crm/Calls";
+import AddFiles from "../../../components/modelpopup/Crm/AddFiles";
+import CreateEmail from "../../../components/modelpopup/Crm/CreateEmail";
+import AddContact from "../../../components/modelpopup/Crm/AddContact";
+import AddLeads from "../../../components/modelpopup/Crm/AddLeads";
+import { useLocation } from "react-router-dom";
+import { BASE_URL } from "../../../constants/urls";
+import AddQuotation from "../../../components/modelpopup/Crm/AddQuotation";
 import UserContext from "../../../contexts/UserContext";
-import {registerLeadActivities} from "../../../helpers/users";
+import { registerLeadActivities } from "../../../helpers/users";
 const LeadsDetails = () => {
-  const { userData } = useContext(UserContext);
-  const location = useLocation()
+  const { userData, lead } = useContext(UserContext);
+  const location = useLocation();
   const initialLead =
     location.state?.leadData ||
-    JSON.parse(localStorage.getItem('leadData')) ||
-    {}
+    JSON.parse(localStorage.getItem("leadData")) ||
+    {};
 
   const recentlyViewd = [
-    { value: 'Sort By Alphabet', label: 'Sort By Alphabet' },
-    { value: 'Ascending', label: 'Ascending' },
-    { value: 'Descending', label: 'Descending' }
-  ]
+    { value: "Sort By Alphabet", label: "Sort By Alphabet" },
+    { value: "Ascending", label: "Ascending" },
+    { value: "Descending", label: "Descending" },
+  ];
 
-  const [leadData, setleadData] = useState(() => initialLead)
+  const [leadData, setleadData] = useState(() => initialLead);
 
   useEffect(() => {
-    localStorage.setItem('leadData', JSON.stringify(leadData))
-  }, [location.state, leadData])
-  
-  const [lead, setLead] = useState(initialLead)
+    localStorage.setItem("leadData", JSON.stringify(leadData));
+  }, [location.state, leadData]);
+
+  const [Lead, setLead] = useState(initialLead);
   useEffect(() => {
-    localStorage.getItem('leadData')
-  },)
+    localStorage.getItem("leadData");
+    console.log("Lead activities ", leadData.activities);
+    console.log("leadData.notes ", leadData.notes);
+    console.log("leadData.documents ", leadData.documents);
+  });
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("leadData"));
+    console.log("i am here FYIIIIII boss", data);
+
+    setleadData(data);
+  }, [lead]);
 
   const updateStatusInBackend = async () => {
-    const formData = new FormData()
-    formData.append('status', 'opportunity')
-    const authToken = localStorage.getItem('BearerToken')
+    const formData = new FormData();
+    formData.append("status", "opportunity");
+    console.log("Lead dattaaa", Lead);
+    const authToken = localStorage.getItem("BearerToken");
     try {
-      const response = await fetch(`${BASE_URL}leads/${lead.id}/`, {
-        method: 'PATCH',
+      const response = await fetch(`${BASE_URL}leads/${Lead.id}/`, {
+        method: "PATCH",
         headers: {
-          Authorization: `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
-        body: formData
-      })
+        body: formData,
+      });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        console.log("Error");
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        console.log("opportunity API send properly");
       }
 
-      const updatedLead = await response.json()
-      localStorage.setItem('leadData', JSON.stringify(updatedLead))
-      setLead(updatedLead)
-      setleadData(updatedLead)
-      setVisibleItems(prevItems => [...prevItems, 'Opportunity'])
-      console.log("formData ",formData)
-      console.log("updatedLead ",updatedLead)
-      const str = `Lead ${lead.name} is marked as opportunity by ${userData?.user?.username}`;
-      console.log("String ",str);
-      const result = await registerLeadActivities(lead.id,userData?.user?.username,str);
+      const updatedLead = await response.json();
+      localStorage.setItem("leadData", JSON.stringify(updatedLead));
+      setLead(updatedLead);
+      setleadData(updatedLead);
+      setVisibleItems((prevItems) => [...prevItems, "Opportunity"]);
+      console.log("formData ", formData);
+      console.log("updatedLead ", updatedLead);
+      const str = `Lead ${Lead.name} marked as opportunity by ${userData?.user?.username}`;
+      console.log("String ", str);
+      const result = await registerLeadActivities(
+        Lead.id,
+        userData?.user?.username,
+        str
+      );
       if (result === true) {
-        console.log("result ",result)
-       }
+        console.log("result ", result);
+        const updatedLead = await result.json();
+        localStorage.setItem("leadData", JSON.stringify(updatedLead));
+      }
     } catch (error) {
-      console.error('Failed to update status:', error)
+      console.error("Failed to update status:", error);
     }
-  }
+  };
 
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#667eea' : '#fff',
-      color: state.isFocused ? '#fff' : '#000',
-      '&:hover': {
-        backgroundColor: '#667eea'
-      }
-    })
-  }
+      backgroundColor: state.isFocused ? "#667eea" : "#fff",
+      color: state.isFocused ? "#fff" : "#000",
+      "&:hover": {
+        backgroundColor: "#667eea",
+      },
+    }),
+  };
 
   const tooltipContent = (
-    <Tooltip id='tooltip'>
+    <Tooltip id="tooltip">
       There are no email accounts configured. Please configure your email
       account in order to Send/Create Emails.
     </Tooltip>
-  )
-  const [showFirstField, setShowFirstField] = useState(false)
+  );
 
-  const handleSaveAndNext = () => {
-    setShowFirstField(true)
-  }
+  const [showFirstFieldNotes, setShowFirstFieldNotes] = useState(false);
 
-  const handleCancel = () => {
-    setShowFirstField(false)
-  }
-  const [isFullScreen, setFullScreen] = useState(false)
-  const maximizeBtnRef = useRef(null)
+  const handleSaveAndNextNotes = () => {
+    setShowFirstFieldNotes(true);
+  };
+
+  const handleCancelNotes = () => {
+    setShowFirstFieldNotes(false);
+  };
+  // const [showFirstField, setShowFirstField] = useState(false);
+
+  // const handleSaveAndNext = () => {
+  //   setShowFirstField(true);
+  // };
+
+  // const handleCancel = () => {
+  //   setShowFirstField(false);
+  // };
+  const [isFullScreen, setFullScreen] = useState(false);
+  const maximizeBtnRef = useRef(null);
 
   useEffect(() => {
     const handleClick = () => {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-        setFullScreen(true)
+        document.documentElement.requestFullscreen();
+        setFullScreen(true);
       } else {
         if (document.exitFullscreen) {
-          document.exitFullscreen()
-          setFullScreen(false)
+          document.exitFullscreen();
+          setFullScreen(false);
         }
       }
-    }
+    };
 
     const cleanup = () => {
       if (isFullScreen && document.exitFullscreen) {
-        document.exitFullscreen()
-        setFullScreen(false)
+        document.exitFullscreen();
+        setFullScreen(false);
       }
-    }
+    };
 
-    const maximizeBtn = maximizeBtnRef.current
-    maximizeBtn.addEventListener('click', handleClick)
+    const maximizeBtn = maximizeBtnRef.current;
+    maximizeBtn.addEventListener("click", handleClick);
 
     // Cleanup function to remove the event listener and exit fullscreen on component unmount
     return () => {
-      maximizeBtn.removeEventListener('click', handleClick)
-      cleanup()
-    }
-  }, [isFullScreen])
+      maximizeBtn.removeEventListener("click", handleClick);
+      cleanup();
+    };
+  }, [isFullScreen]);
 
-  const [visibleItems, setVisibleItems] = useState(['Open Lead'])
+  const [visibleItems, setVisibleItems] = useState(["Open Lead"]);
 
   return (
     <>
       {/* Page Wrapper */}
-      <div className='page-wrapper'>
+      <div className="page-wrapper">
         {/* Page Content */}
-        <div className='content container-fluid'>
+        <div className="content container-fluid">
           {/* Page Header */}
-          <div className='page-header'>
-            <div className='row align-items-center'>
-              <div className='col-md-4'>
-                <h3 className='page-title'>Leads</h3>
-                <ul className='breadcrumb'>
-                  <li className='breadcrumb-item'>
-                    <Link to='/admin-dashboard'>Dashboard</Link>
+          <div className="page-header">
+            <div className="row align-items-center">
+              <div className="col-md-4">
+                <h3 className="page-title">Leads</h3>
+                <ul className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <Link to="/admin-dashboard">Dashboard</Link>
                   </li>
-                  <li className='breadcrumb-item active'>Leads</li>
+                  <li className="breadcrumb-item active">Leads</li>
                 </ul>
               </div>
-              <div className='col-md-8 float-end ms-auto'>
-                <div className='d-flex title-head'>
-                  <div className='view-icons' style={{ marginBottom: '9px' }}>
-                    <Link to='#' className='grid-view btn btn-link'>
-                      <i className='las la-redo-alt' />
+              <div className="col-md-8 float-end ms-auto">
+                <div className="d-flex title-head">
+                  <div className="view-icons" style={{ marginBottom: "9px" }}>
+                    <Link to="#" className="grid-view btn btn-link">
+                      <i className="las la-redo-alt" />
                     </Link>
                     <Link
-                      to='#'
-                      className='list-view btn btn-link'
-                      id='collapse-header'
+                      to="#"
+                      className="list-view btn btn-link"
+                      id="collapse-header"
                       ref={maximizeBtnRef}
                     >
-                      <i className='las la-expand-arrows-alt' />
+                      <i className="las la-expand-arrows-alt" />
                     </Link>
                   </div>
-                  <div className='contacts-action'>
+                  <div className="contacts-action">
                     {/*<Link
                       to='#'
                       className='btn btn-sm btn-primary add-btn'
@@ -189,31 +219,31 @@ const LeadsDetails = () => {
                       View Proposal
                     </Link>
                     */}
-                    <div className='dropdown action-drops'>
-                      {lead.status === 'open' && (
+                    <div className="dropdown action-drops">
+                      {Lead.status === "open" && (
                         <Link
-                          to='#'
-                          className='btn btn-sm btn-primary add-btn'
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
                           onClick={updateStatusInBackend}
                         >
-                          <i className='la' />
+                          <i className="la" />
                           Make Opportunity
                         </Link>
                       )}
-                      {lead.status == 'opportunity' && (
+                      {Lead.status == "opportunity" && (
                         <Link
-                          to='#'
-                          className='btn btn-sm btn-primary add-btn'
-                          data-bs-toggle='modal'
-                          data-bs-target='#add_quotations'
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#add_quotations"
                         >
-                          <i className='la' />
+                          <i className="la" />
                           Add Quotation
                         </Link>
                       )}
-                      {lead.status == 'quotation' && (
-                        <Link to='#' className='btn btn-sm btn-primary add-btn'>
-                          <i className='la' />
+                      {Lead.status == "quotation" && (
+                        <Link to="#" className="btn btn-sm btn-primary add-btn">
+                          <i className="la" />
                           Sale Order
                         </Link>
                       )}
@@ -226,16 +256,16 @@ const LeadsDetails = () => {
           {/* /Page Header */}
           <hr />
           {leadData ? (
-            <div className='row'>
+            <div className="row">
               {/* Contact User */}
-              <div className='col-md-12'>
-                <div className='contact-head'>
-                  <div className='row align-items-center'>
-                    <div className='col-sm-6'>
-                      <ul className='contact-breadcrumb'>
+              <div className="col-md-12">
+                <div className="contact-head">
+                  <div className="row align-items-center">
+                    <div className="col-sm-6">
+                      <ul className="contact-breadcrumb">
                         <li>
-                          <Link to='/leads'>
-                            <i className='las la-arrow-left' /> Leads
+                          <Link to="/leads">
+                            <i className="las la-arrow-left" /> Leads
                           </Link>
                         </li>
                         <li>{leadData.name}</li>
@@ -243,18 +273,18 @@ const LeadsDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div className='contact-wrap'>
-                  <div className='contact-profile'>
-                    <div className='name-user'>
+                <div className="contact-wrap">
+                  <div className="contact-profile">
+                    <div className="name-user">
                       <h4>{leadData.name}</h4>
                       <p>
-                        <i className='las la-points' /> {leadData.notes}
+                        {/* <i className="las la-points" /> {leadData.notes} */}
                       </p>
                     </div>
                   </div>
-                <div >
-                    <div className="row"  >
-                      {lead.approval_status === "open" && (
+                  <div>
+                    <div className="row">
+                      {Lead.approval_status === "open" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
@@ -263,30 +293,40 @@ const LeadsDetails = () => {
                           <i className="la" /> Open
                         </Link>
                       )}
-                      {lead.approval_status === "disapproved" && (
+                      {Lead.approval_status === "disapproved" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
                           data-bs-toggle="modal"
                           data-bs-target="#add_quotations"
-                          style={{backgroundColor:'red',borderWidth:0}}
+                          style={{ backgroundColor: "red", borderWidth: 0 }}
                         >
                           <i className="la" /> Disapproved
                         </Link>
                       )}
-                      {lead.approval_status === "approved" && (
-                        <Link to="#" className="btn btn-sm btn-primary add-btn" style={{backgroundColor:'#55CE63',borderWidth:0}}>
+                      {Lead.approval_status === "approved" && (
+                        <Link
+                          to="#"
+                          className="btn btn-sm btn-primary add-btn"
+                          style={{ backgroundColor: "#55CE63", borderWidth: 0 }}
+                        >
                           <i className="la" /> Approved
                         </Link>
                       )}
-                      {lead.approval_status === "pending" && (
-                        <ul className="pending-actions" style={{display:'flex',flexDirection:'row'}}>
+                      {Lead.approval_status === "pending" && (
+                        <ul
+                          className="pending-actions"
+                          style={{ display: "flex", flexDirection: "row" }}
+                        >
                           <li>
                             <Link
                               to="#"
                               className="btn btn-sm btn-primary add-btn"
-                              style={{backgroundColor:'#55CE63',borderWidth:0}}
-                              >
+                              style={{
+                                backgroundColor: "#55CE63",
+                                borderWidth: 0,
+                              }}
+                            >
                               <i className="la" /> Approve
                             </Link>
                           </li>
@@ -294,7 +334,7 @@ const LeadsDetails = () => {
                             <Link
                               to="#"
                               className="btn btn-sm btn-primary add-btn"
-                              style={{backgroundColor:'red',borderWidth:0}}
+                              style={{ backgroundColor: "red", borderWidth: 0 }}
                             >
                               <i className="la" /> Disapprove
                             </Link>
@@ -307,87 +347,87 @@ const LeadsDetails = () => {
               </div>
               {/* /Contact User */}
               {/* Contact Sidebar */}
-              <div className='col-xl-3'>
-                <div className='stickybar'>
-                  <div className='card contact-sidebar'>
+              <div className="col-xl-3">
+                <div className="stickybar">
+                  <div className="card contact-sidebar">
                     <h5>Lead Information</h5>
-                    <ul className='other-info'>
+                    <ul className="other-info">
                       <li>
-                        <span className='other-title'>Date Created</span>
+                        <span className="other-title">Date Created</span>
                         <span>{leadData.created_date}</span>
                       </li>
                       <li>
-                        <span className='other-title'>Lead Owner</span>
+                        <span className="other-title">Lead Owner</span>
                         <span>{leadData.lead_gen_manager}</span>
                       </li>
                       <li>
-                        <span className='other-title'>Assigned To</span>
+                        <span className="other-title">Assigned To</span>
                         <span>{leadData.assigned_to}</span>
                       </li>
                       <li>
-                        <span className='other-title'>Medium</span>
+                        <span className="other-title">Medium</span>
                         <span>{leadData.medium}</span>
                       </li>
                       <li>
-                        <span className='other-title'>Source</span>
+                        <span className="other-title">Source</span>
                         <span>
                           {leadData.source}, {leadData.connects}
                         </span>
                       </li>
                       <li>
-                        <span className='other-title'>Client Name</span>
+                        <span className="other-title">Client Name</span>
                         <span>{leadData.gora}</span>
                       </li>
                       <li>
-                        <span className='other-title'>Acc Executive</span>
+                        <span className="other-title">Acc Executive</span>
                         <span>{leadData.account_executive}</span>
                       </li>
                       <li>
-                        <span className='other-title'>SDR</span>
+                        <span className="other-title">SDR</span>
                         <span>{leadData.sdr}</span>
                       </li>
                     </ul>
-                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
                       <h5>Owner</h5>
                     </div>
-                    <ul className='deals-info'>
+                    <ul className="deals-info">
                       <li>
                         <span>
-                          <img src={avatar21} alt='img' />
+                          <img src={avatar21} alt="img" />
                         </span>
                         <div>
                           <p>Vaughan</p>
                         </div>
                       </li>
                     </ul>
-                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
                       <h5>Priority</h5>
                     </div>
-                    <ul className='priority-info'>
+                    <ul className="priority-info">
                       <li>
-                        <div className='dropdown'>
+                        <div className="dropdown">
                           <Link
-                            to='#'
-                            className='dropdown-toggle'
-                            data-bs-toggle='dropdown'
-                            aria-expanded='false'
+                            to="#"
+                            className="dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
                           >
                             <span>
-                              <i className='fa-solid fa-circle me-1 text-danger circle' />
+                              <i className="fa-solid fa-circle me-1 text-danger circle" />
                               High
                             </span>
-                            <i className='las la-angle-down ms-1' />
+                            <i className="las la-angle-down ms-1" />
                           </Link>
-                          <div className='dropdown-menu dropdown-menu-right'>
-                            <Link className='dropdown-item' to='#'>
+                          <div className="dropdown-menu dropdown-menu-right">
+                            <Link className="dropdown-item" to="#">
                               <span>
-                                <i className='fa-solid fa-circle me-1 text-danger circle' />
+                                <i className="fa-solid fa-circle me-1 text-danger circle" />
                                 High
                               </span>
                             </Link>
-                            <Link className='dropdown-item' to='#'>
+                            <Link className="dropdown-item" to="#">
                               <span>
-                                <i className='fa-solid fa-circle me-1 text-success circle' />
+                                <i className="fa-solid fa-circle me-1 text-success circle" />
                                 Low
                               </span>
                             </Link>
@@ -395,56 +435,56 @@ const LeadsDetails = () => {
                         </div>
                       </li>
                     </ul>
-                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
                       <h5>Projects</h5>
                     </div>
-                    <ul className='projects-info'>
+                    <ul className="projects-info">
                       <li>
-                        <Link to='#' className='badge badge-light'>
+                        <Link to="#" className="badge badge-light">
                           Devops Design
                         </Link>
                       </li>
                       <li>
-                        <Link to='#' className='badge badge-light'>
+                        <Link to="#" className="badge badge-light">
                           Margrate Design
                         </Link>
                       </li>
                     </ul>
-                    <div className='d-flex align-items-center justify-content-between flex-wrap'>
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
                       <h5>Contacts</h5>
                       <Link
-                        to='#'
-                        className='com-add'
-                        data-bs-toggle='modal'
-                        data-bs-target='#add_contact'
+                        to="#"
+                        className="com-add"
+                        data-bs-toggle="modal"
+                        data-bs-target="#add_contact"
                       >
-                        <i className='las la-plus-circle me-1' />
+                        <i className="las la-plus-circle me-1" />
                         Add New
                       </Link>
                     </div>
-                    <ul className='deals-info'>
+                    <ul className="deals-info">
                       <li>
                         <span>
-                          <img src={avatar1} alt='img' />
+                          <img src={avatar1} alt="img" />
                         </span>
                         <div>
                           <p>Jessica</p>
                         </div>
                       </li>
                     </ul>
-                    <ul className='other-info'>
+                    <ul className="other-info">
                       <li>
-                        <span className='other-title'>Last Modified</span>
+                        <span className="other-title">Last Modified</span>
                         <span>10 Jan 2024, 10:00 am</span>
                       </li>
                       <li>
-                        <span className='other-title'>Modified By</span>
+                        <span className="other-title">Modified By</span>
                         <span>
                           <img
                             src={avatar19}
-                            className='avatar-xs rounded-circle'
-                            alt='img'
-                          />{' '}
+                            className="avatar-xs rounded-circle"
+                            alt="img"
+                          />{" "}
                           Darlee Robertson
                         </span>
                       </li>
@@ -454,72 +494,72 @@ const LeadsDetails = () => {
               </div>
               {/* /Contact Sidebar */}
               {/* Contact Details */}
-              <div className='col-xl-9'>
-                <div className='contact-tab-wrap'>
+              <div className="col-xl-9">
+                <div className="contact-tab-wrap">
                   <h4>Lead Pipeline Status</h4>
-                  <div className='pipeline-list'>
+                  <div className="pipeline-list">
                     <ul>
-                      {leadData.status == 'open' && (
+                      {leadData.status == "open" && (
                         <li>
-                          <Link to='#' className='bg-pending'>
+                          <Link to="#" className="bg-pending">
                             Open Lead
                           </Link>
                         </li>
                       )}
-                      {leadData.status == 'opportunity' && (
+                      {leadData.status == "opportunity" && (
                         <ul>
                           <li>
-                            <Link to='#' className='bg-pending'>
+                            <Link to="#" className="bg-pending">
                               Open Lead
                             </Link>
                           </li>
                           <li>
-                            <Link to='#' className='bg-info'>
+                            <Link to="#" className="bg-info">
                               Opportunity
                             </Link>
                           </li>
                         </ul>
                       )}
-                      {leadData.status === 'quotation' && (
+                      {leadData.status === "quotation" && (
                         <ul>
                           <li>
-                            <Link to='#' className='bg-pending'>
+                            <Link to="#" className="bg-pending">
                               Open Lead
                             </Link>
                           </li>
                           <li>
-                            <Link to='#' className='bg-info'>
+                            <Link to="#" className="bg-info">
                               Opportunity
                             </Link>
                           </li>
                           <li>
-                            <Link to='#' className='bg-warning'>
+                            <Link to="#" className="bg-warning">
                               Quotation
                             </Link>
                           </li>
                         </ul>
                       )}
-                      {(leadData.status === 'lost' ||
-                        leadData.status === 'win') && (
+                      {(leadData.status === "lost" ||
+                        leadData.status === "win") && (
                         <ul>
                           <li>
-                            <Link to='#' className='bg-pending'>
+                            <Link to="#" className="bg-pending">
                               Open Lead
                             </Link>
                           </li>
                           <li>
-                            <Link to='#' className='bg-info'>
+                            <Link to="#" className="bg-info">
                               Opportunity
                             </Link>
                           </li>
                           <li>
-                            <Link to='#' className='bg-warning'>
+                            <Link to="#" className="bg-warning">
                               Quotation
                             </Link>
                           </li>
 
                           <li>
-                            <Link to='#' className='bg-danger'>
+                            <Link to="#" className="bg-danger">
                               {leadData.status.charAt(0).toUpperCase() +
                                 leadData.status.slice(1).toLowerCase()}
                             </Link>
@@ -528,632 +568,331 @@ const LeadsDetails = () => {
                       )}
                     </ul>
                   </div>
-                  <ul className='contact-nav nav'>
+                  <ul className="contact-nav nav">
                     <li>
                       <Link
-                        to='#'
-                        data-bs-toggle='tab'
-                        data-bs-target='#activities'
-                        className='active'
+                        to="#"
+                        data-bs-toggle="tab"
+                        data-bs-target="#activities"
+                        className="active"
                       >
-                        <i className='las la-user-clock' />
+                        <i className="las la-user-clock" />
                         Activities
                       </Link>
                     </li>
                     <li>
-                      <Link to='#' data-bs-toggle='tab' data-bs-target='#notes'>
-                        <i className='las la-file' />
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#notes">
+                        <i className="las la-file" />
                         Notes
                       </Link>
                     </li>
                     <li>
-                      <Link to='#' data-bs-toggle='tab' data-bs-target='#calls'>
-                        <i className='las la-phone-volume' />
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#calls">
+                        <i className="las la-phone-volume" />
                         Calls
                       </Link>
                     </li>
                     <li>
-                      <Link to='#' data-bs-toggle='tab' data-bs-target='#files'>
-                        <i className='las la-file' />
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#files">
+                        <i className="las la-file" />
                         Files
                       </Link>
                     </li>
                     <li>
-                      <Link to='#' data-bs-toggle='tab' data-bs-target='#email'>
-                        <i className='las la-envelope' />
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#email">
+                        <i className="las la-envelope" />
                         Email
                       </Link>
                     </li>
                   </ul>
                 </div>
                 {/* Tab Content */}
-                <div className='contact-tab-view'>
-                  <div className='tab-content pt-0'>
+                <div className="contact-tab-view">
+                  <div className="tab-content pt-0">
                     {/* Activities */}
-                    <div className='tab-pane active show' id='activities'>
-                      <div className='view-header'>
+                    <div className="tab-pane active show" id="activities">
+                      <div className="view-header">
                         <h4>Activities</h4>
                         <ul>
                           <li>
-                            <div className='form-sort deals-dash-select'>
-                              <i className='las la-sort-amount-up-alt' />
+                            <div className="form-sort deals-dash-select">
+                              <i className="las la-sort-amount-up-alt" />
                               <Select
-                                className='select w-100'
+                                className="select w-100"
                                 options={recentlyViewd}
-                                placeholder='Sort By Alphabet'
+                                placeholder="Sort By Alphabet"
                                 styles={customStyles}
                               />
                             </div>
                           </li>
                         </ul>
                       </div>
-                      <div className='contact-activity'>
-                        <div className='badge-day'>
-                          <i className='fa-regular fa-calendar-check' />
-                          15 Feb 2024
-                        </div>
-                        <ul>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-info'>
-                              <i className='las la-comment-alt' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>You sent 1 Message to the contact.</h6>
-                              <p>10:25 pm</p>
-                            </div>
-                          </li>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-success'>
-                              <i className='las la-phone' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>
-                                Denwar responded to your appointment schedule
-                                question by call at 09:30pm.
-                              </h6>
-                              <p>09:25 pm</p>
-                            </div>
-                          </li>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-warning'>
-                              <i className='las la-file-alt' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>Notes added by Antony</h6>
-                              <p>
-                                Please accept my apologies for the inconvenience
-                                caused. It would be much appreciated if it's
-                                possible to reschedule to 6:00 PM, or any other
-                                day that week.
-                              </p>
-                              <p>10.00 pm</p>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className='badge-day'>
-                          <i className='fa-regular fa-calendar-check' />
-                          15 Feb 2024
-                        </div>
-                        <ul>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-pending'>
-                              <i className='las la-user-tie' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>
-                                Meeting With{' '}
-                                <span className='avatar-xs'>
-                                  <img src={avatar19} alt='img' />
-                                </span>{' '}
-                                Abraham
-                              </h6>
-                              <p>Schedueled on 05:00 pm</p>
-                            </div>
-                          </li>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-success'>
-                              <i className='las la-phone' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>
-                                Drain responded to your appointment schedule
-                                question.
-                              </h6>
-                              <p>09:25 pm</p>
-                            </div>
-                          </li>
-                        </ul>
-                        <div className='badge-day'>
-                          <i className='fa-regular fa-calendar-check' />
-                          Upcoming Activity
-                        </div>
-                        <ul>
-                          <li className='activity-wrap'>
-                            <span className='activity-icon bg-pending'>
-                              <i className='las la-user-tie' />
-                            </span>
-                            <div className='activity-info'>
-                              <h6>Product Meeting</h6>
-                              <p>
-                                A product team meeting is a gathering of the
-                                cross-functional product team — ideally
-                                including team members from product,
-                                engineering, marketing, and customer support.
-                              </p>
-                              <p>25 Jul 2023, 05:00 pm</p>
-                              <div className='upcoming-info'>
-                                <div className='row'>
-                                  <div className='col-sm-4'>
-                                    <p>Reminder</p>
-                                    <div className='dropdown'>
-                                      <Link
-                                        to='#'
-                                        className='dropdown-toggle'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                      >
-                                        <i className='las la-clock me-1' />
-                                        Reminder
-                                        <i className='las la-angle-down ms-1' />
-                                      </Link>
-                                      <div className='dropdown-menu dropdown-menu-right'>
-                                        <Link className='dropdown-item' to='#'>
-                                          Remainder
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          1 hr
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          10 hr
-                                        </Link>
-                                      </div>
-                                    </div>
+                      <div className="contact-activity">
+                        {leadData.activities &&
+                        leadData.activities.length > 0 ? (
+                          leadData.activities.map((activity) => (
+                            <div key={activity.id} className="badge-day">
+                              <i className="fa-regular fa-calendar-check" />
+                              {new Date(activity.created_at).toLocaleDateString(
+                                "en-GB",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )}
+                              <ul>
+                                <li className="activity-wrap">
+                                  <span className="activity-icon bg-info">
+                                    <i className="las la-comment-alt" />
+                                  </span>
+                                  <div className="activity-info">
+                                    <h6>{activity.text}</h6>
+                                    <p>
+                                      {new Date(
+                                        activity.created_at
+                                      ).toLocaleTimeString("en-US", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </p>
                                   </div>
-                                  <div className='col-sm-4'>
-                                    <p>Task Priority</p>
-                                    <div className='dropdown'>
-                                      <Link
-                                        to='#'
-                                        className='dropdown-toggle'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                      >
-                                        <i className='fa-solid fa-circle me-1 text-danger circle' />
-                                        High
-                                        <i className='las la-angle-down ms-1' />
-                                      </Link>
-                                      <div className='dropdown-menu dropdown-menu-right'>
-                                        <Link className='dropdown-item' to='#'>
-                                          <i className='fa-solid fa-circle me-1 text-danger circle' />
-                                          High
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          <i className='fa-solid fa-circle me-1 text-success circle' />
-                                          Low
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className='col-sm-4'>
-                                    <p>Assigned to</p>
-                                    <div className='dropdown'>
-                                      <Link
-                                        to='#'
-                                        className='dropdown-toggle'
-                                        data-bs-toggle='dropdown'
-                                        aria-expanded='false'
-                                      >
-                                        <img
-                                          src={avatar19}
-                                          alt='img'
-                                          className='me-1 avatar-xs'
-                                        />
-                                        John
-                                        <i className='las la-angle-down ms-1' />
-                                      </Link>
-                                      <div className='dropdown-menu dropdown-menu-right'>
-                                        <Link className='dropdown-item' to='#'>
-                                          <img
-                                            src={avatar19}
-                                            alt='img'
-                                            className='me-1 avatar-xs'
-                                          />
-                                          John
-                                        </Link>
-                                        <Link className='dropdown-item' to='#'>
-                                          <img
-                                            src={avatar19}
-                                            alt='img'
-                                            className='me-1 avatar-xs'
-                                          />
-                                          Peter
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                                </li>
+                              </ul>
                             </div>
-                          </li>
-                        </ul>
+                          ))
+                        ) : (
+                          <p>No activities found.</p>
+                        )}
                       </div>
                     </div>
+
                     {/* /Activities */}
                     {/* Notes */}
-                    <div className='tab-pane fade' id='notes'>
-                      <div className='view-header'>
+                    <div className="tab-pane fade" id="notes">
+                      <div className="view-header">
                         <h4>Notes</h4>
                         <ul>
-                          <li>
-                            <div className='form-sort deals-dash-select'>
-                              <Select
-                                className='select w-100'
-                                options={recentlyViewd}
-                                placeholder='Ascending'
-                                styles={customStyles}
-                              />
-                            </div>
-                          </li>
+                          <li>{/* Optional Sort Dropdown */}</li>
                           <li>
                             <Link
-                              to='#'
-                              data-bs-toggle='modal'
-                              data-bs-target='#add_notes'
-                              className='com-add'
+                              to="#"
+                              data-bs-toggle="modal"
+                              data-bs-target="#add_notes"
+                              className="com-add"
                             >
-                              <i className='las la-plus-circle me-1' />
+                              <i className="las la-plus-circle me-1" />
                               Add New
                             </Link>
                           </li>
                         </ul>
                       </div>
-                      <div className='notes-activity'>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar19} alt='img' />
-                              <div>
-                                <h6>Darlee Robertson</h6>
-                                <p>15 Sep 2023, 12:10 pm</p>
-                              </div>
-                            </div>
-                            <div className='calls-action'>
-                              <div className='dropdown action-drop'>
-                                <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
-                                >
-                                  <MoreVertical size={15} />
-                                </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-edit me-1' />
-                                    Edit
-                                  </Link>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-trash me-1' />
-                                    Delete
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <h5>Notes added by Antony</h5>
-                          <p>
-                            A project review evaluates the success of an
-                            initiative and identifies areas for improvement. It
-                            can also evaluate a current project to determine
-                            whether it's on the right track. Or, it can
-                            determine the success of a completed project.{' '}
-                          </p>
-                          <ul>
-                            <li>
-                              <div className='note-download'>
-                                <div className='note-info'>
-                                  <span className='note-icon bg-success'>
-                                    <i className='las la-file-excel' />
-                                  </span>
+
+                      <div className="notes-activity">
+                        {leadData.notes && leadData.notes.length > 0 ? (
+                          leadData.notes.map((note) => (
+                            <div className="calls-box" key={note.id}>
+                              <div className="caller-info">
+                                <div className="calls-user">
+                                  {/* User Avatar */}
+                                  <img src={avatar21} alt="img" />
                                   <div>
-                                    <h6>Project Specs.xls</h6>
-                                    <p>365 KB</p>
+                                    <h6>{note.created_by || "Unknown User"}</h6>
+                                    <p>
+                                      {new Date(
+                                        note.created_at
+                                      ).toLocaleDateString("en-US", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                      })}
+                                      ,{" "}
+                                      {new Date(
+                                        note.created_at
+                                      ).toLocaleTimeString("en-US", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </p>
                                   </div>
                                 </div>
-                                <Link to='#'>
-                                  <i className='las la-download' />
-                                </Link>
-                              </div>
-                            </li>
-                            <li>
-                              <div className='note-download'>
-                                <div className='note-info'>
-                                  <span className='note-icon'>
-                                    <img src={media35} alt='img' />
-                                  </span>
-                                  <div>
-                                    <h6>090224.jpg</h6>
-                                    <p>365 KB</p>
+                                <div className="calls-action">
+                                  <div className="dropdown action-drop">
+                                    <Link
+                                      to="#"
+                                      className="dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
+                                    >
+                                      <MoreVertical size={15} />
+                                    </Link>
+                                    <div className="dropdown-menu dropdown-menu-right">
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-edit me-1" />
+                                        Edit
+                                      </Link>
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-trash me-1" />
+                                        Delete
+                                      </Link>
+                                    </div>
                                   </div>
                                 </div>
-                                <Link to='#'>
-                                  <i className='las la-download' />
-                                </Link>
                               </div>
-                            </li>
-                          </ul>
-                          <div className='notes-editor'>
-                            <div
-                              className='note-edit-wrap'
-                              style={{
-                                display: showFirstField ? 'block' : 'none'
-                              }}
-                            >
-                              <div className='summernote'>
-                                Write a new comment, send your team notification
-                                by typing @ followed by their name
-                              </div>
-                              <div className='text-end note-btns'>
-                                <Link
-                                  to='#'
-                                  onClick={handleCancel}
-                                  className='btn btn-lighter add-cancel'
+                              <h5>{note.title || "Untitled Note"}</h5>
+                              <p>
+                                {note.note ||
+                                  "No additional details available."}
+                              </p>
+
+                              {/* Document Downloads */}
+                              {leadData.documents &&
+                                leadData.documents.length > 0 && (
+                                  <ul>
+                                    {leadData.documents.map((doc, index) => (
+                                      <li key={index}>
+                                        {/* <div className="note-download">
+                                          <div className="note-info">
+                                            <span className="note-icon bg-success">
+                                              <i className="las la-file-excel" />
+                                            </span>
+                                            <div>
+                                              <h6>
+                                                {doc.name || "Unknown Document"}
+                                              </h6>
+                                              <p>
+                                                {doc.size || "Unknown Size"}
+                                              </p>
+                                            </div>
+                                          </div>
+                                          <Link to="#">
+                                            <i className="las la-download" />
+                                          </Link>
+                                        </div> */}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+
+                              {/* Notes Editor */}
+                              <div className="notes-editor">
+                                <div
+                                  className="note-edit-wrap"
+                                  style={{
+                                    display: showFirstFieldNotes
+                                      ? "block"
+                                      : "none",
+                                  }}
                                 >
-                                  Cancel
-                                </Link>
-                                <Link to='#' className='btn btn-primary'>
-                                  Save
-                                </Link>
-                              </div>
-                            </div>
-                            <div className='text-end'>
-                              <Link
-                                to='#'
-                                className='add-comment'
-                                onClick={handleSaveAndNext}
-                              >
-                                <i className='las la-plus-circle me-1' />
-                                Add Comment
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar20} alt='img' />
-                              <div>
-                                <h6>Sharon Roy</h6>
-                                <p>18 Sep 2023, 09:52 am</p>
-                              </div>
-                            </div>
-                            <div className='calls-action'>
-                              <div className='dropdown action-drop'>
-                                <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
-                                >
-                                  <MoreVertical size={15} />
-                                </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-edit me-1' />
-                                    Edit
-                                  </Link>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-trash me-1' />
-                                    Delete
-                                  </Link>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <h5>Notes added by Antony</h5>
-                          <p>
-                            A project plan typically contains a list of the
-                            essential elements of a project, such as
-                            stakeholders, scope, timelines, estimated cost and
-                            communication methods. The project manager typically
-                            lists the information based on the assignment.
-                          </p>
-                          <ul>
-                            <li>
-                              <div className='note-download'>
-                                <div className='note-info'>
-                                  <span className='note-icon bg-success'>
-                                    <i className='las la-file-excel' />
-                                  </span>
-                                  <div>
-                                    <h6>Andrewpass.txt</h6>
-                                    <p>365 KB</p>
+                                  <div className="summernote">
+                                    Write a new comment, send your team
+                                    notification by typing @ followed by their
+                                    name
+                                  </div>
+                                  <div className="text-end note-btns">
+                                    <Link
+                                      to="#"
+                                      onClick={handleCancelNotes}
+                                      className="btn btn-lighter add-cancel"
+                                    >
+                                      Cancel
+                                    </Link>
+                                    <Link to="#" className="btn btn-primary">
+                                      Save
+                                    </Link>
                                   </div>
                                 </div>
-                                <Link to='#'>
-                                  <i className='las la-file-alt' />
-                                </Link>
-                              </div>
-                            </li>
-                          </ul>
-                          <div className='reply-box'>
-                            <p>
-                              The best way to get a project done faster is to
-                              start sooner. A goal without a timeline is just a
-                              dream.The goal you set must be challenging. At the
-                              same time, it should be realistic and attainable,
-                              not impossible to reach.
-                            </p>
-                            <p>
-                              Commented by{' '}
-                              <span className='text-primary'>Aeron</span> on 15
-                              Sep 2023, 11:15 pm
-                            </p>
-                          </div>
-                          <div className='notes-editor'>
-                            <div className='note-edit-wrap'>
-                              <div className='summernote'>
-                                Write a new comment, send your team notification
-                                by typing @ followed by their name
-                              </div>
-                              <div className='text-end note-btns'>
-                                <Link
-                                  to='#'
-                                  className='btn btn-lighter add-cancel'
-                                >
-                                  Cancel
-                                </Link>
-                                <Link to='#' className='btn btn-primary'>
-                                  Save
-                                </Link>
-                              </div>
-                            </div>
-                            <div className='text-end'>
-                              <Link to='#' className='add-comment'>
-                                <i className='las la-plus-circle me-1' />
-                                Add Comment
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar21} alt='img' />
-                              <div>
-                                <h6>Vaughan</h6>
-                                <p>20 Sep 2023, 10:26 pm</p>
-                              </div>
-                            </div>
-                            <div className='calls-action'>
-                              <div className='dropdown action-drop'>
-                                <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
-                                >
-                                  <MoreVertical size={15} />
-                                </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-edit me-1' />
-                                    Edit
+                                {/* <div className="text-end">
+                                  <Link
+                                    to="#"
+                                    className="add-comment"
+                                    onClick={handleSaveAndNextNotes}
+                                  >
+                                    <i className="las la-plus-circle me-1" />
+                                    Add Comment
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
-                                    <i className='las la-trash me-1' />
-                                    Delete
-                                  </Link>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
-                          </div>
-                          <p>
-                            Projects play a crucial role in the success of
-                            organizations, and their importance cannot be
-                            overstated. Whether it's launching a new product,
-                            improving an existing
-                          </p>
-                          <div className='notes-editor'>
-                            <div className='note-edit-wrap'>
-                              <div className='summernote'>
-                                Write a new comment, send your team notification
-                                by typing @ followed by their name
-                              </div>
-                              <div className='text-end note-btns'>
-                                <Link
-                                  to='#'
-                                  className='btn btn-lighter add-cancel'
-                                >
-                                  Cancel
-                                </Link>
-                                <Link to='#' className='btn btn-primary'>
-                                  Save
-                                </Link>
-                              </div>
-                            </div>
-                            <div className='text-end'>
-                              <Link to='#' className='add-comment'>
-                                <i className='las la-plus-circle me-1' />
-                                Add Comment
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
+                          ))
+                        ) : (
+                          <p>No notes available.</p>
+                        )}
                       </div>
                     </div>
+
                     {/* /Notes */}
                     {/* Calls */}
-                    <div className='tab-pane fade' id='calls'>
-                      <div className='view-header'>
+                    <div className="tab-pane fade" id="calls">
+                      <div className="view-header">
                         <h4>Calls</h4>
                         <ul>
                           <li>
                             <Link
-                              to='#'
-                              data-bs-toggle='modal'
-                              data-bs-target='#create_call'
-                              className='com-add'
+                              to="#"
+                              data-bs-toggle="modal"
+                              data-bs-target="#create_call"
+                              className="com-add"
                             >
-                              <i className='las la-plus-circle me-1' />
+                              <i className="las la-plus-circle me-1" />
                               Add New
                             </Link>
                           </li>
                         </ul>
                       </div>
-                      <div className='calls-activity'>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar19} alt='img' />
+                      <div className="calls-activity">
+                        <div className="calls-box">
+                          <div className="caller-info">
+                            <div className="calls-user">
+                              <img src={avatar19} alt="img" />
                               <p>
                                 <span>Darlee Robertson</span> logged a call on
                                 23 Jul 2023, 10:00 pm
                               </p>
                             </div>
-                            <div className='calls-action'>
-                              <div className='dropdown call-drop'>
+                            <div className="calls-action">
+                              <div className="dropdown call-drop">
                                 <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
+                                  to="#"
+                                  className="dropdown-toggle"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
                                 >
                                   Busy
-                                  <i className='las la-angle-down ms-1' />
+                                  <i className="las la-angle-down ms-1" />
                                 </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <Link className="dropdown-item" to="#">
                                     Busy
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     No Answer
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Unavailable
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Wrong Number
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Left Voice Message
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Moving Forward
                                   </Link>
                                 </div>
                               </div>
-                              <div className='dropdown'>
+                              <div className="dropdown">
                                 <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
+                                  to="#"
+                                  className="dropdown-toggle"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
                                 >
                                   <MoreVertical size={15} />
                                 </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <Link className="dropdown-item" to="#">
                                     Delete
                                   </Link>
                                 </div>
@@ -1165,61 +904,61 @@ const LeadsDetails = () => {
                             initiative and identifies areas for improvement. It
                             can also evaluate a current project to determine
                             whether it's on the right track. Or, it can
-                            determine the success of a completed project.{' '}
+                            determine the success of a completed project.{" "}
                           </p>
                         </div>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar20} alt='img' />
+                        <div className="calls-box">
+                          <div className="caller-info">
+                            <div className="calls-user">
+                              <img src={avatar20} alt="img" />
                               <p>
                                 <span>Sharon Roy</span> logged a call on 28 Jul
                                 2023, 09:00 pm
                               </p>
                             </div>
-                            <div className='calls-action'>
-                              <div className='dropdown call-drop'>
+                            <div className="calls-action">
+                              <div className="dropdown call-drop">
                                 <Link
-                                  to='#'
-                                  className='dropdown-toggle bg-light-pending'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
+                                  to="#"
+                                  className="dropdown-toggle bg-light-pending"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
                                 >
                                   No Answer
-                                  <i className='las la-angle-down ms-1' />
+                                  <i className="las la-angle-down ms-1" />
                                 </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <Link className="dropdown-item" to="#">
                                     Busy
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     No Answer
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Unavailable
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Wrong Number
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Left Voice Message
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Moving Forward
                                   </Link>
                                 </div>
                               </div>
-                              <div className='dropdown'>
+                              <div className="dropdown">
                                 <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
+                                  to="#"
+                                  className="dropdown-toggle"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
                                 >
                                   <MoreVertical size={15} />
                                 </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <Link className="dropdown-item" to="#">
                                     Delete
                                   </Link>
                                 </div>
@@ -1234,58 +973,58 @@ const LeadsDetails = () => {
                             lists the information based on the assignment.
                           </p>
                         </div>
-                        <div className='calls-box'>
-                          <div className='caller-info'>
-                            <div className='calls-user'>
-                              <img src={avatar21} alt='img' />
+                        <div className="calls-box">
+                          <div className="caller-info">
+                            <div className="calls-user">
+                              <img src={avatar21} alt="img" />
                               <p>
                                 <span>Vaughan</span> logged a call on 30 Jul
                                 2023, 08:00 pm
                               </p>
                             </div>
-                            <div className='calls-action'>
-                              <div className='dropdown call-drop'>
+                            <div className="calls-action">
+                              <div className="dropdown call-drop">
                                 <Link
-                                  to='#'
-                                  className='dropdown-toggle bg-light-pending'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
+                                  to="#"
+                                  className="dropdown-toggle bg-light-pending"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
                                 >
                                   No Answer
-                                  <i className='las la-angle-down ms-1' />
+                                  <i className="las la-angle-down ms-1" />
                                 </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <Link className="dropdown-item" to="#">
                                     Busy
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     No Answer
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Unavailable
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Wrong Number
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Left Voice Message
                                   </Link>
-                                  <Link className='dropdown-item' to='#'>
+                                  <Link className="dropdown-item" to="#">
                                     Moving Forward
                                   </Link>
                                 </div>
                               </div>
-                              <div className='dropdown'>
+                              <div className="dropdown">
                                 <Link
-                                  to='#'
-                                  className='dropdown-toggle'
-                                  data-bs-toggle='dropdown'
-                                  aria-expanded='false'
+                                  to="#"
+                                  className="dropdown-toggle"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
                                 >
                                   <MoreVertical size={15} />
                                 </Link>
-                                <div className='dropdown-menu dropdown-menu-right'>
-                                  <Link className='dropdown-item' to='#'>
+                                <div className="dropdown-menu dropdown-menu-right">
+                                  <Link className="dropdown-item" to="#">
                                     Delete
                                   </Link>
                                 </div>
@@ -1303,15 +1042,15 @@ const LeadsDetails = () => {
                     </div>
                     {/* /Calls */}
                     {/* Files */}
-                    <div className='tab-pane fade' id='files'>
-                      <div className='view-header'>
+                    <div className="tab-pane fade" id="files">
+                      <div className="view-header">
                         <h4>Files</h4>
                       </div>
-                      <div className='files-activity'>
-                        <div className='files-wrap'>
-                          <div className='row align-items-center'>
-                            <div className='col-md-8'>
-                              <div className='file-info'>
+                      <div className="files-activity">
+                        <div className="files-wrap">
+                          <div className="row align-items-center">
+                            <div className="col-md-8">
+                              <div className="file-info">
                                 <h4>Manage Documents</h4>
                                 <p>
                                   Send customizable quotes, proposals and
@@ -1319,14 +1058,14 @@ const LeadsDetails = () => {
                                 </p>
                               </div>
                             </div>
-                            <div className='col-md-4 text-md-end'>
-                              <ul className='file-action'>
+                            <div className="col-md-4 text-md-end">
+                              <ul className="file-action">
                                 <li>
                                   <Link
-                                    to='#'
-                                    className='btn btn-primary'
-                                    data-bs-toggle='modal'
-                                    data-bs-target='#new_file'
+                                    to="#"
+                                    className="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#new_file"
                                   >
                                     Create Document
                                   </Link>
@@ -1335,17 +1074,17 @@ const LeadsDetails = () => {
                             </div>
                           </div>
                         </div>
-                        <div className='files-wrap'>
-                          <div className='row align-items-center'>
-                            <div className='col-md-8'>
-                              <div className='file-info'>
+                        <div className="files-wrap">
+                          <div className="row align-items-center">
+                            <div className="col-md-8">
+                              <div className="file-info">
                                 <h4>Collier-Turner Proposal</h4>
                                 <p>
                                   Send customizable quotes, proposals and
                                   contracts to close deals faster.
                                 </p>
-                                <div className='file-user'>
-                                  <img src={avatar21} alt='img' />
+                                <div className="file-user">
+                                  <img src={avatar21} alt="img" />
                                   <div>
                                     <p>
                                       <span>Owner</span> Vaughan
@@ -1354,40 +1093,40 @@ const LeadsDetails = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className='col-md-4 text-md-end'>
-                              <ul className='file-action'>
+                            <div className="col-md-4 text-md-end">
+                              <ul className="file-action">
                                 <li>
-                                  <span className='badge badge-soft-pink'>
+                                  <span className="badge badge-soft-pink">
                                     Proposal
                                   </span>
                                 </li>
                                 <li>
-                                  <span className='badge badge-soft-grey priority-badge'>
-                                    <i className='fa-solid fa-circle' />
+                                  <span className="badge badge-soft-grey priority-badge">
+                                    <i className="fa-solid fa-circle" />
                                     Low
                                   </span>
                                 </li>
                                 <li>
-                                  <div className='dropdown action-drop'>
+                                  <div className="dropdown action-drop">
                                     <Link
-                                      to='#'
-                                      className='dropdown-toggle'
-                                      data-bs-toggle='dropdown'
-                                      aria-expanded='false'
+                                      to="#"
+                                      className="dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
                                     >
                                       <MoreVertical size={15} />
                                     </Link>
-                                    <div className='dropdown-menu dropdown-menu-right'>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-edit me-1' />
+                                    <div className="dropdown-menu dropdown-menu-right">
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-edit me-1" />
                                         Edit
                                       </Link>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-trash me-1' />
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-trash me-1" />
                                         Delete
                                       </Link>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-download me-1' />
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-download me-1" />
                                         Download
                                       </Link>
                                     </div>
@@ -1397,17 +1136,17 @@ const LeadsDetails = () => {
                             </div>
                           </div>
                         </div>
-                        <div className='files-wrap'>
-                          <div className='row align-items-center'>
-                            <div className='col-md-8'>
-                              <div className='file-info'>
+                        <div className="files-wrap">
+                          <div className="row align-items-center">
+                            <div className="col-md-8">
+                              <div className="file-info">
                                 <h4>Collier-Turner Proposal</h4>
                                 <p>
                                   Send customizable quotes, proposals and
                                   contracts to close deals faster.
                                 </p>
-                                <div className='file-user'>
-                                  <img src={avatar1} alt='img' />
+                                <div className="file-user">
+                                  <img src={avatar1} alt="img" />
                                   <div>
                                     <p>
                                       <span>Owner</span> Jessica
@@ -1416,40 +1155,40 @@ const LeadsDetails = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className='col-md-4 text-md-end'>
-                              <ul className='file-action'>
+                            <div className="col-md-4 text-md-end">
+                              <ul className="file-action">
                                 <li>
-                                  <span className='badge badge-soft-info'>
+                                  <span className="badge badge-soft-info">
                                     Quote
                                   </span>
                                 </li>
                                 <li>
-                                  <span className='badge badge-soft-success priority-badge'>
-                                    <i className='fa-solid fa-circle' />
+                                  <span className="badge badge-soft-success priority-badge">
+                                    <i className="fa-solid fa-circle" />
                                     Sent
                                   </span>
                                 </li>
                                 <li>
-                                  <div className='dropdown action-drop'>
+                                  <div className="dropdown action-drop">
                                     <Link
-                                      to='#'
-                                      className='dropdown-toggle'
-                                      data-bs-toggle='dropdown'
-                                      aria-expanded='false'
+                                      to="#"
+                                      className="dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
                                     >
                                       <MoreVertical size={15} />
                                     </Link>
-                                    <div className='dropdown-menu dropdown-menu-right'>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-edit me-1' />
+                                    <div className="dropdown-menu dropdown-menu-right">
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-edit me-1" />
                                         Edit
                                       </Link>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-trash me-1' />
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-trash me-1" />
                                         Delete
                                       </Link>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-download me-1' />
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-download me-1" />
                                         Download
                                       </Link>
                                     </div>
@@ -1459,17 +1198,17 @@ const LeadsDetails = () => {
                             </div>
                           </div>
                         </div>
-                        <div className='files-wrap'>
-                          <div className='row align-items-center'>
-                            <div className='col-md-8'>
-                              <div className='file-info'>
+                        <div className="files-wrap">
+                          <div className="row align-items-center">
+                            <div className="col-md-8">
+                              <div className="file-info">
                                 <h4>Collier-Turner Proposal</h4>
                                 <p>
                                   Send customizable quotes, proposals and
                                   contracts to close deals faster.
                                 </p>
-                                <div className='file-user'>
-                                  <img src={avatar22} alt='img' />
+                                <div className="file-user">
+                                  <img src={avatar22} alt="img" />
                                   <div>
                                     <p>
                                       <span>Owner</span> Vaughan
@@ -1478,40 +1217,40 @@ const LeadsDetails = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className='col-md-4 text-md-end'>
-                              <ul className='file-action'>
+                            <div className="col-md-4 text-md-end">
+                              <ul className="file-action">
                                 <li>
-                                  <span className='badge badge-soft-pink'>
+                                  <span className="badge badge-soft-pink">
                                     Proposal
                                   </span>
                                 </li>
                                 <li>
-                                  <span className='badge badge-soft-grey priority-badge'>
-                                    <i className='fa-solid fa-circle' />
+                                  <span className="badge badge-soft-grey priority-badge">
+                                    <i className="fa-solid fa-circle" />
                                     Low
                                   </span>
                                 </li>
                                 <li>
-                                  <div className='dropdown action-drop'>
+                                  <div className="dropdown action-drop">
                                     <Link
-                                      to='#'
-                                      className='dropdown-toggle'
-                                      data-bs-toggle='dropdown'
-                                      aria-expanded='false'
+                                      to="#"
+                                      className="dropdown-toggle"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
                                     >
                                       <MoreVertical size={15} />
                                     </Link>
-                                    <div className='dropdown-menu dropdown-menu-right'>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-edit me-1' />
+                                    <div className="dropdown-menu dropdown-menu-right">
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-edit me-1" />
                                         Edit
                                       </Link>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-trash me-1' />
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-trash me-1" />
                                         Delete
                                       </Link>
-                                      <Link className='dropdown-item' to='#'>
-                                        <i className='las la-download me-1' />
+                                      <Link className="dropdown-item" to="#">
+                                        <i className="las la-download me-1" />
                                         Download
                                       </Link>
                                     </div>
@@ -1525,28 +1264,28 @@ const LeadsDetails = () => {
                     </div>
                     {/* /Files */}
                     {/* Email */}
-                    <div className='tab-pane fade' id='email'>
-                      <div className='view-header'>
+                    <div className="tab-pane fade" id="email">
+                      <div className="view-header">
                         <h4>Email</h4>
                         <ul>
                           <li>
                             <OverlayTrigger
-                              placement='left'
+                              placement="left"
                               overlay={tooltipContent}
                             >
-                              <Link to='#' className='com-add create-mail'>
-                                <i className='las la-plus-circle me-1' />
+                              <Link to="#" className="com-add create-mail">
+                                <i className="las la-plus-circle me-1" />
                                 Create Email
                               </Link>
                             </OverlayTrigger>
                           </li>
                         </ul>
                       </div>
-                      <div className='files-activity'>
-                        <div className='files-wrap'>
-                          <div className='row align-items-center'>
-                            <div className='col-md-8'>
-                              <div className='file-info'>
+                      <div className="files-activity">
+                        <div className="files-wrap">
+                          <div className="row align-items-center">
+                            <div className="col-md-8">
+                              <div className="file-info">
                                 <h4>Manage Emails</h4>
                                 <p>
                                   You can send and reply to emails directly via
@@ -1554,14 +1293,14 @@ const LeadsDetails = () => {
                                 </p>
                               </div>
                             </div>
-                            <div className='col-md-4 text-md-end'>
-                              <ul className='file-action'>
+                            <div className="col-md-4 text-md-end">
+                              <ul className="file-action">
                                 <li>
                                   <Link
-                                    to='#'
-                                    className='btn btn-primary'
-                                    data-bs-toggle='modal'
-                                    data-bs-target='#create_email'
+                                    to="#"
+                                    className="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#create_email"
                                   >
                                     Connect Account
                                   </Link>
@@ -1570,292 +1309,292 @@ const LeadsDetails = () => {
                             </div>
                           </div>
                         </div>
-                        <div className='files-wrap'>
-                          <div className='email-header'>
-                            <div className='row'>
-                              <div className='col top-action-left'>
-                                <div className='float-start d-none d-sm-block'>
+                        <div className="files-wrap">
+                          <div className="email-header">
+                            <div className="row">
+                              <div className="col top-action-left">
+                                <div className="float-start d-none d-sm-block">
                                   <input
-                                    type='text'
-                                    placeholder='Search Messages'
-                                    className='form-control search-message'
+                                    type="text"
+                                    placeholder="Search Messages"
+                                    className="form-control search-message"
                                   />
                                 </div>
                               </div>
-                              <div className='col-auto top-action-right'>
-                                <div className='text-end'>
+                              <div className="col-auto top-action-right">
+                                <div className="text-end">
                                   <button
-                                    type='button'
-                                    title='Refresh'
-                                    data-bs-toggle='tooltip'
-                                    className='btn btn-white d-none d-md-inline-block me-1'
+                                    type="button"
+                                    title="Refresh"
+                                    data-bs-toggle="tooltip"
+                                    className="btn btn-white d-none d-md-inline-block me-1"
                                   >
-                                    <i className='fa-solid fa-rotate' />
+                                    <i className="fa-solid fa-rotate" />
                                   </button>
-                                  <div className='btn-group'>
-                                    <Link className='btn btn-white'>
-                                      <i className='fa-solid fa-angle-left' />
+                                  <div className="btn-group">
+                                    <Link className="btn btn-white">
+                                      <i className="fa-solid fa-angle-left" />
                                     </Link>
-                                    <Link className='btn btn-white'>
-                                      <i className='fa-solid fa-angle-right' />
+                                    <Link className="btn btn-white">
+                                      <i className="fa-solid fa-angle-right" />
                                     </Link>
                                   </div>
                                 </div>
-                                <div className='text-end'>
-                                  <span className='text-muted d-none d-md-inline-block'>
-                                    Showing 10 of 112{' '}
+                                <div className="text-end">
+                                  <span className="text-muted d-none d-md-inline-block">
+                                    Showing 10 of 112{" "}
                                   </span>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div className='email-content'>
-                            <div className='table-responsive'>
-                              <table className='table table-inbox table-hover'>
+                          <div className="email-content">
+                            <div className="table-responsive">
+                              <table className="table table-inbox table-hover">
                                 <thead>
                                   <tr>
-                                    <th colSpan={6} className='ps-2'>
+                                    <th colSpan={6} className="ps-2">
                                       <input
-                                        type='checkbox'
-                                        className='checkbox-all'
+                                        type="checkbox"
+                                        className="checkbox-all"
                                       />
                                     </th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr
-                                    className='unread clickable-row'
-                                    data-to='/mail-view'
+                                    className="unread clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa fa-star starred ' />
+                                      <span className="mail-important">
+                                        <i className="fa fa-star starred " />
                                       </span>
                                     </td>
-                                    <td className='name'>John Doe</td>
-                                    <td className='subject'>
+                                    <td className="name">John Doe</td>
+                                    <td className="subject">
                                       Lorem ipsum dolor sit amet, consectetuer
                                       adipiscing elit
                                     </td>
                                     <td>
-                                      <i className='fa-solid fa-paperclip' />
+                                      <i className="fa-solid fa-paperclip" />
                                     </td>
-                                    <td className='mail-date'>13:14</td>
+                                    <td className="mail-date">13:14</td>
                                   </tr>
                                   <tr
-                                    className='unread clickable-row'
-                                    data-to='/mail-view'
+                                    className="unread clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>Envato Account</td>
-                                    <td className='subject'>
+                                    <td className="name">Envato Account</td>
+                                    <td className="subject">
                                       Important account security update from
                                       Envato
                                     </td>
                                     <td />
-                                    <td className='mail-date'>8:42</td>
+                                    <td className="mail-date">8:42</td>
                                   </tr>
                                   <tr
-                                    className='clickable-row'
-                                    data-to='/mail-view'
+                                    className="clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>Twitter</td>
-                                    <td className='subject'>
+                                    <td className="name">Twitter</td>
+                                    <td className="subject">
                                       HRMS Bootstrap Admin Template
                                     </td>
                                     <td />
-                                    <td className='mail-date'>30 Nov</td>
+                                    <td className="mail-date">30 Nov</td>
                                   </tr>
                                   <tr
-                                    className='unread clickable-row'
-                                    data-to='/mail-view'
+                                    className="unread clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>Richard Parker</td>
-                                    <td className='subject'>
+                                    <td className="name">Richard Parker</td>
+                                    <td className="subject">
                                       Lorem ipsum dolor sit amet, consectetuer
                                       adipiscing elit
                                     </td>
                                     <td />
-                                    <td className='mail-date'>18 Sep</td>
+                                    <td className="mail-date">18 Sep</td>
                                   </tr>
                                   <tr
-                                    className='clickable-row'
-                                    data-to='/mail-view'
+                                    className="clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>John Smith</td>
-                                    <td className='subject'>
+                                    <td className="name">John Smith</td>
+                                    <td className="subject">
                                       Lorem ipsum dolor sit amet, consectetuer
                                       adipiscing elit
                                     </td>
                                     <td />
-                                    <td className='mail-date'>21 Aug</td>
+                                    <td className="mail-date">21 Aug</td>
                                   </tr>
                                   <tr
-                                    className='clickable-row'
-                                    data-to='/mail-view'
+                                    className="clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>
+                                    <td className="name">
                                       me, Robert Smith (3)
                                     </td>
-                                    <td className='subject'>
+                                    <td className="subject">
                                       Lorem ipsum dolor sit amet, consectetuer
                                       adipiscing elit
                                     </td>
                                     <td />
-                                    <td className='mail-date'>1 Aug</td>
+                                    <td className="mail-date">1 Aug</td>
                                   </tr>
                                   <tr
-                                    className='unread clickable-row'
-                                    data-to='/mail-view'
+                                    className="unread clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>Codecanyon</td>
-                                    <td className='subject'>
+                                    <td className="name">Codecanyon</td>
+                                    <td className="subject">
                                       Welcome To Codecanyon
                                     </td>
                                     <td />
-                                    <td className='mail-date'>Jul 13</td>
+                                    <td className="mail-date">Jul 13</td>
                                   </tr>
                                   <tr
-                                    className='clickable-row'
-                                    data-to='/mail-view'
+                                    className="clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>Richard Miles</td>
-                                    <td className='subject'>
+                                    <td className="name">Richard Miles</td>
+                                    <td className="subject">
                                       Lorem ipsum dolor sit amet, consectetuer
                                       adipiscing elit
                                     </td>
                                     <td>
-                                      <i className='fa-solid fa-paperclip' />
+                                      <i className="fa-solid fa-paperclip" />
                                     </td>
-                                    <td className='mail-date'>May 14</td>
+                                    <td className="mail-date">May 14</td>
                                   </tr>
                                   <tr
-                                    className='unread clickable-row'
-                                    data-to='/mail-view'
+                                    className="unread clickable-row"
+                                    data-to="/mail-view"
                                   >
                                     <td>
                                       <input
-                                        type='checkbox'
-                                        className='checkmail'
+                                        type="checkbox"
+                                        className="checkmail"
                                       />
                                     </td>
                                     <td>
-                                      <span className='mail-important'>
-                                        <i className='fa-regular fa-star' />
+                                      <span className="mail-important">
+                                        <i className="fa-regular fa-star" />
                                       </span>
                                     </td>
-                                    <td className='name'>John Smith</td>
-                                    <td className='subject'>
-                                      Lorem ipsum dolor sit amet, consectetuer
-                                      adipiscing elit
-                                    </td>
-                                    <td />
-                                    <td className='mail-date'>11/11/16</td>
-                                  </tr>
-                                  <tr
-                                    className='clickable-row'
-                                    data-to='/mail-view'
-                                  >
-                                    <td>
-                                      <input
-                                        type='checkbox'
-                                        className='checkmail'
-                                      />
-                                    </td>
-                                    <td>
-                                      <span className='mail-important'>
-                                        <i className='fa fa-star starred ' />
-                                      </span>
-                                    </td>
-                                    <td className='name'>Mike Litorus</td>
-                                    <td className='subject'>
+                                    <td className="name">John Smith</td>
+                                    <td className="subject">
                                       Lorem ipsum dolor sit amet, consectetuer
                                       adipiscing elit
                                     </td>
                                     <td />
-                                    <td className='mail-date'>10/31/16</td>
+                                    <td className="mail-date">11/11/16</td>
+                                  </tr>
+                                  <tr
+                                    className="clickable-row"
+                                    data-to="/mail-view"
+                                  >
+                                    <td>
+                                      <input
+                                        type="checkbox"
+                                        className="checkmail"
+                                      />
+                                    </td>
+                                    <td>
+                                      <span className="mail-important">
+                                        <i className="fa fa-star starred " />
+                                      </span>
+                                    </td>
+                                    <td className="name">Mike Litorus</td>
+                                    <td className="subject">
+                                      Lorem ipsum dolor sit amet, consectetuer
+                                      adipiscing elit
+                                    </td>
+                                    <td />
+                                    <td className="mail-date">10/31/16</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -1872,7 +1611,7 @@ const LeadsDetails = () => {
               {/* /Contact Details */}
             </div>
           ) : (
-            <p>No lead data available</p>
+            <p>No Lead data available</p>
           )}
         </div>
         <AddContact />
@@ -1885,7 +1624,7 @@ const LeadsDetails = () => {
       </div>
       {/* /Page Content */}
     </>
-  )
-}
+  );
+};
 
-export default LeadsDetails
+export default LeadsDetails;

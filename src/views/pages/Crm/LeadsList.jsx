@@ -19,6 +19,10 @@ const LeadsList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState(null);
 
+  // useEffect(() => {
+  //   localStorage.removeItem("leadData");
+  //   console.log("empty")
+  // });
   useEffect(() => {
     const authToken = localStorage.getItem("BearerToken");
     const fetchLeads = async () => {

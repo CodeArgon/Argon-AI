@@ -8,6 +8,8 @@ export const AppProvider = ({ children }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [profileID, setprofileID] = useState(0);
   const [leadData, setLeadData] = useState();
+  const [lead, setlead] = useState();
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -54,6 +56,8 @@ export const AppProvider = ({ children }) => {
         setprofileID,
         leadData,
         setLeadData,
+        lead,
+        setlead
       }}
     >
       {children}

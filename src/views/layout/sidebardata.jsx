@@ -304,6 +304,13 @@ export const SidebarData = [
         route: "/activities",
         icon: "la la-directions",
       },
+      {
+              menuValue: "Users",
+              hasSubRoute: false,
+              showSubRoute: false,
+              route: "/users",
+              icon: "la la-user-plus",
+            },
     ],
   },
   // {

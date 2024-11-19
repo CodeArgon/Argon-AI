@@ -1,17 +1,12 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
-import { Avatar_02, Avatar_16 } from "../../../Routes/ImagePath";
+import { Avatar_16 } from "../../../Routes/ImagePath";
 import { Link } from "react-router-dom";
 import ProfileTab from "./ProfileTab";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 const Profile = () => {
   const userDataString = localStorage.getItem("user");
-  const [userData, setUserData] = useState(JSON.parse(userDataString));
-
-  useEffect(() => {
-    // Fetch and parse the user data from localStorage when the component mounts
-    console.log("Yooo", userDataString);
-  }, []); //
+  const [userData] = useState(JSON.parse(userDataString));
 
   useEffect(() => {
     // This will log whenever userData is updated

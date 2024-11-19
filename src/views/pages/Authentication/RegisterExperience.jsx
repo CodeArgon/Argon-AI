@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../../../contexts/UserContext";
 import { Button } from "@mui/material";
 import { registerUserExperience } from "../../../helpers/users";
@@ -17,7 +17,7 @@ const schema = yup.object({
 const RegisterExperience = (props) => {
   const { setActiveStep, formData, setFormData, profileID } =
     useContext(UserContext);
-
+    const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -32,13 +32,10 @@ const RegisterExperience = (props) => {
     try {
       const result = await registerUserExperience(data, profileID);
       if (result === true) {
-        <Link
-          to="/file-manager"
-          className="company-img"
-        >
-        </Link>
         console.log("Move to next page");
+        navigate("/file-manager"); // Navigate programmatically
       } else {
+        console.log("Failed to register experience");
       }
     } catch (error) {
       console.error("Error:", error);
