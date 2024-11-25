@@ -61,7 +61,8 @@ export const AppProvider = ({ children }) => {
         setprofileID,
         leadData,
         lead,
-        setlead
+        setlead,
+        setLead
 
       }}
     >

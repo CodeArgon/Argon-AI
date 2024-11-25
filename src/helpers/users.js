@@ -1,5 +1,7 @@
 import { BASE_URL } from "../constants/urls";
 
+
+
 export async function registerUser(data) {
   const url = `${BASE_URL}register/`;
   const Registerdata = {
@@ -78,6 +80,7 @@ export async function registerUserEdu(data,profileID) {
   }
 }
 export async function registerLeadActivities(leadData,profileID,txt) {
+
   const authToken = localStorage.getItem("BearerToken");
   const url = `${BASE_URL}activity/`;
   const activityData = {
@@ -101,7 +104,22 @@ export async function registerLeadActivities(leadData,profileID,txt) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    return true;
+    const data =  await response.json();
+    console.log("hehehehhehehehehheheh ganoo ", data)
+    const leadResponse = await fetch(`${BASE_URL}leads/${leadData}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    if (!leadResponse.ok) {
+      console.log("Error");
+      throw new Error(`HTTP error! Status: ${leadResponse.status}`);
+    }else{
+      return await leadResponse.json();
+     
+    }
   } catch (error) {
     console.error("Error:", error);
   }

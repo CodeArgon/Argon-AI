@@ -290,6 +290,13 @@ export const SidebarData = [
         icon: "la la-chart-area",
       },
       {
+        menuValue: "Add Users",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/profile-stepper",
+        icon: "la la-user-plus",
+      },
+      {
         menuValue: "DL Leads",
         hasSubRoute: false,
         showSubRoute: false,
@@ -318,13 +325,7 @@ export const SidebarData = [
         icon: "la la-directions",
       },
 
-      {
-              menuValue: "Users",
-              hasSubRoute: false,
-              showSubRoute: false,
-              route: "/users",
-              icon: "la la-user-plus",
-            },
+      
     ],
   },
 

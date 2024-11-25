@@ -35,7 +35,7 @@ const Sidebar = () => {
       'Proposal Manager',
       'DL Leads'
     ],
-    IT: ['Dashboard', 'Add User'],
+    IT: ['Dashboard', 'Add Users'],
     Admin: [
       'Dashboard',
       'File Manager',
@@ -43,7 +43,7 @@ const Sidebar = () => {
       'Leads',
       'Add User'
     ],
-    BD: ['Dashboard', 'Proposal Manager', 'My Leads'],
+    BD: ['Dashboard', 'Proposal Manager', 'My Leads', 'File Manager'],
     HR: ['Dashboard', 'Leads', 'Sale Order'],
     'Project Manager': ['Dashboard', 'Proposal Manager', 'File Manager']
   }

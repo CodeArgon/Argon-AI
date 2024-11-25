@@ -20,7 +20,7 @@ const Unauthorized = () => {
               <div className='maintenance-content'>
                 <h3>Unauthorized Access</h3>
                 <p>You do not have permission to view this page.</p>
-                <Link to='/login' className='btn btn-custom btn-primary'>
+                <Link to='/employee-dashboard' className='btn btn-custom btn-primary'>
                   Back to Dashboard
                   <i className='la la-arrow-alt-circle-right ms-2' />
                 </Link>

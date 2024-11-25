@@ -232,8 +232,8 @@ const RegisterData = (props) => {
                         {...field}
                       >
                         <option value="">Select</option>
-                        <option value="Khush">Khush</option>
-                        <option value="Dukhi">Dukhi</option>
+                        <option value="Single">Single</option>
+                        <option value="Maried">Married</option>
                       </select>
                     )}
                     // render={({ field }) => (

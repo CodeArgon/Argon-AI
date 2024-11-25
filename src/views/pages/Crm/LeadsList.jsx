@@ -8,6 +8,8 @@ import Select from 'react-select'
 import CrmDeleteModal from '../../../components/modelpopup/Crm/CrmDeleteModal'
 import EditLeads from '../../../components/modelpopup/Crm/EditLeads'
 import { BASE_URL } from '../../../constants/urls'
+import CountUp from "react-countup";
+
 
 const LeadsList = () => {
   const [isFilterVisible, setIsFilterVisible] = useState(false)
@@ -47,6 +49,13 @@ const LeadsList = () => {
   const handleEditClick = record => {
     setSelectedLead(record)
   }
+
+  const openLeads = data.filter(lead => lead.status === 'open')
+  const opportunityLeads = data.filter(lead => lead.status === 'opportunity')
+  const winLeads = data.filter(lead => lead.status === 'win')
+  const lostLeads = data.filter(lead => lead.status === 'lost')
+  const quotationLeads = data.filter(lead => lead.status === 'quotation')
+
 
   const columns = [
     {
@@ -307,6 +316,59 @@ const LeadsList = () => {
           </div>
           {/* /Page Header */}
           {/* Search Filter */}
+
+
+          <div className="filter-section"></div>
+          <br />
+          <div
+            className="row align-items-center"
+            style={{ alignContent: "center", alignItems: "center" }}
+          >
+            <div className="col-md-3">
+              <div className="card">
+                <div className="card-body" style={{ textAlign: "center" }}>
+                  <h5>Total Leads</h5>
+                  <h6 className="counter">
+                  <CountUp end={opportunityLeads.length+openLeads.length+quotationLeads.length+winLeads.length+lostLeads.length} />
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className="card">
+                <div className="card-body" style={{ textAlign: "center" }}>
+                  <h5>In process</h5>
+                  <h6 className="counter">
+                    <CountUp end={opportunityLeads.length+openLeads.length+quotationLeads.length} />
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className="card">
+                <div className="card-body" style={{ textAlign: "center" }}>
+                  <h5>Total Won</h5>
+                  <h6 className="counter">
+                    <CountUp end={winLeads.length} />
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3">
+              <div className="card">
+                <div className="card-body" style={{ textAlign: "center" }}>
+                  <h5>Total Lost</h5>
+                  <h6 className="counter">
+                    <CountUp end={lostLeads.length} />
+                  </h6>
+                </div>
+              </div>
+            </div>
+           
+          </div>
+
+
+
           <div
             className={`filter-filelds${isFilterVisible ? ' visible' : ''}`}
             id='filter_inputs'

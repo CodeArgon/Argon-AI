@@ -11,7 +11,7 @@ const AddQuotation = () => {
   const [customer, setCustomer] = useState('')
   const [approvedBy, setApprovedBy] = useState(null)
   const [dl, setDL] = useState([])
-  const { leadData, setLead, setlead, lead } = useContext(UserContext)
+  const { leadData, setLead, setlead, lead, userData } = useContext(UserContext)
 
   // const initialLead =
   // const [lead, setLead] = useState(
@@ -108,11 +108,14 @@ const AddQuotation = () => {
       })
 
       if (response.ok) {
+        
+
+
         const formData = new FormData()
         formData.append('status', 'quotation')
         const authToken = localStorage.getItem('BearerToken')
         try {
-          const response = await fetch(`${BASE_URL}leads/${lead.id}/`, {
+          const response = await fetch(`${BASE_URL}leads/${leadData.id}/`, {
             method: 'PATCH',
             headers: {
               Authorization: `Bearer ${authToken}`
@@ -127,24 +130,28 @@ const AddQuotation = () => {
           const updatedLead = await response.json()
           localStorage.setItem('leadData', JSON.stringify(updatedLead))
           setLead(updatedLead)
-          setLeadData(updatedLead)
+          setlead(updatedLead)
           setVisibleItems(prevItems => [...prevItems, 'Opportunity'])
-          const str = `Lead ${lead.name} is marked as opportunity by ${userData?.user?.username}`;
-      console.log("String ",str,"Lead ID ",lead.id);
-      const result = await registerLeadActivities(lead.id,userData?.user?.username,str);
-      if (result === true) {
-        console.log("result ",result)
-       }
+          const str = `Qutation is  created for Lead ${leadData.name}  by ${userData?.user?.username}`;
+      console.log("String ",str,"Lead ID ",leadData.id);
+      const result = await registerLeadActivities(leadData.id,userData?.user?.username,str);
+      if (result?.id != '') {
+        console.log("result ", result);
+
+        localStorage.setItem("leadData", JSON.stringify(result));
+        setLead(result)
+        setlead(result)
+      }
         } catch (error) {
           console.error('Failed to update status:', error)
         }
-        alert('Quotation submitted successfully!')
+        Swal.fire('Quotation submitted successfully!')
       } else {
-        alert('Failed to submit quotation.')
+        Swal.fire('Failed to submit quotation.')
       }
     } catch (error) {
       console.error('Error submitting quotation:', error)
-      alert('An error occurred while submitting the quotation.')
+      Swal.fire('An error occurred while submitting the quotation.')
     }
   }
 

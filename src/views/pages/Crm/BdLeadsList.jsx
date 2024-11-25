@@ -106,19 +106,19 @@ const BdLeadsList = () => {
 
     {
       title: "Lead Status",
-      dataIndex: "LeadStatus",
+      dataIndex: "status",
       render: (text) => (
         <div>
-          {text === "Closed" && (
+          {text === "open" && (
             <span className="badge badge-soft-success">{text}</span>
           )}
-          {text === "Not Contacted" && (
+          {text === "opportunity" && (
             <span className="badge badge-soft-info">{text}</span>
           )}
-          {text === "Contacted" && (
+          {text === "win" && (
             <span className="badge badge-soft-warning">{text}</span>
           )}
-          {text === "Lost" && (
+          {text === "lost" && (
             <span className="badge badge-soft-danger">{text}</span>
           )}
         </div>
@@ -306,6 +306,12 @@ const BdLeadsList = () => {
 
   if (loading) return <div>Loading...</div>;
 
+  const openLeads = data.filter(lead => lead.status === 'open')
+  const opportunityLeads = data.filter(lead => lead.status === 'opportunity')
+  const winLeads = data.filter(lead => lead.status === 'win')
+  const lostLeads = data.filter(lead => lead.status === 'lost')
+  const quotationLeads = data.filter(lead => lead.status === 'quotation')
+
   return (
     <div>
       {/* Page Wrapper */}
@@ -470,7 +476,7 @@ const BdLeadsList = () => {
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>Total Leads</h5>
                   <h6 className="counter">
-                    <CountUp end={3000} />
+                  <CountUp end={opportunityLeads.length+openLeads.length+quotationLeads.length+winLeads.length+lostLeads.length} />
                   </h6>
                 </div>
               </div>
@@ -480,7 +486,7 @@ const BdLeadsList = () => {
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>In process</h5>
                   <h6 className="counter">
-                    <CountUp end={1500} />
+                  <CountUp end={opportunityLeads.length+openLeads.length+quotationLeads.length} />
                   </h6>
                 </div>
               </div>
@@ -490,7 +496,7 @@ const BdLeadsList = () => {
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>Total Won</h5>
                   <h6 className="counter">
-                    <CountUp end={1050} />
+                  <CountUp end={winLeads.length} />
                   </h6>
                 </div>
               </div>
@@ -500,7 +506,7 @@ const BdLeadsList = () => {
                 <div className="card-body" style={{ textAlign: "center" }}>
                   <h5>Total Lost</h5>
                   <h6 className="counter">
-                    <CountUp end={450} />
+                  <CountUp end={lostLeads.length} />
                   </h6>
                 </div>
               </div>
