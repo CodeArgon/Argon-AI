@@ -2,11 +2,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import notifications from "../../assets/json/notifications";
-import message from "../../assets/json/message";
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import notifications from '../../assets/json/notifications'
+import message from '../../assets/json/message'
 import {
   Applogo,
   Avatar_02,
@@ -14,48 +14,49 @@ import {
   lnEnglish,
   lnFrench,
   lnGerman,
-  lnSpanish,
-} from "../../Routes/ImagePath";
-import { fetchCurrentUser, logoutUser } from "../../helpers/users";
-import Swal from "sweetalert2";
-import { FaRegBell, FaRegComment } from "react-icons/fa";
-import { useLocation } from "react-router-dom/dist";
-import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
+  lnSpanish
+} from '../../Routes/ImagePath'
+import { fetchCurrentUser, logoutUser } from '../../helpers/users'
+import Swal from 'sweetalert2'
+import { FaRegBell, FaRegComment } from 'react-icons/fa'
+import { useLocation } from 'react-router-dom/dist'
+import { useTranslation } from 'react-i18next'
+import i18n from '../../i18n'
 
-const Header = (props) => {
-  const data = notifications.notifications;
-  const datas = message.message;
-  const navigate = useNavigate();
-  const [notification, setNotifications] = useState(false);
-  const [flag, setflag] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [profile, setProfile] = useState(false);
-  const [flagImage, setFlagImage] = useState(lnEnglish);
-  const [userData, setUserData] = useState();
-  const [Useremail, setUserName] = useState();
-
+const Header = props => {
+  const data = notifications.notifications
+  const datas = message.message
+  const navigate = useNavigate()
+  const [notification, setNotifications] = useState(false)
+  const [flag, setflag] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [profile, setProfile] = useState(false)
+  const [flagImage, setFlagImage] = useState(lnEnglish)
+  const [userData, setUserData] = useState()
+  const [Useremail, setUserName] = useState()
+  const userDataString = localStorage.getItem('user')
+  const [usserData, setUsserData] = useState(JSON.parse(userDataString))
   useEffect(() => {
-    const current_user = fetchCurrentUser();
-    setUserData(current_user);
-    setUserName(current_user.email);
-  }, []);
+    const current_user = fetchCurrentUser()
+    setUserData(current_user)
+    setUserName(current_user.email)
+  }, [])
 
   const handlesidebar = () => {
-    document.body.classList.toggle("mini-sidebar");
-  };
+    document.body.classList.toggle('mini-sidebar')
+  }
   const onMenuClik = () => {
-    document.body.classList.toggle("slide-nav");
-  };
+    document.body.classList.toggle('slide-nav')
+  }
 
-  const themes = localStorage.getItem("theme");
+  const themes = localStorage.getItem('theme')
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-    setNotifications(false);
-    setProfile(false);
-    setflag(false);
-  };
+    setIsOpen(!isOpen)
+    setNotifications(false)
+    setProfile(false)
+    setflag(false)
+  }
 
   // const handleFlags = () => {
   //   setflag(!flag);
@@ -64,99 +65,99 @@ const Header = (props) => {
   //   setProfile(false);
   // };
   const handleNotification = () => {
-    setNotifications(!notification);
-    setflag(false);
-    setIsOpen(false);
-    setProfile(false);
-  };
+    setNotifications(!notification)
+    setflag(false)
+    setIsOpen(false)
+    setProfile(false)
+  }
   const handleProfile = () => {
-    setProfile(!profile);
-    setNotifications(false);
-    setflag(false);
-    setIsOpen(false);
-  };
+    setProfile(!profile)
+    setNotifications(false)
+    setflag(false)
+    setIsOpen(false)
+  }
 
   const handleLogout = async () => {
     try {
-      const result = await logoutUser();
+      const result = await logoutUser()
       if (result === true) {
-        Swal.fire("Logout Successfull!");
-        navigate("/login");
+        Swal.fire('Logout Successfull!')
+        navigate('/login')
       } else {
-        Swal.fire("Invalid Token");
+        Swal.fire('Invalid Token')
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
-  };
+  }
 
-  const location = useLocation();
-  let pathname = location.pathname;
+  const location = useLocation()
+  let pathname = location.pathname
   // const { value } = useSelector((state) => state.user);
   // const Credencial = localStorage.getItem("credencial");
   // const Value = JSON.parse(Credencial);
-  const UserName = Useremail?.email?.split("@")[0];
-  const ProfileName = UserName?.charAt(0).toUpperCase() + UserName?.slice(1);
+  const UserName = Useremail?.email?.split('@')[0]
+  const ProfileName = usserData?.user?.first_name?.charAt(0).toUpperCase()
+  // const ProfileName = usserData?.user?.first_name?.charAt(0).toUpperCase() + usserData?.user?.first_name?.slice(1);
+  const { t, i18n } = useTranslation()
 
-  const { t, i18n } = useTranslation();
-
-  const changeLanguage = (lng) => {
+  const changeLanguage = lng => {
     // Debugging statement
-    i18n.changeLanguage(lng);
+    i18n.changeLanguage(lng)
     setFlagImage(
-      lng === "en"
+      lng === 'en'
         ? lnEnglish
-        : lng === "fr"
+        : lng === 'fr'
         ? lnFrench
-        : lng === "es"
+        : lng === 'es'
         ? lnSpanish
         : lnGerman
-    );
-  };
+    )
+  }
 
   return (
-    <div className="header" style={{ right: "0px" }}>
+    <div className='header' style={{ right: '0px' }}>
       {/* Logo */}
-      <div className="header-left">
-        <Link to="/file-manager" className="logo">
-          <img style={{ width: "70%" }} src={headerlogo} alt="img" />
+      <div className='header-left'>
+        <Link to='/file-manager' className='logo'>
+          <img style={{ width: '70%' }} src={headerlogo} alt='img' />
         </Link>
-        <Link to="/file-manager" className="logo2">
-          <img src={Applogo} width={40} height={40} alt="img" />
+        <Link to='/file-manager' className='logo2'>
+          <img src={Applogo} width={40} height={40} alt='img' />
         </Link>
       </div>
       {/* /Logo */}
       <Link
-        id="toggle_btn"
-        to="#"
+        id='toggle_btn'
+        to='#'
         style={{
-          display: pathname.includes("tasks")
-            ? "none"
-            : pathname.includes("compose")
-            ? "none"
-            : "",
+          display: pathname.includes('tasks')
+            ? 'none'
+            : pathname.includes('compose')
+            ? 'none'
+            : ''
         }}
         onClick={handlesidebar}
       >
-        <span className="bar-icon">
+        <span className='bar-icon'>
           <span />
           <span />
           <span />
         </span>
       </Link>
       {/* Header Title */}
-      <div className="page-title-box">{/* <h3>Argon Technologies</h3> */}</div>
+      <div className='page-title-box'>{/* <h3>Argon Technologies</h3> */}</div>
       {/* /Header Title */}
       <Link
-        id="mobile_btn"
-        className="mobile_btn"
-        to="#"
+        id='mobile_btn'
+        className='mobile_btn'
+        to='#'
         onClick={() => onMenuClik()}
       >
-        <i className="fa fa-bars" />
+        <i className='fa fa-bars' />
       </Link>
       {/* Header Menu */}
-      <ul className="nav user-menu">
+      <ul className='nav user-menu'>
         {/* Search */}
         {/* <li className="nav-item">
           <div className="top-nav-search">
@@ -363,32 +364,35 @@ const Header = (props) => {
           </div>
         </li> */}
         {/* /Message Notifications */}
-        <li className="nav-item dropdown has-arrow main-drop">
+        <li className='nav-item dropdown has-arrow main-drop'>
           <Link
-            to="#"
-            className="dropdown-toggle nav-link"
-            data-bs-toggle="dropdown"
+            to='#'
+            className='dropdown-toggle nav-link'
+            data-bs-toggle='dropdown'
             onClick={handleProfile}
           >
-            {" "}
-            <span className="user-img me-1">
-              <img src={Avatar_02} alt="img" />
-              <span className="status online" />
+            {' '}
+            <span className='user-img me-1'>
+              <img
+                src={`http://10.3.1.181:8000${usserData?.user?.profile?.profile_photo}`}
+                alt='img'
+              />
+              <span className='status online' />
             </span>
-            <span>{ProfileName ? `${ProfileName}` : ""}</span>
+            <span>{ProfileName ? `${usserData?.user?.first_name}  ` : ''}</span>
           </Link>
           <div
             className={`dropdown-menu dropdown-menu-end ${
-              profile ? "show" : ""
+              profile ? 'show' : ''
             }`}
           >
-            <Link className="dropdown-item" to="/profile">
+            <Link className='dropdown-item' to='/profile'>
               My Profile
             </Link>
             {/* <Link className="dropdown-item" to="/settings/companysetting">
               Settings
             </Link> */}
-            <Link className="dropdown-item" onClick={handleLogout}>
+            <Link className='dropdown-item' onClick={handleLogout}>
               Logout
             </Link>
           </div>
@@ -396,30 +400,30 @@ const Header = (props) => {
       </ul>
       {/* /Header Menu */}
       {/* Mobile Menu */}
-      <div className="dropdown mobile-user-menu">
+      <div className='dropdown mobile-user-menu'>
         <Link
-          to="#"
-          className="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+          to='#'
+          className='nav-link dropdown-toggle'
+          data-bs-toggle='dropdown'
+          aria-expanded='false'
         >
-          <i className="fa fa-ellipsis-v" />
+          <i className='fa fa-ellipsis-v' />
         </Link>
-        <div className="dropdown-menu dropdown-menu-end dropdown-menu-right">
+        <div className='dropdown-menu dropdown-menu-end dropdown-menu-right'>
           {/* <Link className="dropdown-item" to="/profile">
             My Profile
           </Link>
           <Link className="dropdown-item" to="/settings/companysetting">
             Settings
           </Link> */}
-          <Link className="dropdown-item" to="/login">
+          <Link className='dropdown-item' to='/login'>
             Logout
           </Link>
         </div>
       </div>
       {/* /Mobile Menu */}
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

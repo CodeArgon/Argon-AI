@@ -7,7 +7,9 @@ export const AppProvider = ({ children }) => {
   const [userData, setUserData] = useState(JSON.parse(userDataString));
   const [activeStep, setActiveStep] = useState(0);
   const [profileID, setprofileID] = useState(0);
-  const [leadData, setLeadData] = useState();
+  const [leadData, setLead] = useState();
+  const [lead, setlead] = useState();
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -51,8 +53,17 @@ export const AppProvider = ({ children }) => {
         setFormData,
         profileID,
         setprofileID,
+        activeStep,
+        setActiveStep,
+        formData,
+        setFormData,
+        profileID,
+        setprofileID,
         leadData,
-        setLeadData,
+        lead,
+        setlead,
+        setLead
+
       }}
     >
       {children}
@@ -62,15 +73,3 @@ export const AppProvider = ({ children }) => {
 
 export default UserContext;
 
-// degree: "",
-//     institute_name: "",
-//     degree_duration: "",
-//     degree2: "",
-//     institute_name2: "",
-//     degree_duration2: "",
-//     company_name: "",
-//     company_designation: "",
-//     company_name2: "",
-//     company_designation2: "",
-//     company_duration: "",
-//     company_duration2: "",

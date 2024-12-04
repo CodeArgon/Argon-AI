@@ -2,19 +2,22 @@ import React, { useState, useEffect, useContext } from 'react'
 import Select from 'react-select'
 import { BASE_URL } from '../../../constants/urls'
 import UserContext from '../../../contexts/UserContext'
+import Swal from 'sweetalert2'
 
+import {registerLeadActivities} from "../../../helpers/users";
 const AddQuotation = () => {
   const [paymentTerm, setPaymentTerm] = useState(null)
   const [paymentList, setPaymentList] = useState(null)
   const [customer, setCustomer] = useState('')
   const [approvedBy, setApprovedBy] = useState(null)
   const [dl, setDL] = useState([])
-  const { leadData, setLeadData } = useContext(UserContext)
+  const { leadData, setLead, setlead, lead, userData } = useContext(UserContext)
 
-  const initialLead = JSON.parse(localStorage.getItem('leadData')) || {}
-  const [lead, setLead] = useState(initialLead)
-
-  const [visibleItems, setVisibleItems] = useState([lead?.status])
+  // const initialLead =
+  // const [lead, setLead] = useState(
+  //   JSON.parse(localStorage.getItem('leadData')) || {}
+  // )
+  const [visibleItems, setVisibleItems] = useState([leadData?.status])
 
   const paymentListOptions = [
     { value: 'PKR', label: 'PKR' },
@@ -39,10 +42,9 @@ const AddQuotation = () => {
     })
   }
 
-  //Fetch DLs
+  // Fetch DLs
   const fetchDLs = async () => {
     const authToken = localStorage.getItem('BearerToken')
-
     try {
       const response = await fetch(`${BASE_URL}users/by-role/`, {
         method: 'POST',
@@ -59,7 +61,6 @@ const AddQuotation = () => {
 
       const data = await response.json()
       setDL(data)
-      console.log(data)
     } catch (error) {
       console.error('Error fetching users:', error)
     }
@@ -74,17 +75,28 @@ const AddQuotation = () => {
     label: user.username
   }))
 
+  const validateForm = () => {
+    return customer && paymentList && paymentTerm && approvedBy
+  }
+
   const handleSubmit = async e => {
     e.preventDefault()
+
+    if (!validateForm()) {
+      alert('Please fill in all required fields.')
+      return
+    }
 
     const data = {
       customer_name: customer,
       payment_list: paymentList?.value,
       payment_term: paymentTerm?.value,
-      approved_by: approvedBy?.value
+      approved_by: approvedBy?.value,
+      lead: leadData.id
     }
 
     try {
+      console.log('this is the data for adding the quotation ', data)
       const authToken = localStorage.getItem('BearerToken')
       const response = await fetch(`${BASE_URL}quotations/`, {
         method: 'POST',
@@ -96,11 +108,14 @@ const AddQuotation = () => {
       })
 
       if (response.ok) {
+        
+
+
         const formData = new FormData()
         formData.append('status', 'quotation')
         const authToken = localStorage.getItem('BearerToken')
         try {
-          const response = await fetch(`${BASE_URL}leads/${lead.id}/`, {
+          const response = await fetch(`${BASE_URL}leads/${leadData.id}/`, {
             method: 'PATCH',
             headers: {
               Authorization: `Bearer ${authToken}`
@@ -115,18 +130,28 @@ const AddQuotation = () => {
           const updatedLead = await response.json()
           localStorage.setItem('leadData', JSON.stringify(updatedLead))
           setLead(updatedLead)
-          setLeadData(updatedLead)
+          setlead(updatedLead)
           setVisibleItems(prevItems => [...prevItems, 'Opportunity'])
+          const str = `Qutation is  created for Lead ${leadData.name}  by ${userData?.user?.username}`;
+      console.log("String ",str,"Lead ID ",leadData.id);
+      const result = await registerLeadActivities(leadData.id,userData?.user?.username,str);
+      if (result?.id != '') {
+        console.log("result ", result);
+
+        localStorage.setItem("leadData", JSON.stringify(result));
+        setLead(result)
+        setlead(result)
+      }
         } catch (error) {
           console.error('Failed to update status:', error)
         }
-        alert('Quotation submitted successfully!')
+        Swal.fire('Quotation submitted successfully!')
       } else {
-        alert('Failed to submit quotation.')
+        Swal.fire('Failed to submit quotation.')
       }
     } catch (error) {
       console.error('Error submitting quotation:', error)
-      alert('An error occurred while submitting the quotation.')
+      Swal.fire('An error occurred while submitting the quotation.')
     }
   }
 
@@ -205,6 +230,7 @@ const AddQuotation = () => {
                     type='submit'
                     data-bs-dismiss='modal'
                     aria-label='Close'
+                    disabled={!validateForm()} // Disable button if form is not valid
                   >
                     Submit
                   </button>
@@ -215,7 +241,11 @@ const AddQuotation = () => {
         </div>
       </div>
       {/* Edit Quotation Modal */}
-      <div id='edit_policy' className='modal custom-modal fade' role='dialog'>
+      <div
+        id='edit_quotations'
+        className='modal custom-modal fade'
+        role='dialog'
+      >
         <div className='modal-dialog modal-dialog-centered' role='document'>
           <div className='modal-content'>
             <div className='modal-header'>

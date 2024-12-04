@@ -1,96 +1,94 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Applogo } from "../../../Routes/ImagePath";
-import { Controller, useForm } from "react-hook-form";
-import * as Yup from "yup";
-import Swal from "sweetalert2";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../../helpers/users";
-import { useRole } from "../../../contexts/RoleContext";
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Applogo } from '../../../Routes/ImagePath'
+import { Controller, useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+import Swal from 'sweetalert2'
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup.js'
+import { useDispatch } from 'react-redux'
+import { loginUser } from '../../../helpers/users'
+import { useRole } from '../../../contexts/RoleContext'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
+    .email('Please enter a valid email address')
+    .required('Email is required'),
   password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .max(20, "Password must be at most 20 characters")
-    .required("Password is required"),
-});
+    .min(6, 'Password must be at least 6 characters')
+    .max(20, 'Password must be at most 20 characters')
+    .required('Password is required')
+})
 
 const Login = () => {
-  const details = localStorage.getItem("loginDetails");
+  const details = localStorage.getItem('loginDetails')
 
-  const loginData = JSON.parse(details);
+  const loginData = JSON.parse(details)
 
   const {
     register,
     control,
     setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
-    resolver: yupResolver(validationSchema),
-  });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+    resolver: yupResolver(validationSchema)
+  })
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     try {
-      const result = await loginUser(data);
+      const result = await loginUser(data)
       if (result === true) {
-        Swal.fire("Login Successfull!");
-        navigate("/file-manager");
+        Swal.fire('Login Successfull!')
+        navigate('/employee-dashboard')
       } else {
-        Swal.fire("Login UnSuccessfull, Invalid Credentials");
+        Swal.fire('Login UnSuccessfull, Invalid Credentials')
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
-  };
+  }
 
   useEffect(() => {
-    setValue("email", localStorage.getItem("email"));
-    setValue("password", localStorage.getItem("password"));
-  }, []);
+    setValue('email', localStorage.getItem('email'))
+    setValue('password', localStorage.getItem('password'))
+  }, [])
 
-  const [eye, seteye] = useState(true);
+  const [eye, seteye] = useState(true)
 
   const onEyeClick = () => {
-    seteye(!eye);
-  };
+    seteye(!eye)
+  }
 
   return (
-    <div className="account-page">
-      <div className="main-wrapper">
-        <div className="account-content">
+    <div className='account-page'>
+      <div className='main-wrapper'>
+        <div className='account-content'>
           {/* <Link to="/job-list" className="btn btn-primary apply-btn">
               Apply Job
             </Link> */}
-          <div className="container">
+          <div className='container'>
             {/* Account Logo */}
-            <div className="account-logo">
-              <Link to="/admin-dashboard">
-                <img src={Applogo} alt="Dreamguy's Technologies" />
-              </Link>
+            <div className='account-logo'>
+              <img src={Applogo} alt="Dreamguy's Technologies" />
             </div>
             {/* /Account Logo */}
-            <div className="account-box">
-              <div className="account-wrapper">
-                <h3 className="account-title">Login</h3>
-                <p className="account-subtitle">Access to our dashboard</p>
+            <div className='account-box'>
+              <div className='account-wrapper'>
+                <h3 className='account-title'>Login</h3>
+                <p className='account-subtitle'>Access to our dashboard</p>
                 {/* Account Form */}
                 <div>
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="input-block mb-4">
-                      <label className="col-form-label">
-                        Email Address<span style={{ color: "red" }}> *</span>
+                    <div className='input-block mb-4'>
+                      <label className='col-form-label'>
+                        Email Address<span style={{ color: 'red' }}> *</span>
                       </label>
                       <Controller
-                        name="email"
+                        name='email'
                         control={control}
                         render={({ field }) => (
                           <input
@@ -167,12 +165,12 @@ const Login = () => {
                       </button>
                     </div>
                   </form>
-                  <div className="account-footer">
+                  {/* <div className="account-footer">
                     <p>
                       Don't have an account yet?{" "}
-                      <Link to="/register">Register</Link>
+                      <Link to="/profile-stepper">Register</Link>
                     </p>
-                  </div>
+                  </div> */}
                 </div>
                 {/* /Account Form */}
               </div>

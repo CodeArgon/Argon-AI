@@ -1,5 +1,7 @@
 import { BASE_URL } from "../constants/urls";
 
+
+
 export async function registerUser(data) {
   const url = `${BASE_URL}register/`;
   const Registerdata = {
@@ -26,7 +28,133 @@ export async function registerUser(data) {
     console.error("Error:", error);
   }
 }
+export async function registerUserData(data) {
+  const url = `${BASE_URL}register/`;
 
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const responseData = await response.json();
+    console.log(responseData," && ",responseData.profile_id)
+    localStorage.setItem("ProfileId", responseData.profile_id);
+    return true;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+export async function registerUserEdu(data,profileID) {
+  const authToken = localStorage.getItem("BearerToken");
+  const url = `${BASE_URL}education/`;
+  const Educationrdata = {
+    profile: profileID ,
+    institute_name: data.institute_name,
+    degree: data.degree,
+    duration: data.duration,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(Educationrdata),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return true;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+export async function registerLeadActivities(leadData,profileID,txt) {
+
+  const authToken = localStorage.getItem("BearerToken");
+  const url = `${BASE_URL}activity/`;
+  const activityData = {
+    lead: leadData,
+    user: profileID,
+    text: txt,
+
+  };
+
+  try {
+    console.log(activityData)
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization:  `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(activityData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data =  await response.json();
+    console.log("hehehehhehehehehheheh ganoo ", data)
+    const leadResponse = await fetch(`${BASE_URL}leads/${leadData}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    if (!leadResponse.ok) {
+      console.log("Error");
+      throw new Error(`HTTP error! Status: ${leadResponse.status}`);
+    }else{
+      return await leadResponse.json();
+     
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+export async function registerUserExperience(data,profileID) {
+  const authToken = localStorage.getItem("BearerToken");
+  const url = `${BASE_URL}work/`;
+  const Workdata = {
+    profile: profileID ,
+    company_name: data.company_name,
+    job_title: data.job_title,
+    start_date: data.start_date,
+    end_date: data.end_date,
+    location:"Lahore"
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization:  `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(Workdata),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return true;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 export async function loginUser(data) {
   const url = `${BASE_URL}login/`;
   const logindata = {

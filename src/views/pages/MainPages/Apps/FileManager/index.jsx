@@ -1,29 +1,29 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Files from "./files";
-import ProjectModelPopup from "../../../../../components/modelpopup/ProjectModelPopup";
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import Files from './files'
+import ProjectModelPopup from '../../../../../components/modelpopup/ProjectModelPopup'
 
 const FileManager = () => {
-  const [project, setData] = useState();
+  const [project, setData] = useState()
   return (
     <>
-      <div className="page-wrapper">
-        <div className="content container-fluid">
-          <div className="row">
-            <div className="col-sm-12">
-              <div className="file-wrap">
+      <div className='page-wrapper'>
+        <div className='content container-fluid'>
+          <div className='row'>
+            <div className='col-sm-12'>
+              <div className='file-wrap'>
                 <div className>
-                  <div className="file-cont-inner">
-                    <div className="file-content">
-                      <form className="file-search">
-                        <div className="input-group">
-                          <div className="input-group-text">
-                            <i className="fa-solid fa-magnifying-glass" />
+                  <div className='file-cont-inner'>
+                    <div className='file-content'>
+                      <form className='file-search'>
+                        <div className='input-group'>
+                          <div className='input-group-text'>
+                            <i className='fa-solid fa-magnifying-glass' />
                           </div>
                           <input
-                            type="text"
-                            className="form-control rounded-pill"
-                            placeholder="Search"
+                            type='text'
+                            className='form-control rounded-pill'
+                            placeholder='Search'
                           />
 
                           {/* <div
@@ -56,9 +56,9 @@ const FileManager = () => {
                             </div>
                           </div> */}
 
-                          <div className="d-flex justify-content-start mt-3"></div>
+                          <div className='d-flex justify-content-start mt-3'></div>
 
-                          <div className="file-options">
+                          <div className='file-options'>
                             {/* <button
                               className="btn btn-sm btn-primary"
                               style={{
@@ -91,15 +91,15 @@ const FileManager = () => {
                             </button> */}
                             <Link
                               style={{
-                                borderRadius: "20px",
-                                marginLeft: "50px",
-                                marginTop: "10px",
+                                borderRadius: '20px',
+                                marginLeft: '50px',
+                                marginTop: '10px'
                               }}
-                              className="btn btn-sm btn-primary"
-                              to="#"
-                              data-bs-toggle="modal"
-                              data-bs-backdrop="static"
-                              data-bs-target="#create_project"
+                              className='btn btn-sm btn-primary'
+                              to='#'
+                              data-bs-toggle='modal'
+                              data-bs-backdrop='static'
+                              data-bs-target='#create_project'
                             >
                               + Add Project
                             </Link>
@@ -107,9 +107,9 @@ const FileManager = () => {
                         </div>
                       </form>
 
-                      <div className="file-body">
-                        <div className="file-scroll">
-                          <div className="file-content-inner">
+                      <div className='file-body'>
+                        <div className='file-scroll'>
+                          <div className='file-content-inner'>
                             <h4>Projects</h4>
                             <Files setData={setData} />
                           </div>
@@ -126,7 +126,7 @@ const FileManager = () => {
       </div>
       <ProjectModelPopup project={project} />
     </>
-  );
-};
+  )
+}
 
-export default FileManager;
+export default FileManager

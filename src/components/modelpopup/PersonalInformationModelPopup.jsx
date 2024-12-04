@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Avatar_02 } from "../../Routes/ImagePath";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
+import { registerUserData } from "../../helpers/users";
 import { BASE_URL } from "../../constants/urls";
 
 const PersonalInformationModelPopup = () => {
   const [selectedDate1, setSelectedDate1] = useState(null);
   const [selectedDate2, setSelectedDate2] = useState(null);
   const userDataString = localStorage.getItem("user");
+  const setprofileID = localStorage.getItem("ProfileId");
   const [userData, setUserData] = useState(JSON.parse(userDataString));
 
   const [educationList, setEducationList] = useState([
@@ -19,6 +20,28 @@ const PersonalInformationModelPopup = () => {
       completeDate: null,
       degree: "",
       grade: "",
+    },
+  ]);
+  const [personalInfo, setPersonalInfo] = useState([
+    {
+      cnic: "",
+      mobile_number: "",
+      nationality: "",
+      religion: "",
+      marital_status: "",
+      employment_of_spouse: "",
+      number_of_children: "",
+      // first_name: "",
+      // last_name: "",
+      // date_of_birth: "",
+      // designation: "",
+      // mobile_number: "",
+      // description: "",
+      // gender: "",
+      // address: "",
+      // role: "",
+      // lead: "",
+      // profile_photo: "",
     },
   ]);
   const addMoreEducation = () => {
@@ -35,6 +58,100 @@ const PersonalInformationModelPopup = () => {
     ]);
   };
 
+  const [primaryContact, setPrimaryContact] = useState({
+    emergency_contact_primary_name: "",
+    emergency_contact_primary_relationship: "",
+    emergency_contact_primary_phone: "",
+  });
+
+  const [secondaryContact, setSecondaryContact] = useState({
+    emergency_contact_secondary_name: "",
+    emergency_contact_secondary_relationship: "",
+    emergency_contact_secondary_phone: "",
+  });
+
+  useEffect(() => {
+    if (userData?.user?.profile) {
+      setPrimaryContact({
+        emergency_contact_primary_name:
+          userData.user.profile.emergency_contact_primary_name || "",
+        emergency_contact_primary_relationship:
+          userData.user.profile.emergency_contact_primary_relationship || "",
+        emergency_contact_primary_phone:
+          userData.user.profile.emergency_contact_primary_phone || "",
+      });
+
+      setSecondaryContact({
+        emergency_contact_secondary_name:
+          userData.user.profile.emergency_contact_secondary_name || "",
+        emergency_contact_secondary_relationship:
+          userData.user.profile.emergency_contact_secondary_relationship || "",
+        emergency_contact_secondary_phone:
+          userData.user.profile.emergency_contact_secondary_phone || "",
+      });
+    }
+  }, [userData]);
+
+  const handleContactChange = (contactType, field, value) => {
+    const updateContact =
+      contactType === "primary" ? setPrimaryContact : setSecondaryContact;
+    updateContact((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmitEmergencyContact = async () => {
+    const formData = {
+      profile: {
+        emergency_contact_primary_name:
+          primaryContact.emergency_contact_primary_name,
+        emergency_contact_primary_relationship:
+          primaryContact.emergency_contact_primary_relationship,
+        emergency_contact_primary_phone:
+          primaryContact.emergency_contact_primary_phone,
+        emergency_contact_secondary_name:
+          secondaryContact.emergency_contact_secondary_name,
+        emergency_contact_secondary_relationship:
+          secondaryContact.emergency_contact_secondary_relationship,
+        emergency_contact_secondary_phone:
+          secondaryContact.emergency_contact_secondary_phone,
+      },
+    };
+
+    try {
+      const result = await registerUserData(formData);
+      if (result === true) {
+        // Update local userData state and localStorage
+        setUserData({
+          ...userData,
+          user: {
+            ...userData.user,
+            profile: {
+              ...userData.user.profile,
+              ...formData.profile,
+            },
+          },
+        });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...userData,
+            user: {
+              ...userData.user,
+              profile: {
+                ...userData.user.profile,
+                ...formData.profile,
+              },
+            },
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Failed to submit emergency contact data:", error);
+    }
+  };
+
   const deleteEducation = (index) => {
     const updatedList = educationList.filter((_, i) => i !== index);
     setEducationList(updatedList);
@@ -44,6 +161,11 @@ const PersonalInformationModelPopup = () => {
     const updatedList = [...educationList];
     updatedList[index][field] = value;
     setEducationList(updatedList);
+  };
+  const handlePersonalInfoChange = (index, field, value) => {
+    const updatedList = [...personalInfo];
+    updatedList[index][field] = value;
+    setPersonalInfo(updatedList);
   };
 
   const handleDateChangeEducation = (index, field, date) => {
@@ -61,29 +183,23 @@ const PersonalInformationModelPopup = () => {
       periodTo: null,
     },
   ]);
-
-  // Handle input changes for text fields (company name, job position, location)
   const handleInputChange = (index, field, value) => {
     const newExperienceList = [...experienceList];
-    newExperienceList[index][field] = value; // Update the specific field in the experience list
+    newExperienceList[index][field] = value;
     setExperienceList(newExperienceList);
   };
   const handleDateChange1 = (date, index) => {
     const newExperienceList = [...experienceList];
-    newExperienceList[index].periodFrom = date; // Update the periodFrom date
+    newExperienceList[index].periodFrom = date;
     setExperienceList(newExperienceList);
   };
 
   // Handle date change for "Period To"
   const handleDateChange2 = (date, index) => {
     const newExperienceList = [...experienceList];
-    newExperienceList[index].periodTo = date; // Update the periodTo date
+    newExperienceList[index].periodTo = date;
     setExperienceList(newExperienceList);
   };
-  // Handle date change for "Period From"
-
-  // To delete an experience from the list
-
   const addMoreExperience = () => {
     setExperienceList([
       ...experienceList,
@@ -151,37 +267,6 @@ const PersonalInformationModelPopup = () => {
     }),
   };
 
-  // const handleSubmitExperience = async (e) => {
-  //   e.preventDefault();
-  //   const formData = experienceList.map((experience) => ({
-  //     company_name: experience.companyName,
-  //     location: experience.location,
-  //     start_date: experience.periodFrom,
-  //     end_date: experience.periodTo,
-  //     job_title: experience.jobPosition,
-  //   }));
-
-  //   try {
-  //     const authToken = localStorage.getItem("BearerToken");
-  //     const response = await fetch(`${BASE_URL}work/`, {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: `Bearer ${authToken}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: formData,
-  //     });
-
-  //     if (response.ok) {
-  //       console.log("Form submitted successfully");
-  //     } else {
-  //       console.error("Failed to submit form");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //   }
-  // };
-
   const handleSubmitExperience = async (e) => {
     e.preventDefault();
     const authToken = localStorage.getItem("BearerToken");
@@ -200,7 +285,6 @@ const PersonalInformationModelPopup = () => {
     }));
 
     try {
-      // Create an array of API request promises
       console.log("form data", formData);
       const apiRequests = formData.map((data) =>
         fetch(`${BASE_URL}work/`, {
@@ -213,17 +297,12 @@ const PersonalInformationModelPopup = () => {
         })
       );
 
-      // Wait until all requests are completed
       const responses = await Promise.all(apiRequests);
 
-      // Check if all requests were successful
       const allSuccessful = responses.every((response) => response.ok);
 
       if (allSuccessful) {
         console.log("All forms submitted successfully");
-        // Navigate to another route (assuming you're using react-router-dom)
-        // Replace '/your-next-page' with the actual route you want to navigate to
-        // navigate("/your-next-page");
         console.log("addedd all");
       } else {
         console.error("Some forms failed to submit");
@@ -261,6 +340,50 @@ const PersonalInformationModelPopup = () => {
       console.error("Error:", error);
     }
   };
+  const handleSubmitPersonalInfo = async () => {
+    const formData = {
+      cnic: personalInfo.cnic,
+      mobile_number: personalInfo.mobile_number,
+      nationality: personalInfo.nationality,
+      religion: personalInfo.religion,
+      marital_status: personalInfo.marital_status,
+      employment_of_spouse: personalInfo.employment_of_spouse,
+      number_of_children: personalInfo.number_of_children,
+      profile: userData?.user.profile.id,
+    };
+    try {
+      const result = await registerUserData(formData);
+      console.log("handleSubmitPersonalInfo Result: ",result);
+      if (result === true) {
+        // Update local userData state and localStorage
+        setUserData({
+          ...userData,
+          user: {
+            ...userData.user,
+            profile: {
+              ...userData.user.profile,
+              ...formData.profile,
+            },
+          },
+        });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...userData,
+            user: {
+              ...userData.user,
+              profile: {
+                ...userData.user.profile,
+                ...formData.profile,
+              },
+            },
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Failed to submit emergency contact data:", error);
+    }
+  };
 
   return (
     <>
@@ -289,7 +412,7 @@ const PersonalInformationModelPopup = () => {
                     <div className="profile-img-wrap edit-img">
                       <img
                         className="inline-block"
-                        src={userData?.user?.profile?.profile_photo}
+                        src={`http://10.3.1.181:8000${userData?.user?.profile?.profile_photo}`}
                         alt="user"
                       />
                       <div className="fileupload btn">
@@ -359,7 +482,7 @@ const PersonalInformationModelPopup = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">State</label>
                       <input
@@ -388,7 +511,7 @@ const PersonalInformationModelPopup = () => {
                         defaultValue="Not Available"
                       />
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-md-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Phone Number</label>
@@ -418,7 +541,7 @@ const PersonalInformationModelPopup = () => {
                       </label>
                       <Select
                         options={developer}
-                        placeholder="Select Department"
+                        placeholder="Designation"
                         styles={customStyles}
                       />
                     </div>
@@ -431,7 +554,7 @@ const PersonalInformationModelPopup = () => {
 
                       <Select
                         options={reporter}
-                        placeholder="Not Available"
+                        placeholder="Reports To"
                         styles={customStyles}
                       />
                     </div>
@@ -478,86 +601,145 @@ const PersonalInformationModelPopup = () => {
             </div>
             <div className="modal-body">
               <form>
+                {/* Primary Contact Section */}
                 <div className="card">
                   <div className="card-body">
                     <h3 className="card-title">Primary Contact</h3>
                     <div className="row">
                       <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">
-                            Name <span className="text-danger">*</span>
-                          </label>
-                          <input type="text" className="form-control" />
-                        </div>
+                        <label className="col-form-label">
+                          Name <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholderText={
+                            primaryContact.emergency_contact_primary_name
+                          }
+                          onChange={(e) =>
+                            handleContactChange(
+                              "primary",
+                              "name",
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
                       <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">
-                            Relationship <span className="text-danger">*</span>
-                          </label>
-                          <input className="form-control" type="text" />
-                        </div>
+                        <label className="col-form-label">
+                          Relationship <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholderText={
+                            primaryContact.emergency_contact_primary_relationship
+                          }
+                          onChange={(e) =>
+                            handleContactChange(
+                              "primary",
+                              "relationship",
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
                       <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">
-                            Phone <span className="text-danger">*</span>
-                          </label>
-                          <input className="form-control" type="text" />
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">Phone 2</label>
-                          <input className="form-control" type="text" />
-                        </div>
+                        <label className="col-form-label">
+                          Phone <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholderText={
+                            primaryContact.emergency_contact_primary_phone
+                          }
+                          onChange={(e) =>
+                            handleContactChange(
+                              "primary",
+                              "phone",
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Secondary Contact Section */}
                 <div className="card">
                   <div className="card-body">
-                    <h3 className="card-title">Primary Contact</h3>
+                    <h3 className="card-title">Secondary Contact</h3>
                     <div className="row">
                       <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">
-                            Name <span className="text-danger">*</span>
-                          </label>
-                          <input type="text" className="form-control" />
-                        </div>
+                        <label className="col-form-label">
+                          Name <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholderText={
+                            secondaryContact.emergency_contact_secondary_name
+                          }
+                          onChange={(e) =>
+                            handleContactChange(
+                              "secondary",
+                              "name",
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
                       <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">
-                            Relationship <span className="text-danger">*</span>
-                          </label>
-                          <input className="form-control" type="text" />
-                        </div>
+                        <label className="col-form-label">
+                          Relationship <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholderText={
+                            secondaryContact.emergency_contact_secondary_relationship
+                          }
+                          onChange={(e) =>
+                            handleContactChange(
+                              "secondary",
+                              "relationship",
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
                       <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">
-                            Phone <span className="text-danger">*</span>
-                          </label>
-                          <input className="form-control" type="text" />
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="input-block mb-3 mb-3">
-                          <label className="col-form-label">Phone 2</label>
-                          <input className="form-control" type="text" />
-                        </div>
+                        <label className="col-form-label">
+                          Phone <span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholderText={
+                            secondaryContact.emergency_contact_secondary_phone
+                          }
+                          onChange={(e) =>
+                            handleContactChange(
+                              "secondary",
+                              "phone",
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div className="submit-section">
                   <button
                     className="btn btn-primary submit-btn"
                     data-bs-dismiss="modal"
                     aria-label="Close"
-                    type="reset"
+                    type="button"
+                    onClick={handleSubmitEmergencyContact}
                   >
                     Submit
                   </button>
@@ -596,11 +778,18 @@ const PersonalInformationModelPopup = () => {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="input-block mb-3 mb-3">
-                      <label className="col-form-label">Passport No</label>
-                      <input type="text" className="form-control" />
+                      <label className="col-form-label">CNIC No</label>
+                      <input
+                        type="text"
+                        placeholder={userData?.user?.profile?.cnic}
+                        onChange={(e) =>
+                          handlePersonalInfoChange("cnic", e.target.value)
+                        }
+                        className="form-control"
+                      />
                     </div>
                   </div>
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <div className="input-block mb-3 mb-3">
                       <label className="col-form-label">
                         Passport Expiry Date
@@ -611,16 +800,26 @@ const PersonalInformationModelPopup = () => {
                           onChange={handleDateChange3}
                           className="form-control floating datetimepicker"
                           type="date"
-                          placeholderText="04/10/2023"
+                          placeholder={userData?.user?.profile?.gender}
                           dateFormat="dd-MM-yyyy"
                         />
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-md-6">
                     <div className="input-block mb-3 mb-3">
                       <label className="col-form-label">Tel</label>
-                      <input className="form-control" type="text" />
+                      <input
+                        className="form-control"
+                        placeholder={userData?.user?.profile?.mobile_number}
+                        type="text"
+                        onChange={(e) =>
+                          handlePersonalInfoChange(
+                            "mobile_number",
+                            e.target.value
+                          )
+                        }
+                      />
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -628,22 +827,30 @@ const PersonalInformationModelPopup = () => {
                       <label className="col-form-label">
                         Nationality <span className="text-danger">*</span>
                       </label>
-                      <input className="form-control" type="text" />
+                      <input
+                        className="form-control"
+                        placeholder={userData?.user?.profile?.nationality}
+                        type="text"
+                        onChange={(e) =>
+                          handlePersonalInfoChange(
+                            "nationality",
+                            e.target.value
+                          )
+                        }
+                      />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="input-block mb-3 mb-3">
                       <label className="col-form-label">Religion</label>
-                      <div className="cal-icon">
-                        <DatePicker
-                          selected={selectedDate1}
-                          onChange={handleDateChange3}
-                          className="form-control floating datetimepicker"
-                          type="date"
-                          placeholderText="04/10/2023"
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
+                      <input
+                        className="form-control"
+                        placeholder={userData?.user?.profile?.religion}
+                        type="text"
+                        onChange={(e) =>
+                          handlePersonalInfoChange("religion", e.target.value)
+                        }
+                      />
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -653,7 +860,14 @@ const PersonalInformationModelPopup = () => {
                       </label>
                       <Select
                         options={status}
-                        placeholder="-"
+                        // placeholder="-"
+                        placeholder={userData?.user?.profile?.marital_status}
+                        onChange={(e) =>
+                          handlePersonalInfoChange(
+                            "marital_status",
+                            e.target.value
+                          )
+                        }
                         styles={customStyles}
                       />
                     </div>
@@ -663,13 +877,37 @@ const PersonalInformationModelPopup = () => {
                       <label className="col-form-label">
                         Employment of spouse
                       </label>
-                      <input className="form-control" type="text" />
+                      <input
+                        className="form-control"
+                        placeholder={
+                          userData?.user?.profile?.employment_of_spouse
+                        }
+                        onChange={(e) =>
+                          handlePersonalInfoChange(
+                            "employment_of_spouse",
+                            e.target.value
+                          )
+                        }
+                        type="text"
+                      />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="input-block mb-3 mb-3">
                       <label className="col-form-label">No. of children </label>
-                      <input className="form-control" type="text" />
+                      <input
+                        className="form-control"
+                        placeholder={
+                          userData?.user?.profile?.number_of_children
+                        }
+                        onChange={(e) =>
+                          handlePersonalInfoChange(
+                            "number_of_children",
+                            e.target.value
+                          )
+                        }
+                        type="text"
+                      />
                     </div>
                   </div>
                 </div>
@@ -679,6 +917,7 @@ const PersonalInformationModelPopup = () => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     type="reset"
+                    onClick={handleSubmitPersonalInfo}
                   >
                     Submit
                   </button>
@@ -897,89 +1136,6 @@ const PersonalInformationModelPopup = () => {
             <div className="modal-body">
               <form>
                 <div className="form-scroll">
-                  {/* {experienceList.map((experience, index) => (
-                    <div className="card" key={index}>
-                      <div className="card-body">
-                        <h3 className="card-title">
-                          Experience Informations #{index + 1}
-                          <Link
-                            to="#"
-                            className="delete-icon"
-                            onClick={() => deleteExperience(index)}
-                          >
-                            <i className="fa-regular fa-trash-can" />
-                          </Link>
-                        </h3>
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="input-block mb-3 mb-3 form-focus focused">
-                              <input
-                                type="text"
-                                className="form-control floating"
-                                //defaultValue="Digital Devlopment Inc"
-                              />
-                              <label className="focus-label">
-                                Company Name
-                              </label>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="input-block mb-3 mb-3 form-focus focused">
-                              <input
-                                type="text"
-                                className="form-control floating"
-                                //defaultValue="United States"
-                              />
-                              <label className="focus-label">
-                                Job Position
-                              </label>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="input-block mb-3 mb-3 form-focus focused">
-                              <div className="cal-icon">
-                                <DatePicker
-                                  selected={selectedDate1}
-                                  onChange={handleDateChange3}
-                                  className="form-control floating datetimepicker"
-                                  type="date"
-                                  //placeholderText="04/10/2023"
-                                  dateFormat="dd-MM-yyyy"
-                                />
-                              </div>
-                              <label className="focus-label">Period From</label>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="input-block mb-3 mb-3 form-focus focused">
-                              <div className="cal-icon">
-                                <DatePicker
-                                  selected={selectedDate2}
-                                  onChange={handleDateChange4}
-                                  className="form-control floating datetimepicker"
-                                  type="date"
-                                  //placeholderText="04/10/2023"
-                                  dateFormat="dd-MM-yyyy"
-                                />
-                              </div>
-                              <label className="focus-label">Period To</label>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="input-block mb-3 mb-3 form-focus focused">
-                              <input
-                                type="text"
-                                className="form-control floating"
-                                //defaultValue="United States"
-                              />
-                              <label className="focus-label">Location</label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))} */}
-
                   {experienceList.map((experience, index) => (
                     <div className="card" key={index}>
                       <div className="card-body">
