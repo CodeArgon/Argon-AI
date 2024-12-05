@@ -988,13 +988,13 @@ const AppContainer = () => {
       id: 120,
       path: 'contact-list',
       element: <ContactList />,
-      allowedRoles: ['admin', 'Employee']
+      allowedRoles: ['Admin', 'Employee']
     },
     {
       id: 121,
       path: 'contact-grid',
       element: <ContactGrid />,
-      allowedRoles: ['admin', 'Employee']
+      allowedRoles: ['Admin', 'Employee']
     },
     {
       id: 122,
@@ -1021,10 +1021,10 @@ const AppContainer = () => {
       allowedRoles: ['admin', 'Employee']
     },
     {
-      id: 126,
+      id: 143,
       path: 'contact-details',
       element: <ContactDetails />,
-      allowedRoles: ['admin', 'Employee']
+      allowedRoles: ['Admin', 'Employee']
     },
     {
       id: 126,

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Documents from './documents'
 
 import DocumentModal from '../../../../../components/modelpopup/DocumentModal'
 
 const DocumentManager = () => {
+  const [searchQuery, setSearchQuery] = useState('')
+
   return (
     <>
       <div className='page-wrapper'>
@@ -46,6 +48,8 @@ const DocumentManager = () => {
                             type='text'
                             className='form-control rounded-pill'
                             placeholder='Search'
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
                           />
                         </div>
                       </form>
@@ -54,7 +58,7 @@ const DocumentManager = () => {
                         <div className='file-scroll'>
                           <div className='file-content-inner'>
                             <h4>Files</h4>
-                            <Documents />
+                            <Documents searchQuery={searchQuery} />{' '}
                           </div>
                         </div>
                       </div>

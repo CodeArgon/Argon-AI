@@ -295,7 +295,6 @@ export const SidebarData = [
         menuValue: 'Leads',
         hasSubRoute: false,
         showSubRoute: false,
-
         route: '/leads-list',
         icon: 'la la-chart-area'
       },

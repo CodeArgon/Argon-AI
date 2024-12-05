@@ -2,14 +2,72 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BASE_URL } from '../../../../../constants/urls'
-import { fileIcon } from '../../../../../Routes/ImagePath'
 import { useLocation } from 'react-router-dom'
 
-const Documents = () => {
+const Documents = ({ searchQuery }) => {
   const [values, setValues] = useState([])
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const folderName = queryParams.get('folder')
+
+  const handleFilter = async type => {
+    try {
+      // Fetch all files from the API
+      const authToken = localStorage.getItem('BearerToken')
+      const response = await axios.get(
+        `${BASE_URL}folders/${folderName}/archive/`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` }
+        }
+      )
+
+      const allFiles = response.data // API response data
+      let filteredValues = []
+
+      // Apply filter based on the selected type
+      switch (type) {
+        case 'Documents':
+          filteredValues = allFiles.filter(
+            item => item.name.includes('.docx') || item.name.includes('.doc')
+          )
+          break
+
+        case 'PDFs':
+          filteredValues = allFiles.filter(item => item.name.includes('.pdf'))
+          break
+
+        case 'SpreadSheets':
+          filteredValues = allFiles.filter(
+            item => item.name.includes('.xlsx') || item.name.includes('.xls')
+          )
+          break
+
+        case 'Presentations':
+          filteredValues = allFiles.filter(
+            item => item.name.includes('.pptx') || item.name.includes('.ppt')
+          )
+          break
+
+        case 'Images':
+          filteredValues = allFiles.filter(
+            item =>
+              item.name.includes('.png') ||
+              item.name.includes('.jpg') ||
+              item.name.includes('.jpeg')
+          )
+          break
+
+        default: // Show all files if no specific type is selected
+          filteredValues = allFiles
+          break
+      }
+
+      // Update the state with the filtered data
+      setValues(filteredValues)
+    } catch (error) {
+      console.error('Error fetching files:', error)
+    }
+  }
 
   useEffect(() => {
     const authToken = localStorage.getItem('BearerToken')
@@ -17,11 +75,84 @@ const Documents = () => {
       .get(`${BASE_URL}folders/${folderName}/archive/`, {
         headers: { Authorization: `Bearer ${authToken}` }
       })
-      .then(res => setValues(res.data))
-  }, [])
+      .then(res => {
+        setValues(res.data)
+        console.log('here', res.data)
+      })
+  }, [folderName])
+
+  // Filter files based on the search query
+  const filteredValues = values.filter(file =>
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const handleOpenInNewTab = fileURL => {
+    window.open(fileURL, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className='row row-sm'>
-      {values.map((file, index) => (
+      <div
+        style={{
+          display: 'flex',
+          alignContent: 'flex-end',
+          justifyContent: 'flex-end',
+          marginBottom: '10px'
+        }}
+      >
+        <div
+          className='dropdown'
+          style={{ marginTop: '10px', marginLeft: 'auto' }}
+        >
+          <Link
+            to='#'
+            className='btn btn-white btn-sm btn-rounded dropdown-toggle'
+            style={{ gap: '10px' }}
+            data-bs-toggle='dropdown'
+            aria-expanded='false'
+          >
+            Filter
+          </Link>
+          <div className='dropdown-menu'>
+            <Link
+              className='dropdown-item'
+              to='#'
+              onClick={() => handleFilter('Documents')}
+            >
+              Documents
+            </Link>
+            <Link
+              className='dropdown-item'
+              to='#'
+              onClick={() => handleFilter('SpreadSheets')}
+            >
+              SpreadSheets
+            </Link>
+            <Link
+              className='dropdown-item'
+              to='#'
+              onClick={() => handleFilter('Presentations')}
+            >
+              Presentations
+            </Link>
+            <Link
+              className='dropdown-item'
+              to='#'
+              onClick={() => handleFilter('PDFs')}
+            >
+              PDFs
+            </Link>
+            <Link
+              className='dropdown-item'
+              to='#'
+              onClick={() => handleFilter('Images')}
+            >
+              Images
+            </Link>
+          </div>
+        </div>
+      </div>
+      {filteredValues.map((file, index) => (
         <div className='col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3' key={index}>
           <div className='card card-file'>
             <div className='dropdown-file'>
@@ -29,26 +160,19 @@ const Documents = () => {
                 <i className='fa fa-ellipsis-v' />
               </Link>
               <div className='dropdown-menu dropdown-menu-right'>
-                {/* <Link to='#' className='dropdown-item'>
-                  View Details
-                </Link>
-                <Link to='#' className='dropdown-item'>
-                  Share
-                </Link> */}
-                <Link to='#' className='dropdown-item'>
+                <Link
+                  onClick={() => handleOpenInNewTab(file.file)}
+                  className='dropdown-item'
+                >
                   Download
-                </Link>
-                <Link to='#' className='dropdown-item'>
-                  Rename
-                </Link>
-                <Link to='#' className='dropdown-item'>
-                  Delete
                 </Link>
               </div>
             </div>
             <div className='card-file-thumb'>
-              {/* <i className={`fa-regular ${file.icon}`} /> */}
-              <img src={fileIcon} alt='File Icon' />
+              <i
+                className='fa-solid fa-file fa-2xs'
+                style={{ color: '#FFD43B' }}
+              ></i>
             </div>
             <div className='card-body'>
               <h6>

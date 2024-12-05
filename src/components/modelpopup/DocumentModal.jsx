@@ -1,18 +1,86 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { BASE_URL } from '../../constants/urls'
+import Swal from 'sweetalert2'
 
 dayjs.extend(customParseFormat)
 
 const DocumentModal = () => {
-  const options2 = [
-    { label: 'Select', value: 'Select' },
-    { label: 'CVs', value: 'CVs' },
-    { label: 'Company Documents', value: 'Company Documents' },
-    { label: 'Profiles', value: 'Profiles' },
-    { label: 'Case Studies', value: 'Case Studies' }
-  ]
+  const [folder, setFolder] = useState(null)
+  const [file, setFile] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [folderOptions, setFolderOptions] = useState([])
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('BearerToken')
+    const fetchFolders = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}folders/`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        })
+        const data = await response.json()
+
+        const options = data.map(platform => ({
+          value: platform.id,
+          label: platform.name
+        }))
+
+        setFolderOptions(options)
+      } catch (error) {
+        console.error('Error fetching platforms:', error)
+      }
+    }
+
+    fetchFolders()
+  }, [])
+
+  const handleFileChange = e => {
+    setFile(e.target.files[0])
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    if (!folder || !file) {
+      alert('Please fill in all fields.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('folder', folder.value)
+    formData.append('file', file)
+
+    setIsSubmitting(true)
+    const authToken = localStorage.getItem('BearerToken')
+    try {
+      const response = await fetch(`${BASE_URL}archive/`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        method: 'POST',
+        body: formData
+      })
+      if (response.ok) {
+        Swal.fire('Document saved successfully!').then(result => {
+          if (result.isConfirmed) {
+            setFolder(null)
+            setFile(null)
+            window.location.reload()
+          }
+        })
+      } else {
+        Swal.fire('Failed to save the document.')
+      }
+    } catch (error) {
+      console.error('Error saving document:', error)
+      Swal.fire('An error occurred while saving the document.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div>
@@ -37,29 +105,43 @@ const DocumentModal = () => {
               </button>
             </div>
             <div className='modal-body p-0'>
-              <form action='/activities'>
+              <form onSubmit={handleSubmit}>
                 <div className='contact-input-set'>
                   <div className='row'>
-                    <div className='col-lg-6'>
-                      <div className='input-block mb-3'>
-                        <label className='col-form-label'>
-                          File Name <span className='text-danger'>*</span>
-                        </label>
-                        <input className='form-control' type='text' />
-                      </div>
-                    </div>
-
-                    <div className='col-lg-6'>
+                    <div className='col-lg-12'>
                       <div className='input-block mb-3'>
                         <label className='col-form-label'>
                           Folder <span className='text-danger'>*</span>
                         </label>
-                        <Select options={options2} placeholder={'select'} />
+                        <Select
+                          options={folderOptions}
+                          placeholder={'Select'}
+                          value={folder}
+                          onChange={selectedOption => setFolder(selectedOption)}
+                        />
                       </div>
                     </div>
+
+                    <div className='col-lg-12'>
+                      <div className='input-block mb-3'>
+                        <label className='col-form-label'>
+                          Upload File <span className='text-danger'>*</span>
+                        </label>
+                        <input
+                          className='form-control'
+                          type='file'
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    </div>
+
                     <div className='col-lg-12 text-end form-wizard-button'>
-                      <button className='btn btn-primary' type='submit'>
-                        Save Document
+                      <button
+                        className='btn btn-primary'
+                        type='submit'
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? 'Saving...' : 'Save Document'}
                       </button>
                     </div>
                   </div>

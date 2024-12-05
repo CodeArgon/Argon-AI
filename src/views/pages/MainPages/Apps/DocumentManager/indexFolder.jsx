@@ -1,39 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Documents from './documents'
 import Folders from './folders'
-
 import DocumentModal from '../../../../../components/modelpopup/DocumentModal'
 import FolderModal from '../../../../../components/modelpopup/FolderModal'
 
-import axios from 'axios'
-import { BASE_URL } from '../../../../../constants/urls'
-
 const FolderManager = () => {
-  const [folders, setFolders] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
 
-  useEffect(() => {
-    const fetchFolders = async () => {
-      const authToken = localStorage.getItem('BearerToken')
-      try {
-        const response = await axios.get(`${BASE_URL}folders/`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        })
-        setFolders(response.data)
-      } catch (error) {
-        console.error('Error fetching folders:', error)
-      }
-    }
-
-    fetchFolders()
-  }, [])
+  const handleSearchChange = e => {
+    setSearchTerm(e.target.value)
+  }
 
   return (
     <>
       <div className='page-wrapper'>
-        {/* Page Content */}
         <div className='content container-fluid'>
           <div className='row'>
             <div className='col-sm-12'>
@@ -58,6 +38,16 @@ const FolderManager = () => {
                           <span className='btn-file'>
                             <i className='fa-solid fa-upload' />
                           </span>
+                          <Link>
+                            <span
+                              className='btn-file'
+                              data-bs-toggle='modal'
+                              data-bs-target='#add_folder'
+                              style={{ marginLeft: '10px' }}
+                            >
+                              <i class='fa-solid fa-folder-plus fa-lg'></i>
+                            </span>
+                          </Link>
                         </Link>
                       </div>
                     </div>
@@ -71,9 +61,12 @@ const FolderManager = () => {
                             type='text'
                             className='form-control rounded-pill'
                             placeholder='Search'
+                            value={searchTerm}
+                            onChange={handleSearchChange}
                           />
                         </div>
                       </form>
+
                       <div className='file-body'>
                         <div className='file-scroll'>
                           <div className='file-content-inner'>
@@ -86,7 +79,7 @@ const FolderManager = () => {
                               <i className='la la-plus-circle' /> Add Folder
                             </Link>
                             <h4>Folders</h4>
-                            <Folders />
+                            <Folders searchTerm={searchTerm} />{' '}
                           </div>
                         </div>
                       </div>
@@ -97,8 +90,8 @@ const FolderManager = () => {
             </div>
           </div>
         </div>
-        {/* /Page Content */}
         <FolderModal />
+        <DocumentModal />
       </div>
     </>
   )

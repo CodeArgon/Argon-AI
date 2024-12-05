@@ -41,7 +41,8 @@ const Sidebar = () => {
       'File Manager',
       'Proposal Manager',
       'Leads',
-      'Add User'
+      'Add User',
+      'Contacts'
     ],
     BD: ['Dashboard', 'Proposal Manager', 'My Leads', 'File Manager'],
     HR: ['Dashboard', 'Leads', 'Sale Order'],
@@ -4316,6 +4317,4 @@ const Sidebar = () => {
   )
 }
 
-
-
-export default Sidebar;
+export default Sidebar

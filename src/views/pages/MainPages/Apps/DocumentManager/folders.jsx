@@ -2,10 +2,10 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BASE_URL } from '../../../../../constants/urls'
-import { fileIcon } from '../../../../../Routes/ImagePath'
 
-const Folders = () => {
+const Folders = ({ searchTerm }) => {
   const [folders, setFolders] = useState([])
+  const [filteredFolders, setFilteredFolders] = useState([])
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -17,6 +17,7 @@ const Folders = () => {
           }
         })
         setFolders(response.data)
+        setFilteredFolders(response.data) // Initialize filteredFolders
       } catch (error) {
         console.error('Error fetching folders:', error)
       }
@@ -25,34 +26,28 @@ const Folders = () => {
     fetchFolders()
   }, [])
 
+  useEffect(() => {
+    // Filter folders based on search term
+    const filtered = folders.filter(folder =>
+      folder.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    setFilteredFolders(filtered)
+  }, [searchTerm, folders]) // Re-run filter whenever searchTerm or folders change
+
   return (
     <div className='row row-sm'>
-      {folders.length > 0 ? (
-        folders.map((folder, index) => (
+      {filteredFolders.length > 0 ? (
+        filteredFolders.map((folder, index) => (
           <div
-            className='col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3'
+            className='col-6 col-sm-4 col-md-3 col-lg-4 col-xl-2'
             key={index}
           >
             <div className='card card-file'>
-              <div className='dropdown-file'>
-                <Link
-                  to='#'
-                  className='dropdown-link'
-                  data-bs-toggle='dropdown'
-                >
-                  <i className='fa fa-ellipsis-v' />
-                </Link>
-                <div className='dropdown-menu dropdown-menu-right'>
-                  <Link to='#' className='dropdown-item'>
-                    Rename
-                  </Link>
-                  <Link to='#' className='dropdown-item'>
-                    Delete
-                  </Link>
-                </div>
-              </div>
               <div className='card-file-thumb'>
-                <img src={fileIcon} alt='File Icon' />
+                <i
+                  className='fa-solid fa-folder fa-2xs'
+                  style={{ color: '#FFD43B' }}
+                ></i>
               </div>
               <div className='card-body'>
                 <h6>
@@ -62,9 +57,9 @@ const Folders = () => {
                     )}`}
                   >
                     {folder.name}
-                  </Link>{' '}
+                  </Link>
                 </h6>
-                <span>{folder.fileSize}</span>
+                <span>{folder.file_size}</span>
               </div>
               <div className='card-footer'>
                 {new Date(folder.last_modified).toLocaleString('en-US', {
