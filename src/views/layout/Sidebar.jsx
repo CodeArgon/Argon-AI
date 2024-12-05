@@ -8,8 +8,6 @@ import { useTranslation } from 'react-i18next'
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from 'react-router-dom'
 import { SidebarData } from './sidebardata'
-import { Link, useLocation } from 'react-router-dom'
-import { SidebarData } from './sidebardata'
 
 const Sidebar = () => {
   const userDataString = localStorage.getItem('user')

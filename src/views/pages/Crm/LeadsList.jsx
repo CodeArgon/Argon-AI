@@ -436,66 +436,6 @@ const LeadsList = () => {
           </div>
 
           <div
-            className='row align-items-center'
-            style={{ alignContent: 'center', alignItems: 'center' }}
-          >
-            <div className='col-md-3'>
-              <div className='card'>
-                <div className='card-body' style={{ textAlign: 'center' }}>
-                  <h5>Total Leads</h5>
-                  <h6 className='counter'>
-                    <CountUp
-                      end={
-                        opportunityLeads.length +
-                        openLeads.length +
-                        quotationLeads.length +
-                        winLeads.length +
-                        lostLeads.length
-                      }
-                    />
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div className='col-md-3'>
-              <div className='card'>
-                <div className='card-body' style={{ textAlign: 'center' }}>
-                  <h5>In process</h5>
-                  <h6 className='counter'>
-                    <CountUp
-                      end={
-                        opportunityLeads.length +
-                        openLeads.length +
-                        quotationLeads.length
-                      }
-                    />
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div className='col-md-3'>
-              <div className='card'>
-                <div className='card-body' style={{ textAlign: 'center' }}>
-                  <h5>Total Won</h5>
-                  <h6 className='counter'>
-                    <CountUp end={winLeads.length} />
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div className='col-md-3'>
-              <div className='card'>
-                <div className='card-body' style={{ textAlign: 'center' }}>
-                  <h5>Total Lost</h5>
-                  <h6 className='counter'>
-                    <CountUp end={lostLeads.length} />
-                  </h6>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
             className={`filter-filelds${isFilterVisible ? ' visible' : ''}`}
             id='filter_inputs'
             style={{ display: isFilterVisible ? 'block' : 'none' }}

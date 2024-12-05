@@ -10,9 +10,6 @@ export const AppProvider = ({ children }) => {
   const [leadData, setLead] = useState();
   const [lead, setlead] = useState();
 
-  const [leadData, setLead] = useState();
-  const [lead, setlead] = useState();
-
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
