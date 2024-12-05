@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next'
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from 'react-router-dom'
 import { SidebarData } from './sidebardata'
+import { Link, useLocation } from 'react-router-dom'
+import { SidebarData } from './sidebardata'
 
 const Sidebar = () => {
   const userDataString = localStorage.getItem('user')
@@ -35,7 +37,7 @@ const Sidebar = () => {
       'Proposal Manager',
       'DL Leads'
     ],
-    IT: ['Dashboard', 'Add Users'],
+    IT: ['Dashboard', 'Add Users', 'Users'],
     Admin: [
       'Dashboard',
       'File Manager',
@@ -44,7 +46,13 @@ const Sidebar = () => {
       'Add User',
       'Contacts'
     ],
-    BD: ['Dashboard', 'Proposal Manager', 'My Leads', 'File Manager'],
+    BD: [
+      'Dashboard',
+      'Proposal Manager',
+      'My Leads',
+      'File Manager',
+      'Contacts'
+    ],
     HR: ['Dashboard', 'Leads', 'Sale Order'],
     'Project Manager': ['Dashboard', 'Proposal Manager', 'File Manager']
   }
@@ -548,18 +556,28 @@ const Sidebar = () => {
                   <ul>
                     <li>
                       <Link
-                        // className={
-                        //   pathname.includes("projects")
-                        //     ? "active"
-                        //     : pathname.includes("project-list")
-                        //     ? "active"
-                        //     : pathname.includes("project-view")
-                        //     ? "active"
-                        //     : ""
-                        // }
+                        className={
+                          pathname.includes('projects')
+                            ? 'active'
+                            : pathname.includes('project-list')
+                            ? 'active'
+                            : pathname.includes('project-view')
+                            ? 'active'
+                            : pathname.includes('contact')
+                            ? 'active'
+                            : ''
+                        }
                         to='/contact-list'
                       >
                         {t('Contacts')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={pathname.includes('leads') ? 'active' : ''}
+                        to='/leads'
+                      >
+                        {t('Leads')}
                       </Link>
                     </li>
                     <li>
@@ -2784,7 +2802,7 @@ const Sidebar = () => {
                         {t('Calendar')}
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         onClick={() =>
                           localStorage.setItem('minheight', 'true')
@@ -2796,7 +2814,7 @@ const Sidebar = () => {
                       >
                         {t('Contacts')}
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to='/email/inbox'>{t('Email')}</Link>
                     </li>

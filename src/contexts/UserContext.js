@@ -10,6 +10,9 @@ export const AppProvider = ({ children }) => {
   const [leadData, setLead] = useState();
   const [lead, setlead] = useState();
 
+  const [leadData, setLead] = useState();
+  const [lead, setlead] = useState();
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -62,8 +65,7 @@ export const AppProvider = ({ children }) => {
         leadData,
         lead,
         setlead,
-        setLead
-
+        setLead,
       }}
     >
       {children}
@@ -72,4 +74,3 @@ export const AppProvider = ({ children }) => {
 };
 
 export default UserContext;
-

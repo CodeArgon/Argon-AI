@@ -8,8 +8,7 @@ import Select from 'react-select'
 import CrmDeleteModal from '../../../components/modelpopup/Crm/CrmDeleteModal'
 import EditLeads from '../../../components/modelpopup/Crm/EditLeads'
 import { BASE_URL } from '../../../constants/urls'
-import CountUp from "react-countup";
-
+import CountUp from 'react-countup'
 
 const LeadsList = () => {
   const [isFilterVisible, setIsFilterVisible] = useState(false)
@@ -19,7 +18,10 @@ const LeadsList = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedLead, setSelectedLead] = useState(null)
-
+  const [searchText, setSearchText] = useState('')
+  const [filteredData, setFilteredData] = useState([])
+  const [dateRange, setDateRange] = useState({ start: null, end: null }) // Date filter
+  const [status, setStatus] = useState(null) // Status filter
   useEffect(() => {
     const authToken = localStorage.getItem('BearerToken')
     const fetchLeads = async () => {
@@ -33,6 +35,7 @@ const LeadsList = () => {
         if (response.ok) {
           const data = await response.json()
           setData(data)
+          setFilteredData(data)
         } else {
           console.error('Failed to fetch leads:', response.statusText)
         }
@@ -46,6 +49,13 @@ const LeadsList = () => {
     fetchLeads()
   }, [])
 
+  useEffect(() => {
+    const filtered = data.filter(lead =>
+      lead.name.toLowerCase().includes(searchText.toLowerCase())
+    )
+    setFilteredData(filtered)
+  }, [searchText, data])
+
   const handleEditClick = record => {
     setSelectedLead(record)
   }
@@ -55,7 +65,6 @@ const LeadsList = () => {
   const winLeads = data.filter(lead => lead.status === 'win')
   const lostLeads = data.filter(lead => lead.status === 'lost')
   const quotationLeads = data.filter(lead => lead.status === 'quotation')
-
 
   const columns = [
     {
@@ -84,7 +93,7 @@ const LeadsList = () => {
           {text}
         </Link>
       ),
-      sorter: (a, b) => a.LeadName.length - b.LeadName.length
+      sorter: (a, b) => a.name.length - b.name.length
     },
     {
       title: 'Source',
@@ -193,14 +202,61 @@ const LeadsList = () => {
     startDate: new Date('2020-08-04T04:57:17.076Z'), // Set "Last 7 Days" as default
     timePicker: false
   }
-  const status = [
+  const leadStatus = [
     { value: '--Select--', label: '--Select--' },
-    { value: 'Closed', label: 'Closed' },
-    { value: 'Not Contacted', label: 'Not Contacted' },
-    { value: 'Contacted', label: 'Contacted' },
-    { value: 'Lost', label: 'Lost' }
+    { value: 'Open', label: 'Open' },
+    { value: 'opportunity', label: 'Opportunity' },
+    { value: 'Quotation', label: 'Quotation' },
+    { value: 'Lost', label: 'Lost' },
+    { value: 'Win', label: 'Win' }
+  ]
+  const source = [
+    { value: '--Select--', label: '--Select--' },
+    { value: 'Upwork', label: 'Upwork' },
+    { value: 'LinkdIn', label: 'LinkdIn' },
+    { value: 'Facebook', label: 'Facebook' }
+  ]
+  const medium = [
+    { value: '--Select--', label: '--Select--' },
+    { value: 'DL@gmail.com', label: 'DL@gmail.com' },
+    { value: 'BD@gmail.com', label: 'BD@gmail.com' }
   ]
 
+  useEffect(() => {
+    applyFilters()
+  }, [dateRange, status])
+  // Filter function
+  const applyFilters = () => {
+    let updatedData = [...data]
+    // Apply date range filter
+    if (dateRange.start && dateRange.end) {
+      updatedData = updatedData.filter(lead => {
+        const leadDate = new Date(lead.date) // Adjust to match your date format
+        return (
+          leadDate >= new Date(dateRange.start) &&
+          leadDate <= new Date(dateRange.end)
+        )
+      })
+    }
+    // Apply status filter
+    if (status) {
+      updatedData = updatedData.filter(lead => lead.status === status.value)
+    }
+    setFilteredData(updatedData)
+  }
+
+  // Handle date range change
+  const handleDateRangeChange = (start, end) => {
+    setDateRange({
+      start: start.format('YYYY-MM-DD'),
+      end: end.format('YYYY-MM-DD')
+    })
+  }
+
+  // Handle status change
+  const handleStatusChange = selectedOption => {
+    setStatus(selectedOption)
+  }
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -317,57 +373,127 @@ const LeadsList = () => {
           {/* /Page Header */}
           {/* Search Filter */}
 
-
-          <div className="filter-section"></div>
+          <div className='filter-section'></div>
           <br />
           <div
-            className="row align-items-center"
-            style={{ alignContent: "center", alignItems: "center" }}
+            className='row align-items-center'
+            style={{ alignContent: 'center', alignItems: 'center' }}
           >
-            <div className="col-md-3">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
                   <h5>Total Leads</h5>
-                  <h6 className="counter">
-                  <CountUp end={opportunityLeads.length+openLeads.length+quotationLeads.length+winLeads.length+lostLeads.length} />
+                  <h6 className='counter'>
+                    <CountUp
+                      end={
+                        opportunityLeads.length +
+                        openLeads.length +
+                        quotationLeads.length +
+                        winLeads.length +
+                        lostLeads.length
+                      }
+                    />
                   </h6>
                 </div>
               </div>
             </div>
-            <div className="col-md-3">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
                   <h5>In process</h5>
-                  <h6 className="counter">
-                    <CountUp end={opportunityLeads.length+openLeads.length+quotationLeads.length} />
+                  <h6 className='counter'>
+                    <CountUp
+                      end={
+                        opportunityLeads.length +
+                        openLeads.length +
+                        quotationLeads.length
+                      }
+                    />
                   </h6>
                 </div>
               </div>
             </div>
-            <div className="col-md-3">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
                   <h5>Total Won</h5>
-                  <h6 className="counter">
+                  <h6 className='counter'>
                     <CountUp end={winLeads.length} />
                   </h6>
                 </div>
               </div>
             </div>
-            <div className="col-md-3">
-              <div className="card">
-                <div className="card-body" style={{ textAlign: "center" }}>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
                   <h5>Total Lost</h5>
-                  <h6 className="counter">
+                  <h6 className='counter'>
                     <CountUp end={lostLeads.length} />
                   </h6>
                 </div>
               </div>
             </div>
-           
           </div>
 
-
+          <div
+            className='row align-items-center'
+            style={{ alignContent: 'center', alignItems: 'center' }}
+          >
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
+                  <h5>Total Leads</h5>
+                  <h6 className='counter'>
+                    <CountUp
+                      end={
+                        opportunityLeads.length +
+                        openLeads.length +
+                        quotationLeads.length +
+                        winLeads.length +
+                        lostLeads.length
+                      }
+                    />
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
+                  <h5>In process</h5>
+                  <h6 className='counter'>
+                    <CountUp
+                      end={
+                        opportunityLeads.length +
+                        openLeads.length +
+                        quotationLeads.length
+                      }
+                    />
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
+                  <h5>Total Won</h5>
+                  <h6 className='counter'>
+                    <CountUp end={winLeads.length} />
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className='col-md-3'>
+              <div className='card'>
+                <div className='card-body' style={{ textAlign: 'center' }}>
+                  <h5>Total Lost</h5>
+                  <h6 className='counter'>
+                    <CountUp end={lostLeads.length} />
+                  </h6>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div
             className={`filter-filelds${isFilterVisible ? ' visible' : ''}`}
@@ -386,10 +512,11 @@ const LeadsList = () => {
                   <input
                     type='text'
                     className='form-control floating'
-                    value={inputValue}
-                    onFocus={handleLabelClick}
-                    onBlur={handleInputBlur}
-                    onChange={handleInputChange}
+                    // value={inputValue}
+                    // onFocus={handleLabelClick}
+                    // onBlur={handleInputBlur}
+                    // onChange={handleInputChange}
+                    onChange={e => setSearchText(e.target.value)}
                   />
                   <label className='focus-label' onClick={handleLabelClick}>
                     LeadName
@@ -397,7 +524,7 @@ const LeadsList = () => {
                 </div>
               </div>
               <div className='col-xl-2'>
-                <div
+                {/* <div
                   className={
                     focused1 || inputValue1 !== ''
                       ? 'input-block mb-3 form-focus focused'
@@ -414,26 +541,52 @@ const LeadsList = () => {
                   />
                   <label className='focus-label' onClick={handleLabelClick1}>
                     Medium
-                  </label>
+                  </label> */}
+                <div className='input-block mb-3 form-focus select-focus'>
+                  <Select
+                    options={medium}
+                    placeholder='Select'
+                    styles={customStyles}
+                  />
+                  <label className='focus-label'>Medium</label>
                 </div>
               </div>
               <div className='col-xl-2'>
                 <div className='input-block mb-3 form-focus focused'>
-                  <DateRangePicker initialSettings={initialSettings}>
+                  <DateRangePicker
+                    onApply={(event, picker) =>
+                      handleDateRangeChange(picker.startDate, picker.endDate)
+                    }
+                    initialSettings={{
+                      autoApply: true
+                    }}
+                    // initialSettings={initialSettings}
+                  >
                     <input
                       className='form-control  date-range bookingrange'
                       type='text'
+                      placeholder='Select Date Range'
                     />
                   </DateRangePicker>
+                  {/* <DateRangePicker
+                    onApply={(event, picker) =>
+                      handleDateRangeChange(picker.startDate, picker.endDate)
+                    }
+                  >
+                    <button className="btn btn-primary">
+                      Select Date Range
+                    </button>
+                  </DateRangePicker> */}
                   <label className='focus-label'>From - To Date</label>
                 </div>
               </div>
               <div className='col-xl-2'>
                 <div className='input-block mb-3 form-focus select-focus'>
                   <Select
-                    options={status}
+                    options={leadStatus}
                     placeholder='Select'
                     styles={customStyles}
+                    onChange={handleStatusChange}
                   />
                   <label className='focus-label'>Lead Status</label>
                 </div>
@@ -441,19 +594,19 @@ const LeadsList = () => {
               <div className='col-xl-2'>
                 <div className='input-block mb-3 form-focus select-focus'>
                   <Select
-                    //options={}
+                    options={source}
                     placeholder='Select'
                     styles={customStyles}
                   />
                   <label className='focus-label'>Source</label>
                 </div>
               </div>
-              <div className='col-xl-2'>
+              {/* <div className='col-xl-2'>
                 <Link to='#' className='btn btn-success w-100'>
                   {' '}
                   Search{' '}
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -483,7 +636,8 @@ const LeadsList = () => {
                 <Table
                   className='table table-striped custom-table datatable contact-table'
                   columns={columns}
-                  dataSource={data}
+                  dataSource={filteredData}
+                  // dataSource={data}
                   rowKey={record => record.id}
                 />
               </div>

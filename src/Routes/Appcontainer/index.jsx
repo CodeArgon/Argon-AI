@@ -185,8 +185,6 @@ import TicketDetails from '../../views/pages/Employees/TicketDetails.jsx'
 import Companies from '../../views/pages/Crm/companies.jsx'
 import ContactDetails from '../../views/pages/Crm/ContactDetails.jsx'
 import LeadsList from '../../views/pages/Crm/LeadsList.jsx'
-import BdLeadsList from '../../views/pages/Crm/BdLeadsList.jsx'
-import DlLeadsList from '../../views/pages/Crm/DlLeadsList.jsx'
 import LeadsKanban from '../../views/pages/Crm/LeadsKanban.jsx'
 import LeadsDetails from '../../views/pages/Crm/LeadsDetails.jsx'
 import PipeLine from '../../views/pages/Crm/PipeLine.jsx'
@@ -327,15 +325,7 @@ const AppContainer = () => {
       id: 17,
       path: 'Employee-dashboard',
       element: <EmployeeDashboard />,
-      allowedRoles: [
-        'Admin',
-        'Employee',
-        'BD',
-        'HR',
-        'IT',
-        'Project Manager',
-        'Division Lead'
-      ]
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 18,
@@ -371,13 +361,7 @@ const AppContainer = () => {
       id: 23,
       path: 'file-manager',
       element: <FileManager />,
-      allowedRoles: [
-        'Admin',
-        'Employee',
-        'Project Manager',
-        'Division Lead',
-        'BD'
-      ]
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 24,
@@ -551,7 +535,7 @@ const AppContainer = () => {
       id: 50,
       path: 'leads',
       element: <Leads />,
-      allowedRoles: ['Admin', 'HR']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 51,
@@ -569,15 +553,7 @@ const AppContainer = () => {
       id: 53,
       path: 'profile',
       element: <Profile />,
-      allowedRoles: [
-        'Admin',
-        'Employee',
-        'BD',
-        'HR',
-        'Project Manager',
-        'Division Lead',
-        'IT'
-      ]
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 54,
@@ -988,13 +964,13 @@ const AppContainer = () => {
       id: 120,
       path: 'contact-list',
       element: <ContactList />,
-      allowedRoles: ['Admin', 'Employee']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 121,
       path: 'contact-grid',
       element: <ContactGrid />,
-      allowedRoles: ['Admin', 'Employee']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 122,
@@ -1021,34 +997,34 @@ const AppContainer = () => {
       allowedRoles: ['admin', 'Employee']
     },
     {
-      id: 143,
+      id: 126,
       path: 'contact-details',
       element: <ContactDetails />,
-      allowedRoles: ['Admin', 'Employee']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 126,
       path: 'leads-list',
       element: <LeadsList />,
-      allowedRoles: ['Admin', 'HR']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 127,
       path: 'leads-kanban',
       element: <LeadsKanban />,
-      allowedRoles: ['Admin', 'HR', 'BD']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 128,
       path: 'leads-details',
       element: <LeadsDetails />,
-      allowedRoles: ['Admin', 'HR', 'BD', 'Division Lead', 'Project Manager']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 128,
       path: 'pipeline',
       element: <PipeLine />,
-      allowedRoles: ['Admin', 'HR', 'Division Lead']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 129,
@@ -1090,61 +1066,31 @@ const AppContainer = () => {
       id: 137,
       path: 'view-project-details',
       element: <ArchieveProjectDetails />,
-      allowedRoles: ['Admin', 'Division Lead', 'Project Manager']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 139,
       path: 'view-proposal-details',
       element: <ProposalDetails />,
-      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 136,
       path: 'proposal-creation',
       element: <ProposalCreation />,
-      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 138,
       path: 'proposal-list',
       element: <ProposalList />,
-      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
+      allowedRoles: ['admin', 'Employee']
     },
     {
       id: 136,
       path: 'editer',
       element: <Editer />,
-      allowedRoles: ['Admin', 'Division Lead', 'BD', 'Project Manager']
-    },
-    {
-      id: 140,
-      path: 'profile-stepper',
-      element: <ProfileStepper />,
-      allowedRoles: ['IT']
-    },
-    {
-      id: 126,
-      path: 'bd-leads-list',
-      element: <BdLeadsList />,
-      allowedRoles: ['BD']
-    },
-    {
-      id: 127,
-      path: 'dl-leads-list',
-      element: <DlLeadsList />,
-      allowedRoles: ['Division Lead']
-    },
-    {
-      id: 141,
-      path: 'document-list',
-      element: <DocumentManager />,
-      allowedRoles: ['Admin', 'Project Manager', 'Division Lead', 'BD']
-    },
-    {
-      id: 142,
-      path: 'folder-list',
-      element: <FolderManager />,
-      allowedRoles: ['Admin', 'Project Manager', 'Division Lead', 'BD']
+      allowedRoles: ['admin', 'Employee']
     }
   ]
 

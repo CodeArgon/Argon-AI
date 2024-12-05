@@ -93,6 +93,18 @@ export const SidebarData = [
       // }
 
       // {
+      //   menuValue: "Contacts",
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: "/contact-list",
+      //   icon: "la la-user-shield",
+      // },
+
+      // {
+      //   menuValue: "Contacts",
+      //   route: "/contacts",
+      // },
+      // {
       //   menuValue: "Proposal Creation",
       //   hasSubRoute: false,
       //   showSubRoute: false,
@@ -144,10 +156,6 @@ export const SidebarData = [
       //     {
       //       menuValue: "Calendar",
       //       route: "/events",
-      //     },
-      //     {
-      //       menuValue: "Contacts",
-      //       route: "/contacts",
       //     },
       //     {
       //       menuValue: "Email",
@@ -318,27 +326,6 @@ export const SidebarData = [
         showSubRoute: false,
         route: '/dl-leads-list',
         icon: 'la la-chart-area'
-      },
-      {
-        menuValue: 'Sale Order',
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: '/pipeline',
-        icon: 'la la-exchange-alt'
-      },
-      {
-        menuValue: 'Analytics',
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: '/analytics',
-        icon: 'la la-dice'
-      },
-      {
-        menuValue: 'Activities',
-        hasSubRoute: false,
-        showSubRoute: false,
-        route: '/activities',
-        icon: 'la la-directions'
       }
     ]
   }
