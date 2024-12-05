@@ -7,7 +7,7 @@ export const AppProvider = ({ children }) => {
   const [userData, setUserData] = useState(JSON.parse(userDataString));
   const [activeStep, setActiveStep] = useState(0);
   const [profileID, setprofileID] = useState(0);
-  const [leadData, setLeadData] = useState();
+  const [leadData, setLead] = useState();
   const [lead, setlead] = useState();
 
   const [formData, setFormData] = useState({
@@ -41,23 +41,22 @@ export const AppProvider = ({ children }) => {
     emergency_contact_secondary_name: "",
     emergency_contact_secondary_relationship: "",
     emergency_contact_secondary_phone: "",
-    
   });
   return (
     <UserContext.Provider
       value={{
         userData,
         setUserData,
-        activeStep, 
+        activeStep,
         setActiveStep,
-        formData, 
+        formData,
         setFormData,
-        profileID, 
+        profileID,
         setprofileID,
         leadData,
-        setLeadData,
         lead,
-        setlead
+        setlead,
+        setLead
       }}
     >
       {children}
@@ -66,3 +65,4 @@ export const AppProvider = ({ children }) => {
 };
 
 export default UserContext;
+

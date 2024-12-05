@@ -1,34 +1,37 @@
+// const filteredMenu = sidebarData.menu.filter((item) =>
+//   item.allowedRoles.includes(userRole)
+// );
 export const SidebarData = [
   {
     tittle: "MAIN",
     showAsTab: false,
     separateRoute: false,
     menu: [
-      {
-        menuValue: "Dashboard",
-        hasSubRoute: true,
-        showSubRoute: false,
-        route: "#",
-        icon: "la la-dashcube",
-        subMenus: [
-          {
-            menuValue: "Admin Dashboard",
-            route: "/admin-dashboard",
-          },
-          {
-            menuValue: "Employee Dashboard",
-            route: "/employee-dashboard",
-          },
-          {
-            menuValue: "Deals Dashboard",
-            route: "/deals-dashboard",
-          },
-          {
-            menuValue: "Leads Dashboard",
-            route: "/leads-dashboard",
-          },
-        ],
-      },
+      // {
+      //   menuValue: "Dashboard",
+      //   hasSubRoute: true,
+      //   showSubRoute: false,
+      //   route: "#",
+      //   icon: "la la-dashcube",
+      //   subMenus: [
+      //     {
+      //       menuValue: "Admin Dashboard",
+      //       route: "/admin-dashboard",
+      //     },
+      //     {
+      //       menuValue: "Employee Dashboard",
+      //       route: "/employee-dashboard",
+      //     },
+      //     {
+      //       menuValue: "Deals Dashboard",
+      //       route: "/deals-dashboard",
+      //     },
+      //     {
+      //       menuValue: "Leads Dashboard",
+      //       route: "/leads-dashboard",
+      //     },
+      //   ],
+      // },
       // {
       //   menuValue: "Dashboard",
       //   hasSubRoute: false,
@@ -36,6 +39,14 @@ export const SidebarData = [
       //   route: "/employee-dashboard",
       //   icon: "la la-dashcube",
       // },
+
+      {
+        menuValue: "Dashboard",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/employee-dashboard",
+        icon: "la la-dashcube",
+      },
 
       {
         menuValue: "Proposal Manager",
@@ -63,6 +74,19 @@ export const SidebarData = [
         icon: "la la-rocket",
       },
 
+      // {
+      //   menuValue: "Contacts",
+      //   hasSubRoute: false,
+      //   showSubRoute: false,
+      //   route: "/contact-list",
+      //   icon: "la la-user-shield",
+      // },
+
+
+      // {
+      //   menuValue: "Contacts",
+      //   route: "/contacts",
+      // },
       // {
       //   menuValue: "Proposal Creation",
       //   hasSubRoute: false,
@@ -115,10 +139,6 @@ export const SidebarData = [
       //     {
       //       menuValue: "Calendar",
       //       route: "/events",
-      //     },
-      //     {
-      //       menuValue: "Contacts",
-      //       route: "/contacts",
       //     },
       //     {
       //       menuValue: "Email",
@@ -266,6 +286,7 @@ export const SidebarData = [
         menuValue: "Leads",
         hasSubRoute: false,
         showSubRoute: false,
+
         route: "/leads-list",
         icon: "la la-chart-area",
       },
@@ -275,6 +296,20 @@ export const SidebarData = [
         showSubRoute: false,
         route: "/bd-leads-list",
         icon: "la la-chart-area",
+      },
+      {
+        menuValue: "Add Users",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/users",
+        icon: "la la-user-plus",
+      },
+      {
+        menuValue: "Users",
+        hasSubRoute: false,
+        showSubRoute: false,
+        route: "/profile-stepper",
+        icon: "la la-user-plus",
       },
       {
         menuValue: "DL Leads",
@@ -304,15 +339,9 @@ export const SidebarData = [
         route: "/activities",
         icon: "la la-directions",
       },
-      {
-              menuValue: "Users",
-              hasSubRoute: false,
-              showSubRoute: false,
-              route: "/users",
-              icon: "la la-user-plus",
-            },
     ],
   },
+
   // {
   //   tittle: "HR",
   //   showAsTab: false,

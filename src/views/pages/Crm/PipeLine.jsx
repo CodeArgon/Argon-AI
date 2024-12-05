@@ -236,7 +236,6 @@ const PipeLine = () => {
       sorter: (a, b) => a.length - b.length,
     },
   ];
-
   const [selectedDate, setSelectedDate] = useState();
   const [isFocused, setIsFocused] = useState(false);
 

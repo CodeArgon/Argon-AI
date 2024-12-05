@@ -1,25 +1,15 @@
 import { Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Avatar_25,
-  avatar19,
-  avatar20,
-  avatar21,
-  avatar22,
-  avatar23,
-  avatar24,
-  avatar26,
-  avatar27,
-  avatar28,
-} from "../../../Routes/ImagePath";
+import { BASE_URL } from "../../../constants/urls";
+import { avatar19 } from "../../../Routes/ImagePath";
 import Select from "react-select";
 import {
-  Facebook,
-  Mail,
-  MessageSquare,
-  Phone,
-  PhoneCall,
+  // Facebook,
+  // Mail,
+  // MessageSquare,
+  // Phone,
+  // PhoneCall,
   Star,
 } from "react-feather";
 import DateRangePicker from "react-bootstrap-daterangepicker";
@@ -28,41 +18,43 @@ import DeleteContact from "../../../components/modelpopup/Crm/DeleteContact";
 import AddContact from "../../../components/modelpopup/Crm/AddContact";
 import EditContact from "../../../components/modelpopup/Crm/EditContact";
 import AddNotes from "../../../components/modelpopup/Crm/AddNotes";
-
+import dayjs from "dayjs";
+import ImportContactModal from "../../../components/modelpopup/ImportContactModal";
 const ContactList = () => {
-  const [isFullScreen, setFullScreen] = useState(false);
-  const maximizeBtnRef = useRef(null);
+  const [contactData, setContactData] = useState([]);
+
+ 
 
   useEffect(() => {
-    const handleClick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        setFullScreen(true);
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-          setFullScreen(false);
-        }
+    const fetchTeamMembers = async () => {
+      const authToken = localStorage.getItem("BearerToken");
+      try {
+        const response = await fetch(`${BASE_URL}contact/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        const data = await response.json();
+        const formattedData = data.map((user) => ({
+          // id: user.id,
+          title: user.title,
+          company: user.company,
+          phone_Number: user.phone_number,
+          name: `${user.first_name} ${user.last_name}`.trim(),
+          email: user.email,
+          image: avatar19,
+          created_date: dayjs(user.date_joined).format("DD MMM YYYY"),
+          }));
+        setContactData(formattedData);
+        console.log("Contacts API: ", formattedData);
+      } catch (error) {
+        console.error("Error fetching users:", error);
       }
     };
 
-    const cleanup = () => {
-      if (isFullScreen && document.exitFullscreen) {
-        document.exitFullscreen();
-        setFullScreen(false);
-      }
-    };
-
-    const maximizeBtn = maximizeBtnRef.current;
-    maximizeBtn.addEventListener("click", handleClick);
-
-    // Cleanup function to remove the event listener and exit fullscreen on component unmount
-    return () => {
-      maximizeBtn.removeEventListener("click", handleClick);
-      cleanup();
-    };
-  }, [isFullScreen]);
-
+    fetchTeamMembers();
+  }, []);
   const [inputValue, setInputValue] = useState("");
   const [focused, setFocused] = useState(false);
 
@@ -182,202 +174,20 @@ const ContactList = () => {
   const handleToggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const data = [
-    {
-      Id: 1,
-      stars: "fa fa-star filled",
-      Image: avatar19,
-      Name: "Darlee Robertson",
-      Position: "Facility Manager",
-      Phone: "+1 875455453",
-      Email: "robertson@example.com",
-      Tags: "Promotion",
-      Location: "Germany",
-      Rating: "4.2",
-      Owner: "Hendry",
-      Status: "Active",
-    },
-    {
-      Id: 2,
-      stars: "fa fa-star",
-      Image: avatar20,
-      Name: "Sharon Roy",
-      Position: "Installer",
-      Phone: "+1 989757485",
-      Email: "sharon@example.com",
-      Tags: "Rated",
-      Location: "USA",
-      Rating: "5.0",
-      Owner: "Guillory",
-      Status: "Active",
-    },
-    {
-      Id: 3,
-      stars: "fa fa-star filled",
-      Image: avatar21,
-      Name: "Vaughan",
-      Position: "Senior Manager",
-      Phone: "+1 546555455",
-      Email: "vaughan12@example.com",
-      Tags: "Promotion",
-      Location: "Canada",
-      Rating: "3.5",
-      Owner: "Jami",
-      Status: "Inactive",
-    },
-    {
-      Id: 4,
-      stars: "fa fa-star",
-      Image: avatar22,
-      Name: "Jessica",
-      Position: "Test Engineer",
-      Phone: "+1 454478787",
-      Email: "jessica13@example.com",
-      Tags: "Rated",
-      Location: "India",
-      Rating: "4.5",
-      Owner: "Theresa",
-      Status: "Active",
-    },
-    {
-      Id: 5,
-      stars: "fa fa-star",
-      Image: avatar23,
-      Name: "Carol Thomas",
-      Position: "UI /UX Designer",
-      Phone: "+1 124547845",
-      Email: "carolTho3@example.com",
-      Tags: "Rejected",
-      Location: "China",
-      Rating: "4.7",
-      Owner: "Espinosa",
-      Status: "Active",
-    },
-    {
-      Id: 6,
-      stars: "fa fa-star filled",
-      Image: avatar24,
-      Name: "Dawn Mercha",
-      Position: "Technician",
-      Phone: "+1 478845447",
-      Email: "dawnmercha@example.com",
-      Tags: "Rated",
-      Location: "Japan",
-      Rating: "5.0",
-      Owner: "Martin",
-      Status: "Active",
-    },
-    {
-      Id: 7,
-      stars: "fa fa-star",
-      Image: Avatar_25,
-      Name: "Rachel Hampton",
-      Position: "Software Developer",
-      Phone: "+1 215544845",
-      Email: "rachel@example.com",
-      Tags: "Rejected",
-      Location: "Indonesia",
-      Rating: "3.1",
-      Owner: "Newell",
-      Status: "Active",
-    },
-    {
-      Id: 8,
-      stars: "fa fa-star",
-      Image: avatar26,
-      Name: "Jonelle",
-      Position: " CurtissSupervisor",
-      Phone: "+1 121145471",
-      Email: "jonelle@example.com",
-      Tags: "Rejected",
-      Location: "Cuba",
-      Rating: "5.0",
-      Owner: "Janet",
-      Status: "Active",
-    },
-    {
-      Id: 9,
-      stars: "fa fa-star",
-      Image: avatar27,
-      Name: "Jonathan",
-      Position: "Team Lead Dev",
-      Phone: "+1 321454789",
-      Email: "jonathan@example.com",
-      Tags: "Collab",
-      Location: "Isreal",
-      Rating: "2.7",
-      Owner: "Craig",
-      Status: "Active",
-    },
-    {
-      Id: 10,
-      stars: "fa fa-star",
-      Image: avatar28,
-      Name: "Brook",
-      Position: "Team Lead Dev",
-      Phone: "+1 278907145",
-      Email: "brook@example.com",
-      Tags: "Calls",
-      Location: "Colombia",
-      Rating: "3.0",
-      Owner: "Daniel",
-      Status: "Active",
-      Contact: (
-        <div>
-          <ul className="social-links d-flex align-items-center">
-            <li>
-              <Link to="#">
-                <Mail />
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <Phone />
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <MessageSquare />
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <PhoneCall />
-              </Link>
-            </li>
-            <li>
-              <Link to="#">
-                <Facebook />
-              </Link>
-            </li>
-          </ul>
-        </div>
-      ),
-    },
-  ];
 
   const columns = [
     {
-      title: "",
-      dataIndex: "stars",
-      render: (text, record) => (
-        <div className="d-flex">
-          <div>
-            <div className="set-star star-select star-position">
-              <i className={record.stars} />
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
       title: "Name",
-      dataIndex: "Name",
+      dataIndex: "name",
       render: (text, record) => (
         <h2 className="table-avatar d-flex">
-          <Link to="/contact-details" className="avatar">
-            <img alt="" src={record.Image} />
-          </Link>
+          <div to="/contact-details" className="avatar">
+          {record.image ? (
+              <img alt="img" src={record.image} />
+            ) : (
+              <img alt="fallback-img" src="/images/default-avatar.jpg" />
+            )}
+          </div>
           <Link
             to="/contact-details"
             className="profile-split d-flex flex-column"
@@ -386,165 +196,36 @@ const ContactList = () => {
           </Link>
         </h2>
       ),
-      sorter: (a, b) => a.Name.length - b.Name.length,
+      sorter: (a, b) => a.name.length - b.name.length,
     },
     {
       title: "Phone",
-      dataIndex: "Phone",
-      sorter: (a, b) => a.Phone.length - b.Phone.length,
+      dataIndex: "phone_Number",
+      sorter: (a, b) => a.phone_Number.length - b.phone_Number.length,
     },
     {
       title: "Email",
-      dataIndex: "Email",
-      sorter: (a, b) => a.Email.length - b.Email.length,
+      dataIndex: "email",
+      sorter: (a, b) => a.email.length - b.email.length,
     },
     {
-      title: "Tags",
-      dataIndex: "Tags",
-      render: (text) => (
-        <div>
-          {text === "Promotion" && (
-            <span className="badge badge-soft-info">{text}</span>
-          )}
-          {text === "Rated" && (
-            <span className="badge badge-soft-warning">{text}</span>
-          )}
-          {text === "Rejected" && (
-            <span className="badge badge-soft-danger">{text}</span>
-          )}
-          {text === "Collab" && (
-            <span className="badge badge-soft-danger">{text}</span>
-          )}
-          {text === "Calls" && (
-            <span className="badge badge-soft-purple">{text}</span>
-          )}
-        </div>
-      ),
-      sorter: (a, b) => a.Tags.length - b.Tags.length,
+      title: "Company",
+      dataIndex: "company",
+      sorter: (a, b) => a.company.length - b.company.length,
     },
     {
-      title: "Location",
-      dataIndex: "Location",
-      sorter: (a, b) => a.Location.length - b.Location.length,
-    },
-    {
-      title: "Rating",
-      dataIndex: "Rating",
-      render: (text) => (
-        <div className="set-star">
-          <i className="fa fa-star filled me-2"></i>
-          {text}
-        </div>
-      ),
-      sorter: (a, b) => a.Rating.length - b.Rating.length,
-    },
-    {
-      title: "Owner",
-      dataIndex: "Owner",
-      sorter: (a, b) => a.Owner.length - b.Owner.length,
-    },
-    {
-      title: "Contact",
-      dataIndex: "Contact", // Assuming you have a 'contact' field in your dataSource
-      render: () => (
-        <ul className="social-links d-flex align-items-center">
-          <li>
-            <Link to="#">
-              <i className="la la-envelope" />
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <i className="la la-phone-volume" />
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <i className="lab la-facebook-messenger" />
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <i className="la la-skype" />
-            </Link>
-          </li>
-          <li>
-            <Link to="#">
-              <i className="la la-facebook " />
-            </Link>
-          </li>
-        </ul>
-      ),
-      sorter: (a, b) => a.Rating.length - b.Rating.length,
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      key: "Status",
-      render: (text) => (
-        <div className="dropdown action-label">
-          <Link
-            to="#"
-            className={
-              text === "Active"
-                ? "btn btn-white btn-sm badge-outline-success"
-                : "btn btn-white btn-sm badge-outline-danger"
-            }
-          >
-            {text}
-          </Link>
-        </div>
-      ),
-    },
-    {
-      title: "Action",
-      render: () => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_contact"
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_contact"
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
-            <Link className="dropdown-item" to="/contact-details">
-              <i className="fa-regular fa-eye"></i> Preview
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#add_notes"
-            >
-              <i class="la la-file-prescription"></i> Notes
-            </Link>
-          </div>
-        </div>
-      ),
-      sorter: true,
+      title: "Title",
+      dataIndex: "title",
+      sorter: (a, b) => a.title.length - b.title.length,
     },
   ];
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prevVisibility) => !prevVisibility);
+  };
+
+  const handleButtonClick = () => {
+    window.location.reload();
   };
   return (
     <div>
@@ -567,20 +248,10 @@ const ContactList = () => {
               <div className="col-md-8 float-end ms-auto">
                 <div className="d-flex title-head">
                   <div className="view-icons">
-                    <Link to="#" className="grid-view btn btn-link">
+                    <Link onClick={handleButtonClick} className="grid-view btn btn-link">
                       <i className="las la-redo-alt" />
                     </Link>
-
-                    <Link
-                      to="#"
-                      className="list-view btn btn-link"
-                      id="collapse-header"
-                      ref={maximizeBtnRef}
-                    >
-                      <i className="las la-expand-arrows-alt" />
-                    </Link>
-
-                    <Link
+                    {/* <Link
                       to="#"
                       className={`list-view btn btn-link ${
                         isFilterVisible ? "active-filter" : ""
@@ -589,17 +260,17 @@ const ContactList = () => {
                       onClick={toggleFilterVisibility}
                     >
                       <i className="las la-filter" />
-                    </Link>
+                    </Link> */}
                   </div>
                   <div className="form-sort">
                     <Link
                       to="#"
                       className="list-view btn btn-link"
                       data-bs-toggle="modal"
-                      data-bs-target="#export"
+                      data-bs-target="#import_contact"
                     >
                       <i className="las la-file-export" />
-                      Export
+                      Import xls
                     </Link>
                   </div>
                   <Link
@@ -714,7 +385,7 @@ const ContactList = () => {
           {/* /Search Filter */}
           <div className="filter-section">
             <ul>
-              <li>
+              {/* <li>
                 <div className="view-icons">
                   <Link
                     to="/contact-list"
@@ -726,459 +397,7 @@ const ContactList = () => {
                     <i className="las la-th" />
                   </Link>
                 </div>
-              </li>
-              <li>
-                <div className="form-sort value-contain">
-                  <i className="las la-sort-alpha-up-alt" />
-                  <Select
-                    className="form-sort-two w-100"
-                    options={sortoption}
-                    placeholder="Select By Alphabet"
-                    styles={customStyles}
-                  />
-                </div>
-              </li>
-              <li>
-                <div
-                  className={`form-sorts dropdown ${
-                    isDropdownOpen ? "table-filter-show" : ""
-                  }`}
-                >
-                  <Link
-                    onClick={handleToggleDropdown}
-                    to="#"
-                    className="dropdown-toggle"
-                    id="table-filter"
-                  >
-                    <i className="las la-filter me-2" />
-                    Filter
-                  </Link>
-                  <div className="filter-dropdown-menu">
-                    <div className="filter-set-view">
-                      <div className="filter-set-head">
-                        <h4>Filter</h4>
-                      </div>
-                      <div className="accordion" id="accordionExample">
-                        <div className="filter-set-content">
-                          <div className="filter-set-content-head">
-                            <Link
-                              to="#"
-                              data-bs-toggle="collapse"
-                              data-bs-target="#collapseOne"
-                              aria-expanded="true"
-                              aria-controls="collapseOne"
-                            >
-                              Rating
-                              <i className="las la-angle-right" />
-                            </Link>
-                          </div>
-                          <div
-                            className="filter-set-contents accordion-collapse collapse show"
-                            id="collapseOne"
-                            data-bs-parent="#accordionExample"
-                          >
-                            <ul>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input
-                                      type="checkbox"
-                                      defaultChecked={true}
-                                    />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="rating">
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-
-                                  <span>5.0</span>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="rating">
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <span>4.0</span>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="rating">
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-
-                                  <span>3.0</span>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="rating">
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-
-                                  <span>2.0</span>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="rating">
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#FFBC34"
-                                    fill="#FFBC34"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-                                  <Star
-                                    className="me-1"
-                                    size={18}
-                                    color="#E2E4E6"
-                                    fill="#E2E4E6"
-                                  />
-
-                                  <span>1.0</span>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div className="filter-set-content">
-                          <div className="filter-set-content-head">
-                            <Link
-                              to="#"
-                              data-bs-toggle="collapse"
-                              data-bs-target="#collapseTwo"
-                              aria-expanded="false"
-                              aria-controls="collapseTwo"
-                            >
-                              Owner
-                              <i className="las la-angle-right" />
-                            </Link>
-                          </div>
-                          <div
-                            className="filter-set-contents accordion-collapse collapse"
-                            id="collapseTwo"
-                            data-bs-parent="#accordionExample"
-                          >
-                            <ul>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" defaultChecked="" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Hendry</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Guillory</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Jami</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Theresa</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Espinosa</h5>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div className="filter-set-content">
-                          <div className="filter-set-content-head">
-                            <Link
-                              to="#"
-                              data-bs-toggle="collapse"
-                              data-bs-target="#collapseThree"
-                              aria-expanded="false"
-                              aria-controls="collapseThree"
-                            >
-                              Tags
-                              <i className="las la-angle-right" />
-                            </Link>
-                          </div>
-                          <div
-                            className="filter-set-contents accordion-collapse collapse"
-                            id="collapseThree"
-                            data-bs-parent="#accordionExample"
-                          >
-                            <ul>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" defaultChecked="" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Promotion</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Rated</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Rejected</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Collab</h5>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="filter-checks">
-                                  <label className="checkboxs">
-                                    <input type="checkbox" />
-                                    <span className="checkmarks" />
-                                  </label>
-                                </div>
-                                <div className="collapse-inside-text">
-                                  <h5>Calls</h5>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="filter-reset-btns">
-                        <Link to="#" className="btn btn-light">
-                          Reset
-                        </Link>
-                        <Link to="#" className="btn btn-primary">
-                          Filter
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div className="search-set">
-                  <div className="search-input">
-                    <Link to="#" className="btn btn-searchset">
-                      <i className="las la-search" />
-                    </Link>
-                    <div className="dataTables_filter">
-                      <label>
-                        {" "}
-                        <input
-                          type="search"
-                          className="form-control form-control-sm"
-                          placeholder="Search"
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </li>
+              </li> */}
             </ul>
           </div>
           <br />
@@ -1189,7 +408,7 @@ const ContactList = () => {
                   className="table table-striped custom-table datatable contact-table"
                   style={{ overflowX: "auto" }}
                   columns={columns}
-                  dataSource={data}
+                  dataSource={contactData}
                   rowKey={(record) => record.id}
                 />
               </div>
@@ -1203,6 +422,7 @@ const ContactList = () => {
       <EditContact />
       <DeleteContact />
       <AddNotes />
+      <ImportContactModal/>
     </div>
   );
 };

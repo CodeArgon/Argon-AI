@@ -21,88 +21,25 @@ import AddLeads from "../../../components/modelpopup/Crm/AddLeads";
 import { useLocation } from "react-router-dom";
 import { BASE_URL } from "../../../constants/urls";
 import AddQuotation from "../../../components/modelpopup/Crm/AddQuotation";
+import AddOrder from "../../../components/modelpopup/Crm/AddOrder";
 import UserContext from "../../../contexts/UserContext";
+import axios from "axios";
 import { registerLeadActivities } from "../../../helpers/users";
 const LeadsDetails = () => {
-  const { userData, lead } = useContext(UserContext);
   const location = useLocation();
   const initialLead =
     location.state?.leadData ||
     JSON.parse(localStorage.getItem("leadData")) ||
     {};
+  const { setLead, lead, setlead, userData } = useContext(UserContext);
+
+  const [leadData, setleadData] = useState(() => initialLead);
 
   const recentlyViewd = [
     { value: "Sort By Alphabet", label: "Sort By Alphabet" },
     { value: "Ascending", label: "Ascending" },
     { value: "Descending", label: "Descending" },
   ];
-
-  const [leadData, setleadData] = useState(() => initialLead);
-
-  useEffect(() => {
-    localStorage.setItem("leadData", JSON.stringify(leadData));
-  }, [location.state, leadData]);
-
-  const [Lead, setLead] = useState(initialLead);
-  useEffect(() => {
-    localStorage.getItem("leadData");
-    console.log("Lead activities ", leadData.activities);
-    console.log("leadData.notes ", leadData.notes);
-    console.log("leadData.documents ", leadData.documents);
-  });
-
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("leadData"));
-    console.log("i am here FYIIIIII boss", data);
-
-    setleadData(data);
-  }, [lead]);
-
-  const updateStatusInBackend = async () => {
-    const formData = new FormData();
-    formData.append("status", "opportunity");
-    console.log("Lead dattaaa", Lead);
-    const authToken = localStorage.getItem("BearerToken");
-    try {
-      const response = await fetch(`${BASE_URL}leads/${Lead.id}/`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        console.log("Error");
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      } else {
-        console.log("opportunity API send properly");
-      }
-
-      const updatedLead = await response.json();
-      localStorage.setItem("leadData", JSON.stringify(updatedLead));
-      setLead(updatedLead);
-      setleadData(updatedLead);
-      setVisibleItems((prevItems) => [...prevItems, "Opportunity"]);
-      console.log("formData ", formData);
-      console.log("updatedLead ", updatedLead);
-      const str = `Lead ${Lead.name} marked as opportunity by ${userData?.user?.username}`;
-      console.log("String ", str);
-      const result = await registerLeadActivities(
-        Lead.id,
-        userData?.user?.username,
-        str
-      );
-      if (result === true) {
-        console.log("result ", result);
-        const updatedLead = await result.json();
-        localStorage.setItem("leadData", JSON.stringify(updatedLead));
-      }
-    } catch (error) {
-      console.error("Failed to update status:", error);
-    }
-  };
-
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -113,14 +50,6 @@ const LeadsDetails = () => {
       },
     }),
   };
-
-  const tooltipContent = (
-    <Tooltip id="tooltip">
-      There are no email accounts configured. Please configure your email
-      account in order to Send/Create Emails.
-    </Tooltip>
-  );
-
   const [showFirstFieldNotes, setShowFirstFieldNotes] = useState(false);
 
   const handleSaveAndNextNotes = () => {
@@ -130,49 +59,143 @@ const LeadsDetails = () => {
   const handleCancelNotes = () => {
     setShowFirstFieldNotes(false);
   };
-  // const [showFirstField, setShowFirstField] = useState(false);
-
-  // const handleSaveAndNext = () => {
-  //   setShowFirstField(true);
-  // };
-
-  // const handleCancel = () => {
-  //   setShowFirstField(false);
-  // };
-  const [isFullScreen, setFullScreen] = useState(false);
-  const maximizeBtnRef = useRef(null);
 
   useEffect(() => {
-    const handleClick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        setFullScreen(true);
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-          setFullScreen(false);
-        }
+    setLead(leadData);
+    setleadData(leadData);
+    localStorage.setItem("leadData", JSON.stringify(leadData));
+  }, [location.state, leadData]);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("leadData"));
+    console.log("i am here FYIIIIII boss", data);
+
+    setleadData(data);
+  }, [lead]);
+
+  // const [lead, setLead] = useState(initialLead)
+
+  const updateStatusInBackend = async (data = "") => {
+    const formData = new FormData();
+    if (leadData.status == "open") {
+      formData.append("status", "opportunity");
+      data = "opportunity"
+    } else if (leadData.status == "quotation") {
+      formData.append("status", data);
+    }
+
+    const authToken = localStorage.getItem("BearerToken");
+    try {
+      const response = await fetch(`${BASE_URL}leads/${leadData.id}/`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
 
-    const cleanup = () => {
-      if (isFullScreen && document.exitFullscreen) {
-        document.exitFullscreen();
-        setFullScreen(false);
+      const updatedLead = await response.json();
+      localStorage.setItem("leadData", JSON.stringify(updatedLead));
+      setLead(updatedLead);
+      setleadData(updatedLead);
+      setVisibleItems((prevItems) => [...prevItems, "Opportunity"]);
+      const str = `Lead ${leadData.name} marked as ${data} by ${userData?.user?.username}`;
+      console.log("String ", str);
+      const result = await registerLeadActivities(
+        leadData.id,
+        userData?.user?.username,
+        str
+      );
+      if (result?.id != '') {
+        console.log("result ", result);
+
+        localStorage.setItem("leadData", JSON.stringify(result));
+        setLead(result);
+        setleadData(result)
       }
-    };
+    } catch (error) {
+      console.error("Failed to update status:", error);
+    }
+  };
 
-    const maximizeBtn = maximizeBtnRef.current;
-    maximizeBtn.addEventListener("click", handleClick);
+  const tooltipContent = (
+    <Tooltip id="tooltip">
+      There are no email accounts configured. Please configure your email
+      account in order to Send/Create Emails.
+    </Tooltip>
+  );
+  const [showFirstField, setShowFirstField] = useState(false);
 
-    // Cleanup function to remove the event listener and exit fullscreen on component unmount
-    return () => {
-      maximizeBtn.removeEventListener("click", handleClick);
-      cleanup();
-    };
-  }, [isFullScreen]);
+  const handleSaveAndNext = () => {
+    setShowFirstField(true);
+  };
+
+  const handleCancel = () => {
+    setShowFirstField(false);
+  };
+  const maximizeBtnRef = useRef(null);
 
   const [visibleItems, setVisibleItems] = useState(["Open Lead"]);
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const authToken = localStorage.getItem("BearerToken");
+    axios
+      .get(`${BASE_URL}leads/${leadData.id}/orders/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .then((response) => {
+        setOrders(response.data);
+        console.log("response ", response);
+      })
+      .catch((error) => {
+        console.error("Error fetching orders:", error);
+      });
+  }, [lead]);
+
+  const [quotationData, setQuotationData] = useState(null);
+
+  useEffect(() => {
+    const authToken = localStorage.getItem("BearerToken");
+    const fetchQuotationData = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}quotations/by-lead/${leadData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        if (response.data.length > 0) {
+          setQuotationData(response.data[0]);
+        } else {
+          setQuotationData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching quotation data:", error);
+      }
+    };
+
+    fetchQuotationData();
+  }, [lead]);
+
+  if (!quotationData) return <p>Loading...</p>;
+
+  const {
+    customer_name,
+    payment_list,
+    payment_duration,
+    created_at,
+    approved_by_username,
+  } = quotationData;
 
   return (
     <>
@@ -220,7 +243,7 @@ const LeadsDetails = () => {
                     </Link>
                     */}
                     <div className="dropdown action-drops">
-                      {Lead.status === "open" && (
+                      {leadData.status === "open" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
@@ -230,7 +253,7 @@ const LeadsDetails = () => {
                           Make Opportunity
                         </Link>
                       )}
-                      {Lead.status == "opportunity" && (
+                      {leadData.status == "opportunity" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
@@ -241,12 +264,77 @@ const LeadsDetails = () => {
                           Add Quotation
                         </Link>
                       )}
-                      {Lead.status == "quotation" && (
-                        <Link to="#" className="btn btn-sm btn-primary add-btn">
-                          <i className="la" />
-                          Sale Order
-                        </Link>
-                      )}
+                      <>
+                        {leadData.status === "quotation" && (
+                          <>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                backgroundColor: "green",
+                                borderColor: "transparent",
+                              }}
+                              onClick={() => updateStatusInBackend("win")}
+                            >
+                              <i className="la" />
+                              Win
+                            </Link>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                backgroundColor: "red",
+                                borderColor: "transparent",
+                              }}
+                              onClick={() => updateStatusInBackend("lost")}
+                            >
+                              <i className="la" />
+                              Lost
+                            </Link>
+                            <Link
+                              to="#"
+                              className="btn btn-sm btn-primary add-btn"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center",
+                              }}
+                              data-bs-toggle="modal"
+                              data-bs-target="#add_orders"
+                            >
+                              <i className="la" />
+                              Add Order
+                            </Link>
+                          </>
+                        )}
+
+                        {leadData.status === "win" && (
+                          <Link
+                            to="#"
+                            className="btn btn-sm btn-primary add-btn"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              textAlign: "center",
+                            }}
+                            data-bs-toggle="modal"
+                            data-bs-target="#add_orders"
+                          >
+                            <i className="la" />
+                            Add Order
+                          </Link>
+                        )}
+                      </>
                     </div>
                   </div>
                 </div>
@@ -264,7 +352,7 @@ const LeadsDetails = () => {
                     <div className="col-sm-6">
                       <ul className="contact-breadcrumb">
                         <li>
-                          <Link to="/leads">
+                          <Link to="/leads-list">
                             <i className="las la-arrow-left" /> Leads
                           </Link>
                         </li>
@@ -284,7 +372,7 @@ const LeadsDetails = () => {
                   </div>
                   <div>
                     <div className="row">
-                      {Lead.approval_status === "open" && (
+                      {leadData.approval_status === "open" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
@@ -293,7 +381,7 @@ const LeadsDetails = () => {
                           <i className="la" /> Open
                         </Link>
                       )}
-                      {Lead.approval_status === "disapproved" && (
+                      {leadData.approval_status === "disapproved" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
@@ -304,7 +392,7 @@ const LeadsDetails = () => {
                           <i className="la" /> Disapproved
                         </Link>
                       )}
-                      {Lead.approval_status === "approved" && (
+                      {leadData.approval_status === "approved" && (
                         <Link
                           to="#"
                           className="btn btn-sm btn-primary add-btn"
@@ -313,7 +401,7 @@ const LeadsDetails = () => {
                           <i className="la" /> Approved
                         </Link>
                       )}
-                      {Lead.approval_status === "pending" && (
+                      {leadData.approval_status === "pending" && (
                         <ul
                           className="pending-actions"
                           style={{ display: "flex", flexDirection: "row" }}
@@ -357,10 +445,6 @@ const LeadsDetails = () => {
                         <span>{leadData.created_date}</span>
                       </li>
                       <li>
-                        <span className="other-title">Lead Owner</span>
-                        <span>{leadData.lead_gen_manager}</span>
-                      </li>
-                      <li>
                         <span className="other-title">Assigned To</span>
                         <span>{leadData.assigned_to}</span>
                       </li>
@@ -375,10 +459,6 @@ const LeadsDetails = () => {
                         </span>
                       </li>
                       <li>
-                        <span className="other-title">Client Name</span>
-                        <span>{leadData.gora}</span>
-                      </li>
-                      <li>
                         <span className="other-title">Acc Executive</span>
                         <span>{leadData.account_executive}</span>
                       </li>
@@ -388,90 +468,93 @@ const LeadsDetails = () => {
                       </li>
                     </ul>
                     <div className="d-flex align-items-center justify-content-between flex-wrap">
-                      <h5>Owner</h5>
+                      <h5>Lead Owner</h5>
                     </div>
                     <ul className="deals-info">
                       <li>
-                        <span>
-                          <img src={avatar21} alt="img" />
-                        </span>
                         <div>
-                          <p>Vaughan</p>
+                          <p>{leadData.lead_gen_manager}</p>
                         </div>
                       </li>
                     </ul>
-                    <div className="d-flex align-items-center justify-content-between flex-wrap">
+
+                    {/* <div className='d-flex align-items-center justify-content-between flex-wrap'>
                       <h5>Priority</h5>
                     </div>
-                    <ul className="priority-info">
+                    <ul className='priority-info'>
                       <li>
-                        <div className="dropdown">
+                        <div className='dropdown'>
                           <Link
-                            to="#"
-                            className="dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
+                            to='#'
+                            className='dropdown-toggle'
+                            data-bs-toggle='dropdown'
+                            aria-expanded='false'
                           >
                             <span>
-                              <i className="fa-solid fa-circle me-1 text-danger circle" />
+                              <i className='fa-solid fa-circle me-1 text-danger circle' />
                               High
                             </span>
-                            <i className="las la-angle-down ms-1" />
+                            <i className='las la-angle-down ms-1' />
                           </Link>
-                          <div className="dropdown-menu dropdown-menu-right">
-                            <Link className="dropdown-item" to="#">
+                          <div className='dropdown-menu dropdown-menu-right'>
+                            <Link className='dropdown-item' to='#'>
                               <span>
-                                <i className="fa-solid fa-circle me-1 text-danger circle" />
+                                <i className='fa-solid fa-circle me-1 text-danger circle' />
                                 High
                               </span>
                             </Link>
-                            <Link className="dropdown-item" to="#">
+                            <Link className='dropdown-item' to='#'>
                               <span>
-                                <i className="fa-solid fa-circle me-1 text-success circle" />
+                                <i className='fa-solid fa-circle me-1 text-success circle' />
                                 Low
                               </span>
                             </Link>
                           </div>
                         </div>
                       </li>
-                    </ul>
+                    </ul> */}
                     <div className="d-flex align-items-center justify-content-between flex-wrap">
-                      <h5>Projects</h5>
-                    </div>
-                    <ul className="projects-info">
-                      <li>
-                        <Link to="#" className="badge badge-light">
-                          Devops Design
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#" className="badge badge-light">
-                          Margrate Design
-                        </Link>
-                      </li>
-                    </ul>
-                    <div className="d-flex align-items-center justify-content-between flex-wrap">
-                      <h5>Contacts</h5>
-                      <Link
-                        to="#"
-                        className="com-add"
-                        data-bs-toggle="modal"
-                        data-bs-target="#add_contact"
-                      >
-                        <i className="las la-plus-circle me-1" />
-                        Add New
-                      </Link>
+                      <h5>Client Name</h5>
                     </div>
                     <ul className="deals-info">
                       <li>
-                        <span>
-                          <img src={avatar1} alt="img" />
-                        </span>
                         <div>
-                          <p>Jessica</p>
+                          <p>{leadData.gora}</p>
                         </div>
                       </li>
                     </ul>
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
+                      <h5>Attached Documents</h5>
+                    </div>
+                    <ul className="other-info">
+                      {leadData?.documents && leadData?.documents.length > 0 ? (
+                        leadData?.documents.map((document, index) => (
+                          <li key={index}>
+                            <div className="d-flex align-items-center">
+                              <span className="file-icon">
+                                <i className="la la-file-alt" />
+                              </span>
+                              <p>{document.name}</p>
+                            </div>
+                            <div className="file-download">
+                              <Link
+                              // onClick={() =>
+                              //   handleOpenInNewTab(leadData.file)
+                              // }
+                              >
+                                <i className="la la-download" />
+                                Download
+                              </Link>
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <li>No documents available</li>
+                      )}
+                    </ul>
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
+                      <h5>Other Information</h5>
+                    </div>
                     <ul className="other-info">
                       <li>
                         <span className="other-title">Last Modified</span>
@@ -479,14 +562,7 @@ const LeadsDetails = () => {
                       </li>
                       <li>
                         <span className="other-title">Modified By</span>
-                        <span>
-                          <img
-                            src={avatar19}
-                            className="avatar-xs rounded-circle"
-                            alt="img"
-                          />{" "}
-                          Darlee Robertson
-                        </span>
+                        <span>Darlee Robertson</span>
                       </li>
                     </ul>
                   </div>
@@ -586,22 +662,34 @@ const LeadsDetails = () => {
                         Notes
                       </Link>
                     </li>
-                    <li>
+                    {/*<li>
                       <Link to="#" data-bs-toggle="tab" data-bs-target="#calls">
                         <i className="las la-phone-volume" />
                         Calls
                       </Link>
                     </li>
                     <li>
-                      <Link to="#" data-bs-toggle="tab" data-bs-target="#files">
-                        <i className="las la-file" />
+                      <Link to='#' data-bs-toggle='tab' data-bs-target='#files'>
+                        <i className='las la-file' />
                         Files
                       </Link>
                     </li>
                     <li>
-                      <Link to="#" data-bs-toggle="tab" data-bs-target="#email">
-                        <i className="las la-envelope" />
+                      <Link to='#' data-bs-toggle='tab' data-bs-target='#email'>
+                        <i className='las la-envelope' />
                         Email
+                      </Link>
+                    </li> */}
+                    <li>
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#qoute">
+                        <i className="las la-file" />
+                        Quotations
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="#" data-bs-toggle="tab" data-bs-target="#order">
+                        <i className="las la-file" />
+                        Orders
                       </Link>
                     </li>
                   </ul>
@@ -1604,6 +1692,128 @@ const LeadsDetails = () => {
                       </div>
                     </div>
                     {/* /Email */}
+                    {/* /Quotation */}
+                    <div className="tab-pane fade" id="qoute">
+                      <div className="view-header">
+                        <h4>Quotations</h4>
+                      </div>
+                      <div className="contact-activity">
+                        <ul>
+                          <li className="activity-wrap">
+                            <span className="activity-icon bg-pending">
+                              <i className="las la-file-alt" />
+                            </span>
+                            <div className="activity-info">
+                              <div className="badge-day">
+                                <i className="fa-regular fa-calendar-check" />
+                                Created Date:{" "}
+                                {new Date(created_at).toLocaleDateString(
+                                  "en-GB",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  }
+                                )}
+                              </div>
+                              <h6>
+                                <b>Client Name: </b>
+                                {customer_name}
+                              </h6>
+                              <div className="upcoming-info">
+                                <div className="row">
+                                  <div className="col-sm-4">
+                                    <p>
+                                      <b>Payment List</b>
+                                    </p>
+                                    <div className="dropdown">
+                                      <p>{payment_list}</p>
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-4">
+                                    <p>
+                                      <b>PaymentTerm</b>
+                                    </p>
+                                    <div className="dropdown">
+                                      <p>{payment_duration} Days</p>
+                                    </div>
+                                  </div>
+                                  <div className="col-sm-4">
+                                    <p>
+                                      <b>Approved By</b>
+                                    </p>
+                                    <div className="dropdown">
+                                      <p>
+                                        {approved_by_username
+                                          ? approved_by_username
+                                          : "N/A"}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    {/* /Quotation */}
+                    {/* /Order */}
+                    <div className="tab-pane fade" id="order">
+                      <div className="view-header">
+                        <h4>Orders</h4>
+                      </div>
+                      <div className="contact-activity">
+                        <ul>
+                          {orders.map((order) => (
+                            <li key={order.id} className="activity-wrap">
+                              <span className="activity-icon bg-pending">
+                                <i className="las la-file-alt" />
+                              </span>
+                              <div className="activity-info">
+                                <div key={order.id} className="badge-day">
+                                  <i className="fa-regular fa-calendar-check" />
+                                  Created Date:{" "}
+                                  {new Date(order.created_at).toLocaleString()}
+                                </div>
+                                <h6>
+                                  <b>Order Name:</b> {order.name}
+                                </h6>
+                                <div className="upcoming-info">
+                                  <div className="row">
+                                    <div className="col-sm-4">
+                                      <p>
+                                        <b>UnitPrice</b>
+                                      </p>
+                                      <div className="dropdown">
+                                        <p>{order.unit_price}</p>
+                                      </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                      <p>
+                                        <b>Quantity</b>
+                                      </p>
+                                      <div className="dropdown">
+                                        <p>{order.quantity}</p>
+                                      </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                      <p>
+                                        <b>TotalPrice</b>
+                                      </p>
+                                      <div className="dropdown">
+                                        <p>{order.total_price}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    {/* /Order */}
                   </div>
                 </div>
                 {/* /Tab Content */}
@@ -1611,7 +1821,7 @@ const LeadsDetails = () => {
               {/* /Contact Details */}
             </div>
           ) : (
-            <p>No Lead data available</p>
+            <p>No lead data available</p>
           )}
         </div>
         <AddContact />
@@ -1621,6 +1831,7 @@ const LeadsDetails = () => {
         <AddFiles />
         <CreateEmail />
         <AddQuotation />
+        <AddOrder />
       </div>
       {/* /Page Content */}
     </>

@@ -1,6 +1,7 @@
 import { BASE_URL } from "../constants/urls";
 
 
+
 export async function registerUser(data) {
   const url = `${BASE_URL}register/`;
   const Registerdata = {
@@ -43,18 +44,18 @@ export async function registerUserData(data) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const responseData = await response.json();
-    console.log(responseData," && ",responseData.profile_id)
+    console.log(responseData, " && ", responseData.profile_id)
     localStorage.setItem("ProfileId", responseData.profile_id);
     return true;
   } catch (error) {
     console.error("Error:", error);
   }
 }
-export async function registerUserEdu(data,profileID) {
+export async function registerUserEdu(data, profileID) {
   const authToken = localStorage.getItem("BearerToken");
   const url = `${BASE_URL}education/`;
   const Educationrdata = {
-    profile: profileID ,
+    profile: profileID,
     institute_name: data.institute_name,
     degree: data.degree,
     duration: data.duration,
@@ -78,7 +79,8 @@ export async function registerUserEdu(data,profileID) {
     console.error("Error:", error);
   }
 }
-export async function registerLeadActivities(leadData,profileID,txt) {
+export async function registerLeadActivities(leadData, profileID, txt) {
+
   const authToken = localStorage.getItem("BearerToken");
   const url = `${BASE_URL}activity/`;
   const activityData = {
@@ -93,7 +95,7 @@ export async function registerLeadActivities(leadData,profileID,txt) {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization:  `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(activityData),
@@ -102,29 +104,77 @@ export async function registerLeadActivities(leadData,profileID,txt) {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    return true;
+    const data = await response.json();
+    console.log("hehehehhehehehehheheh ganoo ", data)
+    const leadResponse = await fetch(`${BASE_URL}leads/${leadData}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    if (!leadResponse.ok) {
+      console.log("Error");
+      throw new Error(`HTTP error! Status: ${leadResponse.status}`);
+    } else {
+      const emailresult = await registerEmail(leadData, profileID, txt);
+      console.log("Email result: ", emailresult);
+      return await leadResponse.json();
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+
+
+}
+export async function registerEmail(leadData, profileID, txt) {
+
+  const authToken = localStorage.getItem("BearerToken");
+  const url = `${BASE_URL}send-email/`;
+  const activityData = {
+    subject: "No response, Activity notify",
+    recipient: [profileID],
+    message: txt,
+  };
+
+  try {
+    console.log("Email data: ", activityData)
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(activityData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response;
+    console.log("email Response ", data)
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
-export async function registerUserExperience(data,profileID) {
+export async function registerUserExperience(data, profileID) {
   const authToken = localStorage.getItem("BearerToken");
   const url = `${BASE_URL}work/`;
   const Workdata = {
-    profile: profileID ,
+    profile: profileID,
     company_name: data.company_name,
     job_title: data.job_title,
     start_date: data.start_date,
     end_date: data.end_date,
-    location:"Lahore"
+    location: "Lahore"
   };
 
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization:  `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(Workdata),

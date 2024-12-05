@@ -1,21 +1,7 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import Select from "react-select";
 
-const UserFilter = () => {
-  const [setSelectedOption] = useState(null);
-  const [setSelectedOptionTwo] = useState(null);
-
-  const [itemFocus, setItemFocus] = useState(false);
-
-  const inputFocus = () => {
-    setItemFocus(true);
-  };
-
-  const inputBlur = () => {
-    setItemFocus(false);
-  };
-
+const UserFilter = ({ filter, setFilter }) => {
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -26,33 +12,43 @@ const UserFilter = () => {
       },
     }),
   };
+
   const options = [
-    { value: 1, label: "Select Company" },
-    { value: 2, label: "Global Technologies" },
-    { value: 3, label: "Delta Infotech" },
+    { value: "", label: "Select Company" },
+    { value: "Global Technologies", label: "Global Technologies" },
+    { value: "Delta Infotech", label: "Delta Infotech" },
+    { value: "Dreamguy's Technologies", label: "Dreamguy's Technologies" },
   ];
+
   const optionsTwo = [
-    { value: 1, label: "Select Role" },
-    { value: 2, label: "Web Developer" },
-    { value: 3, label: "Web Designer" },
-    { value: 4, label: "Andriod Developer" },
-    { value: 5, label: "IOS Developer" },
+    { value: "", label: "Select Role" },
+    { value: "Client", label: "Client" },
+    { value: "Admin", label: "Admin" },
+    { value: "Employee", label: "Employee" },
+    { value: "BD", label: "BD" },
+    { value: "HR", label: "HR" },
+    { value: "IT", label: "IT" },
+    { value: "Project Manager", label: "Project Manager" },
+    { value: "Division Lead", label: "Division Lead" },
   ];
+
   return (
-    <div className="row filter-row space">
+    <div className="row filter-row ">
       <div className="col-sm-6 col-md-3">
-        <div
-          className={`input-block mb-3 form-focus  ${
-            itemFocus ? "focused" : ""
-          } `}
-        >
+        <div className="input-block mb-3 ">
+          {/* <div
+          className={`input-block mb-3 form-focus ${itemFocus ? "focused" : ""}`}
+        > */}
           <input
             type="text"
             className="form-control floating"
-            onFocus={inputFocus}
-            onBlur={inputBlur}
+            value={filter.name}
+            onChange={(e) =>
+              setFilter((prev) => ({ ...prev, name: e.target.value }))
+            }
+            placeholder="Enter Name"
+            // <label className="focus-label">Name</label>
           />
-          <label className="focus-label">Name</label>
         </div>
       </div>
 
@@ -60,7 +56,10 @@ const UserFilter = () => {
         <div className="input-block form-focus select-focus">
           <Select
             placeholder="Select Company"
-            onChange={setSelectedOption}
+            value={options.find((opt) => opt.value === filter.company)}
+            onChange={(selected) =>
+              setFilter((prev) => ({ ...prev, company: selected?.value || "" }))
+            }
             options={options}
             className="select floating"
             styles={customStyles}
@@ -68,24 +67,21 @@ const UserFilter = () => {
           <label className="focus-label">Company</label>
         </div>
       </div>
+
       <div className="col-sm-6 col-md-3">
         <div className="input-block form-focus select-focus">
           <Select
             placeholder="Select Role"
-            onChange={setSelectedOptionTwo}
+            value={optionsTwo.find((opt) => opt.value === filter.role)}
+            onChange={(selected) =>
+              setFilter((prev) => ({ ...prev, role: selected?.value || "" }))
+            }
             options={optionsTwo}
             className="select floating"
             styles={customStyles}
           />
           <label className="focus-label">Role</label>
         </div>
-      </div>
-
-      <div className="col-sm-6 col-md-3">
-        <Link to="#" className="btn btn-success btn-block w-100">
-          {" "}
-          Search{" "}
-        </Link>
       </div>
     </div>
   );

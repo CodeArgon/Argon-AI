@@ -33,7 +33,7 @@ const RegisterExperience = (props) => {
       const result = await registerUserExperience(data, profileID);
       if (result === true) {
         console.log("Move to next page");
-        navigate("/file-manager"); // Navigate programmatically
+        navigate("/employee-dashboard"); // Navigate programmatically
       } else {
         console.log("Failed to register experience");
       }

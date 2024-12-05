@@ -1,8 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState,useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { emailrgx } from "../Authentication/RegEx";
+
+
 import UserContext from "../../../contexts/UserContext";
 import { Button } from "@mui/material";
 const schema = yup.object({
@@ -167,36 +169,6 @@ const Register = (props) => {
                 />
                 <span className="text-danger">{errors?.email?.message}</span>
               </div>
-
-              <div className="input-block mb-3">
-                <label>Role</label>
-                <Controller
-                  name="role"
-                  control={control}
-                  render={({ field }) => (
-                    <select
-                      {...field}
-                      className={`form-control ${
-                        errors?.role ? "error-input" : ""
-                      }`}
-                      onChange={(e) => {
-                        field.onChange(e); // react-hook-form onChange
-                        handleInputChange(e); // Update formData in context
-                      }}
-                      value={formData.role} // Sync with context state
-                    >
-                      <option value="">Select Role</option>
-                      <option value="Admin">Admin</option>
-                      <option value="Employee">Employee</option>
-                      <option value="Project Manager">Project Manager</option>
-                      <option value="Division Lead">Leads</option>
-                      <option value="HR">HR</option>
-                      <option value="BD">BD</option>
-                    </select>
-                  )}
-                />
-                <span className="text-danger">{errors?.role?.message}</span>
-              </div>
               <div className="input-block mb-3">
                 <label>Password</label>
                 <Controller
@@ -235,6 +207,37 @@ const Register = (props) => {
                 />
                 <span className="text-danger">{errors?.password?.message}</span>
               </div>
+              <div className="input-block mb-3">
+                <label>Role</label>
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      className={`form-control ${
+                        errors?.role ? "error-input" : ""
+                      }`}
+                      onChange={(e) => {
+                        field.onChange(e); // react-hook-form onChange
+                        handleInputChange(e); // Update formData in context
+                      }}
+                      value={formData.role} // Sync with context state
+                    >
+                      <option value="">Select Role</option>
+                      <option value="Admin">Admin</option>
+                      <option value="Employee">Employee</option>
+                      <option value="Project Manager">Project Manager</option>
+                      <option value="Division Lead">Leads</option>
+                      <option value="HR">HR</option>
+                      <option value="BD">BD</option>
+                      <option value="BD">IT</option>
+                    </select>
+                  )}
+                />
+                <span className="text-danger">{errors?.role?.message}</span>
+              </div>
+              
               {/* <div className="input-block mb-3">
                       <label className="col-form-label">
                         Repeat Password<span style={{ color: "red" }}> *</span>

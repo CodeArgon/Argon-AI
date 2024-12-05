@@ -8,9 +8,10 @@ import { useTranslation } from "react-i18next";
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";
-import * as Icon from "react-feather";
 
 const Sidebar = () => {
+  const userDataString = localStorage.getItem("user");
+  const [userData, setUserData] = useState(JSON.parse(userDataString));
   const location = useLocation();
   // const pathname = location.pathname.split("/")[1];
   const pathname = location.pathname;
@@ -25,6 +26,40 @@ const Sidebar = () => {
   const [level2Menu, setLevel2Menu] = useState("");
   const [level3Menu, setLevel3Menu] = useState("");
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
+
+  const rolePermissions = {
+    Employee: ["Dashboard", "File Manager"],
+    "Division Lead": [
+      "Dashboard",
+      "File Manager",
+      "Proposal Manager",
+      "DL Leads",
+    ],
+    IT: ["Dashboard", "Add Users", "Users"],
+    Admin: [
+      "Dashboard",
+      "File Manager",
+      "Proposal Manager",
+      "Leads",
+      "Add User",
+      "Contacts"
+    ],
+    BD: ["Dashboard", "Proposal Manager", "My Leads", "File Manager",  "Contacts"],
+    HR: ["Dashboard", "Leads", "Sale Order"],
+    "Project Manager": ["Dashboard", "Proposal Manager", "File Manager"],
+  };
+
+  const filterMenuByRole = (menu, role) => {
+    const allowedMenus = rolePermissions[role] || [];
+    return menu.filter((item) => allowedMenus.includes(item.menuValue));
+  };
+
+  const userRole = userData?.user?.role; // dynamically get this, e.g., from props, state, or context
+
+  const filteredMenuData = sidebarData.map((mainTittle) => ({
+    ...mainTittle,
+    menu: filterMenuByRole(mainTittle.menu, userRole),
+  }));
 
   useEffect(() => {
     if (
@@ -513,18 +548,28 @@ const Sidebar = () => {
                   <ul>
                     <li>
                       <Link
-                        // className={
-                        //   pathname.includes("projects")
-                        //     ? "active"
-                        //     : pathname.includes("project-list")
-                        //     ? "active"
-                        //     : pathname.includes("project-view")
-                        //     ? "active"
-                        //     : ""
-                        // }
+                        className={
+                          pathname.includes("projects")
+                            ? "active"
+                            : pathname.includes("project-list")
+                            ? "active"
+                            : pathname.includes("project-view")
+                            ? "active"
+                            : pathname.includes("contact")
+                            ? "active"
+                            : ""
+                        }
                         to="/contact-list"
                       >
                         {t("Contacts")}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className={pathname.includes("leads") ? "active" : ""}
+                        to="/leads"
+                      >
+                        {t("Leads")}
                       </Link>
                     </li>
                     <li>
@@ -545,14 +590,6 @@ const Sidebar = () => {
                         {t("Deals")}
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        className={pathname.includes("leads") ? "active" : ""}
-                        to="/leads"
-                      >
-                        {t("Leads")}
-                      </Link>
-                    </li>
 
                     <li>
                       <Link
@@ -561,7 +598,7 @@ const Sidebar = () => {
                         }
                         to="/pipeline"
                       >
-                        {t("Sale Order")}
+                        {t("Pipeline")}
                       </Link>
                     </li>
                     <li>
@@ -1740,7 +1777,7 @@ const Sidebar = () => {
             hideTracksWhenNotNeeded={true}
           >
             <ul className="sidebar-vertical" id="veritical-sidebar">
-              {sidebarData.map((mainTittle, index) => {
+              {filteredMenuData.map((mainTittle, index) => {
                 return (
                   <>
                     <li className="menu-title" key={index + 1}>
@@ -1756,7 +1793,6 @@ const Sidebar = () => {
                               className={pathname == menu.route ? "active" : ""}
                             >
                               <Link to={menu.route}>
-                                {/* {menu.icon} */}
                                 <i className={menu?.icon} />
                                 <span>{t(menu.menuValue)}</span>
                               </Link>
@@ -2750,7 +2786,7 @@ const Sidebar = () => {
                         {t("Calendar")}
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         onClick={() =>
                           localStorage.setItem("minheight", "true")
@@ -2762,7 +2798,7 @@ const Sidebar = () => {
                       >
                         {t("Contacts")}
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to="/email/inbox">{t("Email")}</Link>
                     </li>
@@ -3037,7 +3073,7 @@ const Sidebar = () => {
                         }
                         to="/pipeline"
                       >
-                        {t("Sale Order")}
+                        {t("Pipeline")}
                       </Link>
                     </li>
                     <li>

@@ -156,7 +156,7 @@ const ValidationsubForm = () => {
                     <label htmlFor="validationDefault01">First Name</label>
                     <input
                       type="text"
-                      className="form-control"d
+                      className="form-control"
                       id="validationDefault01"
                       placeholder="First Name"
                       defaultValue="Mark"
