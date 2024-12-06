@@ -286,3 +286,47 @@ export async function requestPasswordReset(data) {
     return false;
   }
 }
+
+export async function registerContactActivities(leadData, profileID, txt) {
+  const authToken = localStorage.getItem("BearerToken");
+  const url = `${BASE_URL}activity/`;
+  const activityData = {
+    lead: leadData,
+    user: profileID,
+    text: txt,
+  };
+
+  try {
+    console.log(activityData);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(activityData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    const leadResponse = await fetch(`${BASE_URL}leads/${leadData}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    if (!leadResponse.ok) {
+      console.log("Error");
+      throw new Error(`HTTP error! Status: ${leadResponse.status}`);
+    } else {
+      const emailresult = await registerEmail(leadData, profileID, txt);
+      console.log("Email result: ", emailresult);
+      return await leadResponse.json();
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}

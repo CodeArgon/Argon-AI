@@ -78,8 +78,7 @@ const LeadsList = () => {
         >
           {text}
         </Link>
-      ),
-      sorter: (a, b) => a.LeadName.length - b.LeadName.length
+      )
     },
     {
       title: 'Lead Name',
@@ -92,8 +91,7 @@ const LeadsList = () => {
         >
           {text}
         </Link>
-      ),
-      sorter: (a, b) => a.name.length - b.name.length
+      )
     },
     {
       title: 'Source',
@@ -103,36 +101,30 @@ const LeadsList = () => {
           {text}
           <span>{record.role}</span>
         </span>
-      ),
-      sorter: (a, b) => a.source.length - b.source.length
+      )
     },
     {
       title: 'Medium',
-      dataIndex: 'medium',
-      sorter: (a, b) => a.medium.length - b.medium.length
+      dataIndex: 'medium'
     },
 
     {
       title: 'Assigned To (DL)',
-      dataIndex: 'assigned_to',
-      sorter: (a, b) => a.division_lead.length - b.division_lead.length
+      dataIndex: 'assigned_to'
     },
 
     {
       title: 'Lead Status',
-      dataIndex: 'status',
-      sorter: (a, b) => a.LeadStatus.length - b.LeadStatus.length
+      dataIndex: 'status'
     },
 
     {
       title: 'Created Date',
-      dataIndex: 'created_date',
-      sorter: (a, b) => a.created_date.length - b.created_date.length
+      dataIndex: 'created_date'
     },
     {
       title: 'Lead Owner',
-      dataIndex: 'lead_gen_manager',
-      sorter: (a, b) => a.lead_gen_manager.length - b.LeadOwner.length
+      dataIndex: 'lead_gen_manager'
     },
 
     {
@@ -167,41 +159,9 @@ const LeadsList = () => {
             </Link>
           </div>
         </div>
-      ),
-      sorter: (a, b) => a.length - b.length
+      )
     }
   ]
-  const initialSettings = {
-    endDate: new Date('2020-08-11T12:30:00.000Z'),
-    ranges: {
-      'Last 30 Days': [
-        new Date('2020-07-12T04:57:17.076Z'),
-        new Date('2020-08-10T04:57:17.076Z')
-      ],
-      'Last 7 Days': [
-        new Date('2020-08-04T04:57:17.076Z'),
-        new Date('2020-08-10T04:57:17.076Z')
-      ],
-      'Last Month': [
-        new Date('2020-06-30T18:30:00.000Z'),
-        new Date('2020-07-31T18:29:59.999Z')
-      ],
-      'This Month': [
-        new Date('2020-07-31T18:30:00.000Z'),
-        new Date('2020-08-31T18:29:59.999Z')
-      ],
-      Today: [
-        new Date('2020-08-10T04:57:17.076Z'),
-        new Date('2020-08-10T04:57:17.076Z')
-      ],
-      Yesterday: [
-        new Date('2020-08-09T04:57:17.076Z'),
-        new Date('2020-08-09T04:57:17.076Z')
-      ]
-    },
-    startDate: new Date('2020-08-04T04:57:17.076Z'), // Set "Last 7 Days" as default
-    timePicker: false
-  }
   const leadStatus = [
     { value: '--Select--', label: '--Select--' },
     { value: 'Open', label: 'Open' },
