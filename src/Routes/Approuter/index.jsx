@@ -79,7 +79,7 @@ const AppRouter = () => {
     <div>
       <AppProvider>
         <Provider store={store}>
-          <BrowserRouter basename='/crm'>
+          <BrowserRouter>
             <ScrollToTop />
             <Routes>
               <Route path='/' element={<Login />} />
