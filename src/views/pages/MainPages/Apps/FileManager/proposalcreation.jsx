@@ -6,10 +6,10 @@ import "./proposalcreation.css";
 import { useNavigate } from "react-router-dom";
 
 const ProposalCreation = () => {
-  const [titleName, setTitleName] = useState("AI Tech");
-  const [clientName, setClientName] = useState("John Doe");
-  const [sourceLink, setSourceLink] = useState("https://www.google.com/");
-  const [description, setDescription] = useState("here is a test project");
+  const [titleName, setTitleName] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [sourceLink, setSourceLink] = useState("");
+  const [description, setDescription] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
